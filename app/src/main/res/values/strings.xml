@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ideal-succotash</string>
+    <string name="title_text">Google Sign-In</string>
+    <string name="signed_in">Signed in</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="signed_out">Signed out</string>
+    <string name="desc_google_icon">Google Icon</string>
+    <string name="loading">Loading…</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="invalid_ac">Please Sign In with your Nirmauni Account</string>
+
+    <string name="signed_in_fmt">Signed in as\n%s</string>
+</resources>
