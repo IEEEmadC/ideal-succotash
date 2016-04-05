@@ -151,6 +151,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         } else {
             updateUI(false);
+            revokeAccess();
         }
     }
 
