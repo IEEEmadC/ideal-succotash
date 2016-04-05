@@ -128,8 +128,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     protected void onPostExecute(Bitmap bitmap) {
                         imageProgress.setVisibility(View.INVISIBLE);
-                        imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
-                                imageView.getWidth() * 2));
+                        try {
+                            imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
+                                    imageView.getWidth() * 2));
+                        }catch(NullPointerException e){}
                     }
                 }.execute(acct.getPhotoUrl().toString());
                 updateUI(true);
