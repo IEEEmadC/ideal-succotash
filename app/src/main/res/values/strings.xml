@@ -11,4 +11,9 @@
     <string name="invalid_ac">Please Sign In with your Nirmauni Account</string>
     <string name="conn_prob">There was some problem</string>
     <string name="signed_in_fmt">Signed in as\n%s</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="from_location">From :</string>
+    <string name="to_location">To :</string>
 </resources>
