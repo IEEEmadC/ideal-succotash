@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct.getEmail().split("@")[1].equals("nirmauni.ac.in")) {
-                ((TextView) findViewById(R.id.title_text)).setText(acct.getDisplayName());
+                /*((TextView) findViewById(R.id.title_text)).setText(acct.getDisplayName());
                 mStatusTextView.setText(getResources().getString(R.string.signed_in_fmt, acct.getEmail()));
                 new AsyncTask<String, Void, Bitmap>() {
 
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             InputStream in = url.openStream();
                             return BitmapFactory.decodeStream(in);
                         } catch (Exception e) {
-                        /* TODO log error */
+                        *//* TODO log error *//*
                         }
                         return null;
                     }
@@ -134,8 +134,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         }catch(NullPointerException e){}
                     }
                 }.execute(acct.getPhotoUrl().toString());
-                updateUI(true);
-
+                updateUI(true);*/
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
+                finish();
             } else {
                 revokeAccess();
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.invalid_ac, Snackbar.LENGTH_INDEFINITE);
@@ -188,7 +190,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.conn_prob, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Okay", new OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        snackbar.show();
     }
 
 

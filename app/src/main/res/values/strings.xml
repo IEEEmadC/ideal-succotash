@@ -9,6 +9,6 @@
     <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
     <string name="invalid_ac">Please Sign In with your Nirmauni Account</string>
-
+    <string name="conn_prob">There was some problem</string>
     <string name="signed_in_fmt">Signed in as\n%s</string>
 </resources>
