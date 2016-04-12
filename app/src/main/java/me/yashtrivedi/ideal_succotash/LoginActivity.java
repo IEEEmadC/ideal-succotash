@@ -34,7 +34,7 @@ import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, OnClickListener {
 
-    private static final int RC_SIGN_IN = 9001;
+    private static final int RC_SIGN_IN = 100;
     TextView mStatusTextView;
     private GoogleApiClient mGoogleApiClient;
     private ProgressDialog mProgressDialog;
