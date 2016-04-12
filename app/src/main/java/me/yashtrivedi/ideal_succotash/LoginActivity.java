@@ -15,12 +15,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -43,11 +40,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private ProgressDialog mProgressDialog;
     private ImageView imageView;
     private ProgressBar imageProgress;
+    private Firebase firebase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_login);
+        firebase = new Firebase(Constants.FIREBASE_URL);
         imageView = (ImageView) findViewById(R.id.google_icon);
         imageProgress = (ProgressBar) findViewById(R.id.image_progress);
         mStatusTextView = (TextView) findViewById(R.id.status);
@@ -120,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             InputStream in = url.openStream();
                             return BitmapFactory.decodeStream(in);
                         } catch (Exception e) {
-                        //* TODO log error *//
+                            //* TODO log error *//
                         }
                         return null;
                     }
@@ -131,7 +130,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         try {
                             imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
                                     imageView.getWidth() * 2));
-                        }catch(NullPointerException e){}
+                        } catch (NullPointerException e) {
+                        }
                     }
                 }.execute(acct.getPhotoUrl().toString());
                 updateUI(true);
@@ -236,6 +236,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private class MyAuthResultHandler implements Firebase.AuthResultHandler{
+
+        @Override
+        public void onAuthenticated(AuthData authData) {
+
+        }
+
+        @Override
+        public void onAuthenticationError(FirebaseError firebaseError) {
+
+        }
     }
 
 }
