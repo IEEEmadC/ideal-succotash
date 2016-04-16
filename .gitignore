@@ -5,6 +5,9 @@
 # files for the dex VM
 *.dex
 
+# Google services JSON
+google-services.json
+
 # Java class files
 *.class
 
