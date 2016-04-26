@@ -12,8 +12,7 @@
     <string name="conn_prob">There was some problem</string>
     <string name="signed_in_fmt">Signed in as\n%s</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="oauth2_format">oauth2:%s</string>
     <string name="from_location">From :</string>
     <string name="to_location">To :</string>
 </resources>

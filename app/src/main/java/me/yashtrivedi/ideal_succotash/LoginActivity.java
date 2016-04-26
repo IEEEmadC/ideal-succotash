@@ -2,6 +2,7 @@ package me.yashtrivedi.ideal_succotash;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -15,22 +16,29 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ServerValue;
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, OnClickListener {
 
@@ -41,6 +49,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private ImageView imageView;
     private ProgressBar imageProgress;
     private Firebase firebase;
+    private GoogleSignInAccount acct;
+    private SharedPreferences mSharedPref;
+    private SharedPreferences.Editor mSharedPrefEditor;
+    private String mEncodedEmail;
+    private Firebase.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d("D", "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
+            acct = result.getSignInAccount();
             if (acct.getEmail().split("@")[1].equals("nirmauni.ac.in")) {
                 ((TextView) findViewById(R.id.title_text)).setText(acct.getDisplayName());
                 mStatusTextView.setText(getResources().getString(R.string.signed_in_fmt, acct.getEmail()));
@@ -129,15 +142,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         imageProgress.setVisibility(View.INVISIBLE);
                         try {
                             imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
-                                    imageView.getWidth() * 2));
+                                    imageView.getWidth()));
                         } catch (NullPointerException e) {
                         }
                     }
                 }.execute(acct.getPhotoUrl().toString());
                 updateUI(true);
-                Intent i = new Intent(this, MainActivity.class);
-                startActivity(i);
-                finish();
+                getGoogleOAuthTokenAndLogin();
             } else {
                 revokeAccess();
                 Snackbar snackbar = Snackbar.make(findViewById(R.id.myCoordinatorLayout), R.string.invalid_ac, Snackbar.LENGTH_INDEFINITE);
@@ -238,11 +249,125 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private class MyAuthResultHandler implements Firebase.AuthResultHandler{
+    private void setAuthenticatedUserGoogle(final AuthData authData) {
+        String unprocessedEmail;
+        if (mGoogleApiClient.isConnected()) {
+            unprocessedEmail = acct.getEmail().toLowerCase();
+            mSharedPrefEditor.putString(Constants.KEY_GOOGLE_EMAIL, unprocessedEmail).apply();
+        } else {
+            unprocessedEmail = mSharedPref.getString(Constants.KEY_GOOGLE_EMAIL, null);
+        }
+
+        mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
+        final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
+        final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(mEncodedEmail);
+
+        HashMap<String, Object> userAndUidMap = new HashMap<>();
+        HashMap<String, Object> timestampJoined = new HashMap<>();
+        timestampJoined.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+
+        User newUser = new User(userName, mEncodedEmail, timestampJoined);
+        HashMap<String, Object> newUserMap = (HashMap<String, Object>)
+                new ObjectMapper().convertValue(newUser, Map.class);
+        userAndUidMap.put("/" + Constants.FIREBASE_LOCATION_USERS + "/" + mEncodedEmail,
+                newUserMap);
+        userAndUidMap.put("/" + Constants.FIREBASE_LOCATION_UID_MAP + "/"
+                + authData.getUid(), mEncodedEmail);
+        firebase.updateChildren(userAndUidMap, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    /* Try just making a uid mapping */
+                    firebase.child(Constants.FIREBASE_LOCATION_UID_MAP)
+                            .child(authData.getUid()).setValue(mEncodedEmail);
+                }
+            }
+        });
+    }
+
+    private void loginWithGoogle(String token) {
+        Log.d("there","here");
+        firebase.authWithOAuthToken(Constants.GOOGLE_PROVIDER, token, new MyAuthHandler(Constants.GOOGLE_PROVIDER));
+    }
+
+    private void getGoogleOAuthTokenAndLogin() {
+        AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String token = null;
+                try {
+                    String scope = String.format(getString(R.string.oauth2_format), new Scope(Scopes.PROFILE)).concat(" email");
+                    token = GoogleAuthUtil.getToken(LoginActivity.this, acct.getEmail(), scope);
+                } catch (Exception e) {
+                }
+
+                return token;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                if (s != null)
+                    loginWithGoogle(s);
+                Log.d("hi","here");
+            }
+        };
+        task.execute();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //firebase.removeAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAuthStateListener = new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+
+
+                /**
+                 * If there is a valid session to be restored, start MainActivity.
+                 * No need to pass data via SharedPreferences because app
+                 * already holds userName/provider data from the latest session
+                 */
+                if (authData != null) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        };
+        /* Add auth listener to Firebase ref */
+        //firebase.addAuthStateListener(mAuthStateListener);
+    }
+
+    private class MyAuthHandler implements Firebase.AuthResultHandler {
+
+        private final String provider;
+
+        public MyAuthHandler(String provider) {
+            this.provider = provider;
+        }
 
         @Override
         public void onAuthenticated(AuthData authData) {
+            if (authData != null) {
+                Log.d("hi","there");
+                if (authData.getProvider().equals(Constants.GOOGLE_PROVIDER)) {
+                    setAuthenticatedUserGoogle(authData);
+                }
 
+                mSharedPrefEditor.putString(Constants.KEY_PROVIDER, authData.getProvider()).apply();
+                mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
+
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(i);
+                finish();
+            }
         }
 
         @Override
@@ -250,5 +375,4 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
-
 }

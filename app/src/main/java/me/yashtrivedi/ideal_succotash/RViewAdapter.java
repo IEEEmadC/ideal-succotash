@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
 
-    List<User> list = Collections.emptyList();
+    List<ListUser> list = Collections.emptyList();
 
-    public void setList(List<User> list) {
+    public void setList(List<ListUser> list) {
         this.list = list;
     }
 
