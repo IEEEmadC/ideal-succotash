@@ -9,7 +9,7 @@ public class Constants {
     static final String FIREBASE_LOCATION_UID_MAP = "uidMap";
 
     /*Firebase URL*/
-    static final String FIREBASE_URL = "http://ideal-succotash.firebase.io";
+    static final String FIREBASE_URL = "https://ideal-succotash.firebaseio.com";
     static final String FIREBASE_URL_USERS = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_USERS);
 
     static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";

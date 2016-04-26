@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -60,6 +62,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         firebase = new Firebase(Constants.FIREBASE_URL);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPrefEditor = mSharedPref.edit();
         imageView = (ImageView) findViewById(R.id.google_icon);
         imageProgress = (ProgressBar) findViewById(R.id.image_progress);
         mStatusTextView = (TextView) findViewById(R.id.status);
@@ -299,6 +303,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     String scope = String.format(getString(R.string.oauth2_format), new Scope(Scopes.PROFILE)).concat(" email");
                     token = GoogleAuthUtil.getToken(LoginActivity.this, acct.getEmail(), scope);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 return token;
