@@ -264,7 +264,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
         final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
-        final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(mEncodedEmail);
 
         HashMap<String, Object> userAndUidMap = new HashMap<>();
         HashMap<String, Object> timestampJoined = new HashMap<>();
@@ -290,7 +289,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void loginWithGoogle(String token) {
-        Log.d("there","here");
+        //Log.d("there","here");
         firebase.authWithOAuthToken(Constants.GOOGLE_PROVIDER, token, new MyAuthHandler(Constants.GOOGLE_PROVIDER));
     }
 
@@ -313,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             protected void onPostExecute(String s) {
                 if (s != null)
                     loginWithGoogle(s);
-                Log.d("hi","here");
+                //Log.d("hi","here");
             }
         };
         task.execute();
@@ -322,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onPause() {
         super.onPause();
-        //firebase.removeAuthStateListener(mAuthStateListener);
+        firebase.removeAuthStateListener(mAuthStateListener);
     }
 
     @Override
@@ -347,7 +346,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         };
         /* Add auth listener to Firebase ref */
-        //firebase.addAuthStateListener(mAuthStateListener);
+        firebase.addAuthStateListener(mAuthStateListener);
     }
 
     private class MyAuthHandler implements Firebase.AuthResultHandler {
@@ -361,7 +360,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         @Override
         public void onAuthenticated(AuthData authData) {
             if (authData != null) {
-                Log.d("hi","there");
+                //Log.d("hi","there");
                 if (authData.getProvider().equals(Constants.GOOGLE_PROVIDER)) {
                     setAuthenticatedUserGoogle(authData);
                 }
