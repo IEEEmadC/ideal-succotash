@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,7 +46,8 @@ public class ListFragment extends Fragment implements ClickListener{
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ListUser user = dataSnapshot.getValue(ListUser.class);
+                Log.d("value",dataSnapshot.getValue().toString());
+                Log.d("value list",dataSnapshot.getValue(ListUser.class).toString());
             }
 
             @Override

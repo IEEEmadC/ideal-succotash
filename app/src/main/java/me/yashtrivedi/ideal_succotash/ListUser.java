@@ -6,14 +6,16 @@ import java.io.File;
  * Created by yashtrivedi on 05/04/16.
  */
 public class ListUser {
-    String name, from, to, roll;
-    File img;
+    String userName, area, roll, carNo;
+    Boolean toNirma;
+    //File img;
 
-    public ListUser(String name, String from, String to, File img) {
-        this.name = name;
-        this.from = from;
-        this.to = to;
-        this.img = img;
+    public ListUser(){
+
+    }
+
+    public Boolean getToNirma() {
+        return toNirma;
     }
 
     public String getRoll() {
@@ -25,34 +27,18 @@ public class ListUser {
     }
 
     public String getName() {
-        return name;
+        return userName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.userName = name;
     }
 
-    public String getFrom() {
-        return from;
+    public String getArea() {
+        return area;
     }
 
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    public File getImg() {
-        return img;
-    }
-
-    public void setImg(File img) {
-        this.img = img;
+    public String getCarNo() {
+        return carNo;
     }
 }

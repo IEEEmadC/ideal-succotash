@@ -35,9 +35,9 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     @Override
     public void onBindViewHolder(RViewHolder holder, int position) {
         ListUser lu = list.get(position);
-        holder.from.setText(lu.getFrom());
-        holder.to.setText(lu.getTo());
-        holder.pic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(BitmapFactory.decodeFile(lu.getImg().getAbsolutePath()),holder.pic.getWidth()));
+        //holder.from.setText(lu.getFrom());
+        //holder.to.setText(lu.getTo());
+        //holder.pic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(BitmapFactory.decodeFile(lu.getImg().getAbsolutePath()),holder.pic.getWidth()));
         holder.name.setText(lu.getName() + "(" + lu.getRoll() + ")");
     }
 

@@ -322,7 +322,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onPause() {
         super.onPause();
-        firebase.removeAuthStateListener(mAuthStateListener);
+        //firebase.removeAuthStateListener(mAuthStateListener);
     }
 
     @Override
@@ -338,6 +338,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                  * No need to pass data via SharedPreferences because app
                  * already holds userName/provider data from the latest session
                  */
+
                 if (authData != null) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -347,7 +348,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         };
         /* Add auth listener to Firebase ref */
-        firebase.addAuthStateListener(mAuthStateListener);
+        //firebase.addAuthStateListener(mAuthStateListener);
     }
 
     private class MyAuthHandler implements Firebase.AuthResultHandler {
