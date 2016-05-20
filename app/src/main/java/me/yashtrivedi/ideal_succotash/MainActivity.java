@@ -14,14 +14,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().add(R.id.container,new ListFragment()).commit();
+       // FragmentManager fm = getSupportFragmentManager();
+        //fm.beginTransaction().add(R.id.container,new ListFragment()).commit();
 
     }
 
     public void showRequestForm(View view){
+
         DialogFragment dialogFragment = ShowRequestFormFragment.newInstance();
         dialogFragment.show(getSupportFragmentManager(), "ShowRequestFormFragment");
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

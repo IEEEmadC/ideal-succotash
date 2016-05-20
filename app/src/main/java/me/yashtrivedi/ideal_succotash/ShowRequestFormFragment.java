@@ -4,14 +4,24 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by amit on 20-May-16.
@@ -20,6 +30,7 @@ public class ShowRequestFormFragment extends DialogFragment {
 
     EditText editTextCarNo, editTextArea;
     CheckBox checkBoxToFromNirma;
+    Firebase firebase;
 
 
     /**
@@ -55,6 +66,9 @@ public class ShowRequestFormFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         /* Use the Builder class for convenient dialog construction */
+
+        firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_Dialog);
 
         /* Get the layout inflater */
@@ -62,7 +76,7 @@ public class ShowRequestFormFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.dialog_request_form, null);
         editTextCarNo = (EditText) rootView.findViewById(R.id.edit_text_car_no);
         editTextArea = (EditText) rootView.findViewById(R.id.edit_text_area);
-        checkBoxToFromNirma = (CheckBox) rootView.findViewById(R.id.area_check_box);
+        checkBoxToFromNirma = (CheckBox) rootView.findViewById(R.id.to_from_check_box) ;
         checkBoxToFromNirma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,8 +112,21 @@ public class ShowRequestFormFragment extends DialogFragment {
 
     public void postRequest() {
 
+        SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Map<String, Object> parentData = new HashMap<>();
+            Map<String, Object> rideData = new HashMap<>();
+            rideData.put("toNirma",checkBoxToFromNirma.isChecked());
+            rideData.put("carNo",editTextCarNo.getText().toString());
+            rideData.put("area", editTextArea.getText().toString());
+            parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL,"null"),rideData);
 
+        firebase.updateChildren(parentData, new Firebase.CompletionListener() {
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
 
+            }
+        });
+        Log.d("dataPush","data Pushed");
 
     }
 }

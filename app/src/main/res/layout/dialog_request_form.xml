@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/going_nirma_text"
-        android:id="@+id/area_check_box"/>
+        android:id="@+id/to_from_check_box"/>
 
     <EditText
         android:id="@+id/edit_text_car_no"

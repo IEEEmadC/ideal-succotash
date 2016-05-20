@@ -36,7 +36,7 @@ public class ListFragment extends Fragment implements ClickListener{
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         RViewAdapter adapter = new RViewAdapter(getContext());
 //        adapter.setList();
-        recyclerView.setAdapter(adapter);
+        //recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView,this));
         return v;
     }
