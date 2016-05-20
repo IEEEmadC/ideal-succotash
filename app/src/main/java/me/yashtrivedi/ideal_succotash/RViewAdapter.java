@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,10 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
 
     public void setList(List<ListUser> list) {
         this.list = list;
+        notifyDataSetChanged();
+        for(ListUser l : list){
+            Log.d("value", l.getName());
+        }
     }
 
     @Override
@@ -35,10 +40,11 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     @Override
     public void onBindViewHolder(RViewHolder holder, int position) {
         ListUser lu = list.get(position);
-        //holder.from.setText(lu.getFrom());
-        //holder.to.setText(lu.getTo());
+        holder.from.setText((!lu.getToNirma())?"Nirma":lu.getArea());
+        holder.to.setText(lu.getToNirma()?"Nirma":lu.getArea());
         //holder.pic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(BitmapFactory.decodeFile(lu.getImg().getAbsolutePath()),holder.pic.getWidth()));
-        holder.name.setText(lu.getName() + "(" + lu.getRoll() + ")");
+        holder.name.setText(lu.getName() + " (" + lu.getRoll().toUpperCase() + ")");
+        holder.capacity.setText(lu.getCapacity());
     }
 
     @Override

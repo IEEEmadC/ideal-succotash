@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -23,6 +24,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListFragment extends Fragment implements ClickListener{
@@ -35,7 +38,7 @@ public class ListFragment extends Fragment implements ClickListener{
     public ListFragment() {
         // Required empty public constructor
     }
-
+    List<ListUser> list;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,11 +46,15 @@ public class ListFragment extends Fragment implements ClickListener{
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
+        final RViewAdapter adapter = new RViewAdapter(getContext());
+        list = new ArrayList<>();
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("value",dataSnapshot.getValue().toString());
-                Log.d("value list",dataSnapshot.getValue(ListUser.class).toString());
+                list.add(0,dataSnapshot.getValue(ListUser.class));
+                list.get(0).setRoll(dataSnapshot.getKey().split("@")[0]);
+                adapter.setList(list);
             }
 
             @Override
@@ -70,9 +77,10 @@ public class ListFragment extends Fragment implements ClickListener{
 
             }
         });
-        RViewAdapter adapter = new RViewAdapter(getContext());
+
 //        adapter.setList();
-        //recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView,this));
         return v;
     }
@@ -80,7 +88,10 @@ public class ListFragment extends Fragment implements ClickListener{
     @Override
     public void onClick(View view, int position) {
         //Dialog code
-        AlertDialog dialog = new AlertDialog.Builder(getContext()).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        Log.d("value",list.get(position).getName());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                .setTitle("Are you sure?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);

@@ -6,12 +6,16 @@ import java.io.File;
  * Created by yashtrivedi on 05/04/16.
  */
 public class ListUser {
-    String userName, area, roll, carNo;
+    String userName, area, roll, carNo, carCapacity;
     Boolean toNirma;
     //File img;
 
     public ListUser(){
 
+    }
+
+    public String getCapacity() {
+        return carCapacity;
     }
 
     public Boolean getToNirma() {
