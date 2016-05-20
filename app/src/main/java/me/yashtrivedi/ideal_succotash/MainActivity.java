@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     public void showRequestForm(View view){
         DialogFragment dialogFragment = ShowRequestFormFragment.newInstance();
         dialogFragment.show(getSupportFragmentManager(), "ShowRequestFormFragment");
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
