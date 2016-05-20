@@ -264,6 +264,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
         final String userName = (String) authData.getProviderData().get(Constants.PROVIDER_DATA_DISPLAY_NAME);
+        final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(mEncodedEmail);
 
         HashMap<String, Object> userAndUidMap = new HashMap<>();
         HashMap<String, Object> timestampJoined = new HashMap<>();
