@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -226,7 +227,7 @@ public class ShowRequestFormFragment extends DialogFragment {
             rideData.put("toNirma", checkBoxToFromNirma.isChecked());
             rideData.put("carNo", carNo);
             rideData.put("area", editTextArea.getText().toString());
-
+            rideData.put("carCapacity", Integer.parseInt(editTextCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
 
 
