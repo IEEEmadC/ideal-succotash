@@ -6,7 +6,7 @@ import java.io.File;
  * Created by yashtrivedi on 05/04/16.
  */
 public class ListUser {
-    String name, from, to;
+    String name, from, to, roll;
     File img;
 
     public ListUser(String name, String from, String to, File img) {
@@ -14,6 +14,14 @@ public class ListUser {
         this.from = from;
         this.to = to;
         this.img = img;
+    }
+
+    public String getRoll() {
+        return roll;
+    }
+
+    public void setRoll(String roll) {
+        this.roll = roll.split("@")[0];
     }
 
     public String getName() {
