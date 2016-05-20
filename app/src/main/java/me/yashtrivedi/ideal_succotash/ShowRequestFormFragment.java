@@ -161,6 +161,9 @@ public class ShowRequestFormFragment extends DialogFragment {
                 if (editable.length() == 0) {
                     editTextCarNo3.requestFocus();
                 }
+                else if(editable.length()==4){
+                    editTextArea.requestFocus();
+                }
             }
         });
 
@@ -208,7 +211,7 @@ public class ShowRequestFormFragment extends DialogFragment {
 
         if (editTextArea.getText().length() == 0 || editTextCarCapacity.getText().length() == 0 || editTextCarNo1.getText().length() == 0 || editTextCarNo2.getText().length() == 0 || editTextCarNo3.getText().length() == 0 || editTextCarNo4.getText().length() == 0) {
 
-            Toast.makeText(getContext(), "E madar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Empty entries not allowed, re enter", Toast.LENGTH_SHORT).show();
 
 
         } else {

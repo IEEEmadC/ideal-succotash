@@ -13,7 +13,7 @@
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/going_nirma_text"
+        android:text="@string/going_home_text"
         android:id="@+id/to_from_check_box"/>
     <TextView
         android:layout_width="match_parent"
@@ -132,6 +132,7 @@
         android:textColor="#000"
         android:textColorHint="#bfbdb9"
         android:layout_marginTop="20dp"
+        android:maxLength="1"
         />
     <TextView
         android:layout_width="match_parent"
