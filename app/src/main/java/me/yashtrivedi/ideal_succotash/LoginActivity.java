@@ -368,7 +368,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 mSharedPrefEditor.putString(Constants.KEY_PROVIDER, authData.getProvider()).apply();
                 mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
-
+                mSharedPrefEditor.commit();
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();
