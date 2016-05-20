@@ -19,6 +19,7 @@ public class Constants {
     static final String KEY_GOOGLE_EMAIL = "g_mail";
     static final String KEY_PROVIDER = "provider";
     static final String KEY_ENCODED_EMAIL = "encemail";
+    static final String KEY_NAME = "profile_name";
 
     static final String PROVIDER_DATA_DISPLAY_NAME = "disp_name";
 
