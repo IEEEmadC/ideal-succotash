@@ -15,8 +15,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction().add(R.id.container,new ListFragment()).commit();
 
     }
+
     public void showRequestForm(View view){
         DialogFragment dialogFragment = ShowRequestFormFragment.newInstance();
         dialogFragment.show(getSupportFragmentManager(), "ShowRequestFormFragment");
