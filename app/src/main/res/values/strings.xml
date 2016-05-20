@@ -15,4 +15,6 @@
     <string name="oauth2_format">oauth2:%s</string>
     <string name="from_location">From :</string>
     <string name="to_location">To :</string>
+    <string name="going_nirma_text">Going Nirma</string>
+    <string name="going_home_text">Going Home</string>
 </resources>

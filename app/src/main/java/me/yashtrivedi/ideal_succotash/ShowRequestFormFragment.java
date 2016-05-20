@@ -1,13 +1,16 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 /**
@@ -15,7 +18,9 @@ import android.widget.EditText;
  */
 public class ShowRequestFormFragment extends DialogFragment {
 
-    EditText editTextMealName;
+    EditText editTextCarNo, editTextArea;
+    CheckBox checkBoxToFromNirma;
+
 
     /**
      * Public static constructor that creates fragment and
@@ -50,43 +55,52 @@ public class ShowRequestFormFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         /* Use the Builder class for convenient dialog construction */
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_Dialog);
+
         /* Get the layout inflater */
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View rootView = inflater.inflate(R.layout.dialog_request_form, null);
-        editTextMealName = (EditText) rootView.findViewById(R.id.edit_text_meal_name);
-
-        /**
-         * Call addMeal() when user taps "Done" keyboard action
-         */
-      /*  editTextMealName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        editTextCarNo = (EditText) rootView.findViewById(R.id.edit_text_car_no);
+        editTextArea = (EditText) rootView.findViewById(R.id.edit_text_area);
+        checkBoxToFromNirma = (CheckBox) rootView.findViewById(R.id.area_check_box);
+        checkBoxToFromNirma.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    addMeal();
-                }
-                return true;
-            }
-        });*/
+            public void onClick(View view) {
+                if(!checkBoxToFromNirma.isChecked()){
+                    checkBoxToFromNirma.setText("Going Home");
+                    editTextArea.setHint("Enter the going to area");
 
-        /* Inflate and set the layout for the dialog */
-        /* Pass null as the parent view because its going in the dialog layout */
+                }
+                else{
+
+                    checkBoxToFromNirma.setText("Going Nirma");
+                    editTextArea.setHint("Enter the going from area");
+
+                }
+
+            }
+        });
+
+
+
+
         builder.setView(rootView)
                 /* Add action buttons */
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        addMeal();
+                        postRequest();
                     }
                 });
 
         return builder.create();
     }
 
-    /**
-     * Add new meal
-     */
-    public void addMeal() {
+    public void postRequest() {
+
+
+
+
     }
 }
 

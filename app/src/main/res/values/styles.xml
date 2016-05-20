@@ -11,4 +11,6 @@
         <item name="colorButtonNormal">@color/blue_grey_500</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="CustomTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
+    </style>
 </resources>
