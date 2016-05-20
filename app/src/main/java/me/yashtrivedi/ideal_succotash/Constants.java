@@ -6,7 +6,7 @@ package me.yashtrivedi.ideal_succotash;
 public class Constants {
 
     static final String FIREBASE_LOCATION_USERS = "users";
-    static final String FIREBASE_LOCATION_RIDES = "available_rides";
+    static final String FIREBASE_LOCATION_RIDES = "availableRides";
     static final String FIREBASE_LOCATION_UID_MAP = "uidMap";
 
     /*Firebase URL*/

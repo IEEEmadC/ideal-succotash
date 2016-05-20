@@ -10,22 +10,98 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="me.yashtrivedi.ideal_succotash.MainActivity"
     android:orientation="vertical">
-
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/going_nirma_text"
         android:id="@+id/to_from_check_box"/>
-
-    <EditText
-        android:id="@+id/edit_text_car_no"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Car Number"
-        android:imeOptions="actionDone|flagNoExtractUi"
-        android:inputType="textCapWords"
-        android:textColor="#000"
-        android:textColorHint="#bfbdb9" />
+        android:text="Car No: "
+        android:layout_marginTop="15dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edit_text_car_no1"
+            android:layout_width="wrap_content"
+            android:minWidth="34dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="textCapCharacters"
+            android:textColor="#000"
+            android:textColorHint="#bfbdb9"
+            android:maxLength="2"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="30sp"/>
+
+        <EditText
+            android:id="@+id/edit_text_car_no2"
+            android:layout_width="wrap_content"
+            android:minWidth="34dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="number"
+            android:textColor="#000"
+            android:textColorHint="#bfbdb9"
+            android:maxLength="2"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="30sp"/>
+
+
+        <EditText
+            android:id="@+id/edit_text_car_no3"
+            android:layout_width="wrap_content"
+            android:minWidth="34dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="textCapCharacters"
+            android:textColor="#000"
+            android:textColorHint="#bfbdb9"
+            android:maxLength="2"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="30sp"/>
+
+
+        <EditText
+            android:id="@+id/edit_text_car_no4"
+            android:layout_width="wrap_content"
+            android:minWidth="50dp"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="number"
+            android:textColor="#000"
+            android:textColorHint="#bfbdb9"
+            android:maxLength="4"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+
+
+
+    </LinearLayout>
+
    <!-- <EditText
         android:id="@+id/edit_text_car_model"
         android:layout_width="match_parent"
@@ -44,7 +120,29 @@
         android:imeOptions="actionDone|flagNoExtractUi"
         android:inputType="textCapWords"
         android:textColor="#000"
-        android:textColorHint="#bfbdb9" />
+        android:textColorHint="#bfbdb9"
+        android:layout_marginTop="20dp"/>
+    <EditText
+        android:id="@+id/edit_text_capacity"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter the car capacity"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:inputType="number"
+        android:textColor="#000"
+        android:textColorHint="#bfbdb9"
+        android:layout_marginTop="20dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Empty data not allowed"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible"
+        android:layout_marginTop="5dp"
+        android:id="@+id/text_view_invalid_notification"
+        />
+
 
 
 </LinearLayout>
