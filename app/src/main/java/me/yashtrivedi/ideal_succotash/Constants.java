@@ -8,11 +8,13 @@ public class Constants {
     static final String FIREBASE_LOCATION_USERS = "users";
     static final String FIREBASE_LOCATION_RIDES = "availableRides";
     static final String FIREBASE_LOCATION_UID_MAP = "uidMap";
+    static final String FIREBASE_LOCATION_REQUEST_RIDE = "rideRequest";
 
     /*Firebase URL*/
     static final String FIREBASE_URL = "https://ideal-succotash.firebaseio.com";
     static final String FIREBASE_URL_USERS = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_USERS);
     static final String FIREBASE_URL_RIDES = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_RIDES);
+    static final String FIREBASE_URL_REQUEST_RIDE = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_REQUEST_RIDE);
 
     static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
 
@@ -24,5 +26,9 @@ public class Constants {
     static final String PROVIDER_DATA_DISPLAY_NAME = "disp_name";
 
     static final String GOOGLE_PROVIDER = "google";
+
+    static final int RIDE_REQUEST_WAITING = 0;
+    static final int RIDE_REQUEST_REJECTED = -1;
+    static final int RIDE_REQUEST_ACCEPTED = 1;
 
 }

@@ -5,8 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
@@ -100,7 +102,7 @@ public class ListFragment extends Fragment implements ClickListener{
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onClick(View view, final int position) {
         //Dialog code
         Log.d("value",list.get(position).getName());
         AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -118,6 +120,12 @@ public class ListFragment extends Fragment implements ClickListener{
                         .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Cancel",null));
                 notificationManager.notify(13123,builder.build());
                 //notify user
+                Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE);
+                Map<String,Object> map = new HashMap<String, Object>();
+                Map<String,Object> current = new HashMap<String, Object>();
+                current.put(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""),false);
+                map.put(Utils.rollToEmail(list.get(position).getRoll()),current);
+                firebase.updateChildren(map);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
