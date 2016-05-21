@@ -120,12 +120,12 @@ public class ListFragment extends Fragment implements ClickListener{
                         .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Cancel",null));
                 notificationManager.notify(13123,builder.build());
                 //notify user
-                Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE);
-                Map<String,Object> map = new HashMap<String, Object>();
+                Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
+
                 Map<String,Object> current = new HashMap<String, Object>();
-                current.put(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""),false);
-                map.put(Utils.rollToEmail(list.get(position).getRoll()),current);
-                firebase.updateChildren(map);
+                current.put(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""),Constants.RIDE_REQUEST_WAITING);
+
+                firebase.updateChildren(current);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
