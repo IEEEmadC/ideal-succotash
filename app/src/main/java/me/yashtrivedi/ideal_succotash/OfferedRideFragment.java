@@ -52,7 +52,7 @@ public class OfferedRideFragment extends Fragment {
                 list.add(0,ru);
                 adapter.addItem(ru);
 
-
+            
             }
 
             @Override

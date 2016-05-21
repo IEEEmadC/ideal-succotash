@@ -15,15 +15,15 @@ import org.w3c.dom.Text;
 public class OViewHolder extends RecyclerView.ViewHolder {
 
     TextView name, status;
-    ImageButton acceptButton, cancelButton;
+    Button acceptButton, cancelButton;
     LinearLayout acceptCancelButtonHolder;
     public OViewHolder(View itemView){
 
         super(itemView);
         name = (TextView) itemView.findViewById(R.id.name);
         status = (TextView) itemView.findViewById(R.id.status);
-        acceptButton = (ImageButton) itemView.findViewById(R.id.accept_request);
-        cancelButton = (ImageButton) itemView.findViewById(R.id.cancel_request);
+        acceptButton = (Button) itemView.findViewById(R.id.accept_request);
+        cancelButton = (Button) itemView.findViewById(R.id.cancel_request);
         acceptCancelButtonHolder = (LinearLayout) itemView.findViewById(R.id.accept_cancel_button_holder);
 
 
