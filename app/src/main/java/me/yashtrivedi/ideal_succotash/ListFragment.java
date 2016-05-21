@@ -119,6 +119,7 @@ public class ListFragment extends Fragment implements ClickListener{
                         .setContentTitle("Requesting Ride")
 //                        .setOngoing(true)
                         .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Cancel",null));
+
                 notificationManager.notify(13123,builder.build());
                 //notify user
                 Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
