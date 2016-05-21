@@ -86,6 +86,7 @@ public class ShowRequestFormFragment extends DialogFragment {
         editTextCarNo4 = (EditText) rootView.findViewById(R.id.edit_text_car_no4);
         numberPickerCarCapacity = (NumberPicker) rootView.findViewById(R.id.number_picker_car_capacity);
         numberPickerCarCapacity.setMaxValue(7);
+        numberPickerCarCapacity.setMinValue(1);
         editTextCarNo1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
