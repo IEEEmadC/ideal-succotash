@@ -90,7 +90,7 @@ public class ListFragment extends Fragment implements ClickListener{
             }
         });
         DefaultItemAnimator animator = new DefaultItemAnimator();
-        animator.setAddDuration(1000);
+        animator.setAddDuration(500);
         animator.setRemoveDuration(1000);
         recyclerView.setItemAnimator(animator);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
