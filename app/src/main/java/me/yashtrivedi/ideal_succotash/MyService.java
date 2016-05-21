@@ -32,7 +32,7 @@ public class MyService extends Service {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Ride Request")
-                        .setSubText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you")
+                        .setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you")
 //                        .setOngoing(true)
                         .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Reject",null))
                         .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp,"Accept",null));
