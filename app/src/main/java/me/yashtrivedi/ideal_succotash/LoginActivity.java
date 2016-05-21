@@ -267,10 +267,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(mEncodedEmail);
 
         HashMap<String, Object> userAndUidMap = new HashMap<>();
-        HashMap<String, Object> timestampJoined = new HashMap<>();
-        timestampJoined.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
 
-        User newUser = new User(userName, mEncodedEmail, timestampJoined);
+        User newUser = new User(userName, mEncodedEmail, ServerValue.TIMESTAMP);
         HashMap<String, Object> newUserMap = (HashMap<String, Object>)
                 new ObjectMapper().convertValue(newUser, Map.class);
         userAndUidMap.put("/" + Constants.FIREBASE_LOCATION_USERS + "/" + mEncodedEmail,
