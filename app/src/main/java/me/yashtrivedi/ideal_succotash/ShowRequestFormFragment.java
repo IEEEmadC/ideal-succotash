@@ -1,19 +1,15 @@
 package me.yashtrivedi.ideal_succotash;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,10 +18,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -237,7 +230,8 @@ public class ShowRequestFormFragment extends DialogFragment {
             //    rideData.put("carCapacity", Integer.parseInt(numberPickerCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
             firebase.updateChildren(parentData);
-            getContext().startService(new Intent(getContext(),MyService.class));
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.KEY_OFFERED,true).apply();
+            getContext().startService(new Intent(getContext(),OfferService.class));
         }
     }
 }

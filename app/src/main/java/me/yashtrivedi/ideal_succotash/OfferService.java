@@ -14,29 +14,47 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
-public class MyService extends Service {
-    public MyService() {
+import java.util.ArrayList;
+import java.util.List;
+
+public class OfferService extends Service {
+    List<RideRequest> rides;
+
+    public OfferService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Firebase rideReqs = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL,"")));
+        rides = new ArrayList<>();
+        final Firebase rideReqs = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
         rideReqs.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 RideRequest request = dataSnapshot.getValue(RideRequest.class);
                 request.setEmail(dataSnapshot.getKey());
+                rides.add(0, request);
                 NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 PendingIntent pendingIntent;
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Ride Request")
-                        .setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you")
-//                        .setOngoing(true)
-                        .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Reject",null))
-                        .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp,"Accept",null));
-                notificationManager.notify(12345,builder.build());
+                        .setContentTitle("Ride Request");
+                if (rides.size() == 1) {
+                    builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you")
+                            .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", null))
+                            .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", null));
+                } else {
+                    String text = "";
+                    for (RideRequest rideRequest : rides) {
+                        if(text.equals(""))
+                            text += rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                        else
+                            text += "\n"+rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                    }
+                    builder.setContentText(rides.size() + " Requests")
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
+                }
+                notificationManager.notify(12345, builder.build());
             }
 
             @Override

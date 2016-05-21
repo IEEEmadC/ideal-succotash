@@ -21,7 +21,11 @@
         <activity android:name=".MainActivity" />
 
         <service
-            android:name=".MyService"
+            android:name=".OfferService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".RequestService"
             android:enabled="true"
             android:exported="false"></service>
     </application>

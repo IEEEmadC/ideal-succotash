@@ -1,5 +1,7 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +17,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction().add(R.id.container,new ListFragment()).commit();
+        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.KEY_OFFERED,false)){
+            startService(new Intent(this,OfferService.class));
+//            fm.beginTransaction().add(R.id.container,new Fragment()).commit();
+        }else
+            fm.beginTransaction().add(R.id.container,new ListFragment()).commit();
 
     }
 

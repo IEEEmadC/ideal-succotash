@@ -22,6 +22,7 @@ public class Constants {
     static final String KEY_PROVIDER = "provider";
     static final String KEY_ENCODED_EMAIL = "encemail";
     static final String KEY_NAME = "profile_name";
+    static final String KEY_OFFERED = "ride_offered";
 
     static final String PROVIDER_DATA_DISPLAY_NAME = "disp_name";
 
