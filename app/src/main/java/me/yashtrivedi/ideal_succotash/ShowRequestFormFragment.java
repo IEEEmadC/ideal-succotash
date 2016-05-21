@@ -22,6 +22,8 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -226,18 +228,16 @@ public class ShowRequestFormFragment extends DialogFragment {
             Map<String, Object> parentData = new HashMap<>();
             Map<String, Object> rideData = new HashMap<>();
 
-            rideData.put("userName", userName);
-            rideData.put("toNirma", checkBoxToFromNirma.isChecked());
-            rideData.put("carNo", carNo);
-            rideData.put("area", editTextArea.getText().toString());
-            rideData.put("carCapacity",numberPickerCarCapacity.getValue());
+            rideData.put(Constants.USER_NAME, userName);
+            rideData.put(Constants.TO_NIRMA, checkBoxToFromNirma.isChecked());
+            rideData.put(Constants.CAR_NO, carNo);
+            rideData.put(Constants.AREA, editTextArea.getText().toString());
+            rideData.put(Constants.CAR_CAPACITY,numberPickerCarCapacity.getValue());
 
             //    rideData.put("carCapacity", Integer.parseInt(numberPickerCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
-
-
             firebase.updateChildren(parentData);
-
+            getContext().startService(new Intent(getContext(),MyService.class));
         }
     }
 }

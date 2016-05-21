@@ -31,4 +31,11 @@ public class Constants {
     static final int RIDE_REQUEST_REJECTED = -1;
     static final int RIDE_REQUEST_ACCEPTED = 1;
 
+    static final String USER_NAME="userName";
+    static final String TO_NIRMA = "toNirma";
+    static final String CAR_NO = "carNo";
+    static final String CAR_CAPACITY = "carCapacity";
+    static final String AREA = "area";
+    static final String REQUEST_STATUS = "status";
+
 }

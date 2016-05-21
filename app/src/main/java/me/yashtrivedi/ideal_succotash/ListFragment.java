@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ListFragment extends Fragment implements ClickListener{
     // TODO: Rename parameter arguments, choose names that match
@@ -115,16 +116,17 @@ public class ListFragment extends Fragment implements ClickListener{
                 PendingIntent pendingIntent;
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setTicker("Requesting Ride")
-                        .setOngoing(true)
+                        .setContentTitle("Requesting Ride")
+//                        .setOngoing(true)
                         .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Cancel",null));
                 notificationManager.notify(13123,builder.build());
                 //notify user
                 Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
-
+                Map<String,Object> map = new HashMap<String, Object>();
                 Map<String,Object> current = new HashMap<String, Object>();
-                current.put(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""),Constants.RIDE_REQUEST_WAITING);
-
+                current.put(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""),map);
+                map.put(Constants.USER_NAME,PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME,""));
+                map.put(Constants.REQUEST_STATUS,Constants.RIDE_REQUEST_WAITING);
                 firebase.updateChildren(current);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {

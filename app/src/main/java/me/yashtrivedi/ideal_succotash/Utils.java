@@ -10,10 +10,10 @@ public class Utils {
     }
 
     static String emailToroll(String email){
-        return email.split("@")[0];
+        return email.split("@")[0].toUpperCase();
     }
 
     static String rollToEmail(String roll){
-        return roll.concat("@nirmauni,ac,in");
+        return roll.concat("@nirmauni,ac,in").toLowerCase();
     }
 }
