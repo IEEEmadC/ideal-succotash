@@ -14,6 +14,6 @@ public class Utils {
     }
 
     static String rollToEmail(String roll){
-        return roll.concat("nirmauni,ac,in");
+        return roll.concat("@nirmauni,ac,in");
     }
 }
