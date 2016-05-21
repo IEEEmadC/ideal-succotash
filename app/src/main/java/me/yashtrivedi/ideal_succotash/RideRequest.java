@@ -4,6 +4,7 @@ package me.yashtrivedi.ideal_succotash;
  * Created by yashtrivedi on 21/05/16.
  */
 public class RideRequest {
+
     String userName, email;
     int status;
 
@@ -22,4 +23,5 @@ public class RideRequest {
     public int getStatus() {
         return status;
     }
+
 }

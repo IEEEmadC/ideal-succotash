@@ -18,7 +18,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FragmentManager fm = getSupportFragmentManager();
         if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.KEY_OFFERED,false)){
-            startService(new Intent(this,OfferService.class));
+
+
             fm.beginTransaction().add(R.id.container,new OfferedRideFragment()).commit();
         }else
             fm.beginTransaction().add(R.id.container,new ListFragment()).commit();

@@ -232,6 +232,7 @@ public class ShowRequestFormFragment extends DialogFragment {
             firebase.updateChildren(parentData);
             PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.KEY_OFFERED,true).apply();
             getContext().startService(new Intent(getContext(),OfferService.class));
+            getFragmentManager().beginTransaction().replace(R.id.container,new OfferedRideFragment()).commit();
         }
     }
 }

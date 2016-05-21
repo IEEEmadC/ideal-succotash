@@ -57,6 +57,7 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
 
     @Override
     public int getItemCount() {
+        Log.d("size",list.size()+"");
         return list.size();
     }
 }
