@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     LayoutInflater infater;
-    List<ListUser> list = Collections.emptyList();
+    List<ListUser> list = new ArrayList<>();
 
     public RViewAdapter(Context context) {
         infater = LayoutInflater.from(context);
@@ -26,9 +27,16 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     public void setList(List<ListUser> list) {
         this.list = list;
         notifyDataSetChanged();
-        for(ListUser l : list){
-            Log.d("value", l.getName());
-        }
+    }
+
+    public void removeItem(int lu){
+        list.remove(lu);
+        notifyItemRemoved(lu);
+    }
+
+    public void addItem(ListUser lu){
+        list.add(0,lu);
+        notifyItemInserted(0);
     }
 
     @Override

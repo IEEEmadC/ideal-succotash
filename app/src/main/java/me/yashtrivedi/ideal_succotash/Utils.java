@@ -8,4 +8,12 @@ public class Utils {
     static String encodeEmail(String unencodedEmail){
         return unencodedEmail.replace(".",",");
     }
+
+    static String emailToroll(String email){
+        return email.split("@")[0];
+    }
+
+    static String rollToEmail(String roll){
+        return roll.concat("nirmauni,ac,in");
+    }
 }

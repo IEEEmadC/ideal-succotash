@@ -14,6 +14,10 @@ public class ListUser {
 
     }
 
+    public boolean equals(ListUser user){
+        return (this.roll.equals(user.getRoll()));
+    }
+
     public String getCapacity() {
         return carCapacity;
     }
@@ -27,7 +31,7 @@ public class ListUser {
     }
 
     public void setRoll(String roll) {
-        this.roll = roll.split("@")[0];
+        this.roll = roll;
     }
 
     public String getName() {

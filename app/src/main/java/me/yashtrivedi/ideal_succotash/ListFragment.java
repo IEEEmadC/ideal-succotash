@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,7 +27,9 @@ import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListFragment extends Fragment implements ClickListener{
     // TODO: Rename parameter arguments, choose names that match
@@ -46,15 +49,16 @@ public class ListFragment extends Fragment implements ClickListener{
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
+
         final RViewAdapter adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("value",dataSnapshot.getValue().toString());
-                list.add(0,dataSnapshot.getValue(ListUser.class));
-                list.get(0).setRoll(dataSnapshot.getKey().split("@")[0]);
-                adapter.setList(list);
+                ListUser lu = dataSnapshot.getValue(ListUser.class);
+                lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
+                list.add(0,lu);
+                adapter.addItem(lu);
             }
 
             @Override
@@ -64,7 +68,15 @@ public class ListFragment extends Fragment implements ClickListener{
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                int pos = 0;
+                for(ListUser lu : list){
+                    if(lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))){
+                        list.remove(lu);
+                        adapter.removeItem(pos);
+                        break;
+                    }
+                    pos++;
+                }
             }
 
             @Override
@@ -77,8 +89,10 @@ public class ListFragment extends Fragment implements ClickListener{
 
             }
         });
-
-//        adapter.setList();
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setAddDuration(1000);
+        animator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(animator);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView,this));
@@ -90,7 +104,7 @@ public class ListFragment extends Fragment implements ClickListener{
         //Dialog code
         Log.d("value",list.get(position).getName());
         AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Are you sure?")
+                .setTitle("Are you sure to ride with "+list.get(position).getName()+"?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
