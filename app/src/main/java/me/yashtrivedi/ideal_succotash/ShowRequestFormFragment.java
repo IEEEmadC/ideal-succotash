@@ -236,12 +236,7 @@ public class ShowRequestFormFragment extends DialogFragment {
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
 
 
-            firebase.updateChildren(parentData, new Firebase.CompletionListener() {
-                @Override
-                public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-
-                }
-            });
+            firebase.updateChildren(parentData);
 
         }
     }
