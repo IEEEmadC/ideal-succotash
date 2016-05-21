@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -32,10 +33,10 @@ import java.util.Map;
  */
 public class ShowRequestFormFragment extends DialogFragment {
 
-    EditText editTextCarCapacity, editTextArea, editTextCarNo1, editTextCarNo2, editTextCarNo3, editTextCarNo4;
+    EditText  editTextArea, editTextCarNo1, editTextCarNo2, editTextCarNo3, editTextCarNo4;
     CheckBox checkBoxToFromNirma;
     Firebase firebase;
-
+    NumberPicker numberPickerCarCapacity;
     String carNo, userName;
 
     /**
@@ -83,7 +84,8 @@ public class ShowRequestFormFragment extends DialogFragment {
         editTextCarNo2 = (EditText) rootView.findViewById(R.id.edit_text_car_no2);
         editTextCarNo3 = (EditText) rootView.findViewById(R.id.edit_text_car_no3);
         editTextCarNo4 = (EditText) rootView.findViewById(R.id.edit_text_car_no4);
-        editTextCarCapacity = (EditText) rootView.findViewById(R.id.edit_text_capacity);
+        numberPickerCarCapacity = (NumberPicker) rootView.findViewById(R.id.number_picker_car_capacity);
+        numberPickerCarCapacity.setMaxValue(7);
         editTextCarNo1.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -210,7 +212,7 @@ public class ShowRequestFormFragment extends DialogFragment {
 
     public void postRequest() {
 
-        if (editTextArea.getText().length() == 0 || editTextCarCapacity.getText().length() == 0 || editTextCarNo1.getText().length() == 0 || editTextCarNo2.getText().length() == 0 || editTextCarNo3.getText().length() == 0 || editTextCarNo4.getText().length() == 0) {
+        if (editTextArea.getText().length() == 0 /*||numberPickerCarCapacity.getText().length() == 0*/ || editTextCarNo1.getText().length() == 0 || editTextCarNo2.getText().length() == 0 || editTextCarNo3.getText().length() == 0 || editTextCarNo4.getText().length() == 0) {
 
             Toast.makeText(getContext(), "Empty entries not allowed, re enter", Toast.LENGTH_SHORT).show();
 
@@ -227,7 +229,9 @@ public class ShowRequestFormFragment extends DialogFragment {
             rideData.put("toNirma", checkBoxToFromNirma.isChecked());
             rideData.put("carNo", carNo);
             rideData.put("area", editTextArea.getText().toString());
-            rideData.put("carCapacity", Integer.parseInt(editTextCarCapacity.getText().toString()));
+            rideData.put("carCapacity",numberPickerCarCapacity.getValue());
+
+            //    rideData.put("carCapacity", Integer.parseInt(numberPickerCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
 
 
