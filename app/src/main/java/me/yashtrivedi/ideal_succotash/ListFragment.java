@@ -220,4 +220,8 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
 
         }
     }
+
+    interface Callbacks{
+        void updateFab();
+    }
 }

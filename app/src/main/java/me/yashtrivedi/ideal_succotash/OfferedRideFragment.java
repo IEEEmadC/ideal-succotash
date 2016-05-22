@@ -87,4 +87,5 @@ public class OfferedRideFragment extends Fragment {
        // getContext().startService(new Intent(getContext(),OfferService.class));
         return view;
     }
+
 }
