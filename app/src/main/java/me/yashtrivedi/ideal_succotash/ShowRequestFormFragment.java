@@ -17,11 +17,12 @@ import android.widget.EditText;
  */
 public class ShowRequestFormFragment extends DialogFragment {
 
-    public static ShowRequestFormFragment newInstance(int position, String name) {
+    public static ShowRequestFormFragment newInstance(int position, String name, Boolean toNirma) {
         ShowRequestFormFragment showRequestFormFragment= new ShowRequestFormFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("position",position);
         bundle.putString("name",name);
+        bundle.putBoolean(Constants.TO_NIRMA, toNirma);
         showRequestFormFragment.setArguments(bundle);
         return showRequestFormFragment;
     }
@@ -44,6 +45,7 @@ public class ShowRequestFormFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_request_form,null);
         editTextArea = (EditText) v.findViewById(R.id.area);
+        editTextArea.setHint(getArguments().getBoolean(Constants.TO_NIRMA)?"Going to":"Coming from");
         builder.setView(v)
                 .setTitle("Are you sure to ride with "+getArguments().getString("name"))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

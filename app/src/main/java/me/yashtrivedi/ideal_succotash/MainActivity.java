@@ -73,12 +73,20 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
                 Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL,"null")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
                 firebase.removeValue(); //remove the node from ride request as the user is not willing to go
-
+                mfab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_add_white_24dp));
+               /* mfab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showRequestForm();
+                    }
+                });
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,new ListFragment()).commit();*/
             }
         });
 
     }
+
+
 }

@@ -141,7 +141,7 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     public void onClick(View view, int position) {
         //Dialog code
         if(!list.get(position).getTried()) {
-            DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName());
+            DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName(),list.get(position).getToNirma());
             dialogFragment.show(getFragmentManager(), "ShowRequestFormFragment");
             dialogFragment.setTargetFragment(this, 123);
         }
@@ -220,6 +220,7 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 }
             };
             getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
+            ((Callbacks) new MainActivity()).updateFab();
         }
     }
 
