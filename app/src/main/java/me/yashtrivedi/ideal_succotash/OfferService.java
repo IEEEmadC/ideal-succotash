@@ -31,30 +31,32 @@ public class OfferService extends Service {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 RideRequest request = dataSnapshot.getValue(RideRequest.class);
                 request.setEmail(dataSnapshot.getKey());
-                rides.add(0, request);
-                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                PendingIntent pendingIntent;
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Ride Request");
-                if (rides.size() == 1) {
-                    Boolean toNirma = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.TO_NIRMA,false);
-                    builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you" + (toNirma?"from ":"to ") + request.getArea())
-                            .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", null))
-                            .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", null));
-                } else {
-                    String text = "";
-                    for (RideRequest rideRequest : rides) {
-                        if(text.equals(""))
-                            text += rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
-                        else
-                            text += "\n"+rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                if (request.getStatus() == Constants.RIDE_REQUEST_WAITING) {
+                    rides.add(0, request);
+                    NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    PendingIntent pendingIntent;
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("Ride Request");
+                    if (rides.size() == 1) {
+                        Boolean toNirma = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.TO_NIRMA, false);
+                        builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you" + (toNirma ? "from " : "to ") + request.getArea())
+                                .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", null))
+                                .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", null));
+                    } else {
+                        String text = "";
+                        for (RideRequest rideRequest : rides) {
+                            if (text.equals(""))
+                                text += rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                            else
+                                text += "\n" + rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                        }
+                        builder.setContentText(rides.size() + " Requests")
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
                     }
-                    builder.setContentText(rides.size() + " Requests")
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
+                    notificationManager.notify(12345, builder.build());
                 }
-                notificationManager.notify(12345, builder.build());
             }
 
             @Override
