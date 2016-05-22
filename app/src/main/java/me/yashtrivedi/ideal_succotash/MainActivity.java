@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showRequestForm(View view) {
 
-        DialogFragment dialogFragment = ShowRequestFormFragment.newInstance();
-        dialogFragment.show(getSupportFragmentManager(), "ShowRequestFormFragment");
+        DialogFragment dialogFragment = ShowOfferFormFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), "ShowOfferFormFragment");
 
     }
 
