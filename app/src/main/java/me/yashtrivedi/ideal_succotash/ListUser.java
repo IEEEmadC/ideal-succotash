@@ -6,7 +6,8 @@ import java.io.File;
  * Created by yashtrivedi on 05/04/16.
  */
 public class ListUser {
-    String userName, area, roll, carNo, carCapacity;
+    String userName, area, roll, carNo;
+    int carCapacity;
     Boolean toNirma;
     //File img;
 
@@ -18,7 +19,7 @@ public class ListUser {
         return (this.roll.equals(user.getRoll()));
     }
 
-    public String getCapacity() {
+    public int getCapacity() {
         return carCapacity;
     }
 

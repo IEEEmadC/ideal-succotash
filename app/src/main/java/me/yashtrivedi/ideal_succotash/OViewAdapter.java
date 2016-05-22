@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,22 +56,22 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
     @Override
     public OViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.waiting_list_row, parent, false);
-        Log.d("hi","d");
+        //Log.d("hi","d");
         return new OViewHolder(view);
     }
+    int cap;
 
     @Override
     public void onBindViewHolder(final OViewHolder holder,final int position) {
-
         final RideRequest ru = list.get(position);
-        Log.d("name",ru.getName());
+        //Log.d("name",ru.getName());
         View.OnClickListener mOnClickListner = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(prefDefine).concat("/").concat(list.get(position).getEmail()));
                 Map<String, Object> map = new HashMap<>();
-                Log.d("here",firebase.toString());
+                //Log.d("here",firebase.toString());
                 switch (view.getId()){
                     case R.id.cancel_request:
                         map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_REJECTED);
@@ -83,6 +86,24 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
                 holder.status.setText(Utils.statusString(ru.getStatus()));
                 holder.acceptCancelButtonHolder.setVisibility(View.GONE);
                 firebase.updateChildren(map);
+                Firebase ride = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine).concat("/").concat(Constants.CAR_CAPACITY));
+
+                ride.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        cap = Integer.parseInt(dataSnapshot.getValue().toString());
+                        Map<String,Object> mapa = new HashMap<>();
+                        mapa.put(Constants.CAR_CAPACITY,cap-1);
+                        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine));
+                        firebase1.updateChildren(mapa);
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
 
             }
         };

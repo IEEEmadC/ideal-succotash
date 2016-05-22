@@ -1,13 +1,13 @@
 package me.yashtrivedi.ideal_succotash;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -28,23 +28,22 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-public class ListFragment extends Fragment implements ClickListener{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class ListFragment extends Fragment implements ClickListener, RequestService.Callbacks {
 
-    private OnFragmentInteractionListener mListener;
+    NotificationManager notificationManager;
+    RequestService requestService;
+    List<ListUser> list;
     private RecyclerView recyclerView;
+
 
     public ListFragment() {
         // Required empty public constructor
     }
-    List<ListUser> list;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,7 +51,7 @@ public class ListFragment extends Fragment implements ClickListener{
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
-
+        notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         final RViewAdapter adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
         firebase.addChildEventListener(new ChildEventListener() {
@@ -60,20 +59,29 @@ public class ListFragment extends Fragment implements ClickListener{
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ListUser lu = dataSnapshot.getValue(ListUser.class);
                 lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
-                list.add(0,lu);
+                list.add(0, lu);
                 adapter.addItem(lu);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                int pos = 0;
+                for (ListUser lu : list) {
+                    if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
+                        int capacity = dataSnapshot.getValue(ListUser.class).carCapacity;
+                        list.get(pos).carCapacity = capacity;
+                        adapter.updateCapacity(pos,capacity);
+                        break;
+                    }
+                    pos++;
+                }
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 int pos = 0;
-                for(ListUser lu : list){
-                    if(lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))){
+                for (ListUser lu : list) {
+                    if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
                         list.remove(lu);
                         adapter.removeItem(pos);
                         break;
@@ -95,51 +103,59 @@ public class ListFragment extends Fragment implements ClickListener{
         DefaultItemAnimator animator = new DefaultItemAnimator();
         animator.setAddDuration(500);
         animator.setRemoveDuration(1000);
+        animator.setChangeDuration(1000);
         recyclerView.setItemAnimator(animator);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView,this));
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, this));
         return v;
     }
 
     @Override
     public void onClick(View view, final int position) {
         //Dialog code
-        Log.d("value",list.get(position).getName());
+        Log.d("value", list.get(position).getName());
         AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Are you sure to ride with "+list.get(position).getName()+"?")
+                .setTitle("Are you sure to ride with " + list.get(position).getName() + "?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                Intent intent = new Intent(getContext(),MainActivity.class);
-                PendingIntent pendingIntent;
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext())
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Requesting Ride")
-//                        .setOngoing(true)
-                        .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp,"Cancel",null));
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                notificationManager.notify(13123,builder.build());
-                //notify user
-                Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
-                Map<String,Object> map = new HashMap<String, Object>();
-                Map<String,Object> current = new HashMap<String, Object>();
-                String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,"");
-                current.put(myEmail,map);
-                map.put(Constants.USER_NAME,PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME,""));
-                map.put(Constants.REQUEST_STATUS,Constants.RIDE_REQUEST_WAITING);
-                firebase.updateChildren(current);
-                Intent i = new Intent(getContext(),RequestService.class);
-                i.putExtra(Constants.REQUESTED_USER,Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail));
-                getContext().startService(i);
-            }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).create();
+                        //notify user
+                        Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        Map<String, Object> current = new HashMap<String, Object>();
+                        String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "");
+                        current.put(myEmail, map);
+                        map.put(Constants.USER_NAME, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME, ""));
+                        map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_WAITING);
+                        firebase.updateChildren(current);
+                        Intent i = new Intent(getContext(), RequestService.class);
+                        i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail));
+                        i.putExtra("position", position);
+                        getContext().startService(i);
+                        ServiceConnection mRequestConnection = new ServiceConnection() {
+                            @Override
+                            public void onServiceConnected(ComponentName name, IBinder service) {
+                                RequestService.LocalBinder binder = (RequestService.LocalBinder) service;
+                                requestService = binder.getServiceInstance();
+                                requestService.registerClient(ListFragment.this);
+                            }
+
+                            @Override
+                            public void onServiceDisconnected(ComponentName name) {
+
+                            }
+                        };
+
+                        getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
+                    }
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
         dialog.show();
     }
 
@@ -148,14 +164,33 @@ public class ListFragment extends Fragment implements ClickListener{
 
     }
 
-    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener{
+    @Override
+    public void update(int status, int position) {
+        if (status == Constants.RIDE_REQUEST_ACCEPTED) {
+            ListUser lu = list.get(position);
+            NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext())
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(lu.getName() + " (" + lu.getRoll() + ")")
+                    .setContentText(Utils.statusString(status) + " your request")
+                    .setSubText("Car No: " + lu.getCarNo());
+            notificationManager.notify(12123, notif.build());
+        } else if (status == Constants.RIDE_REQUEST_REJECTED) {
+            NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext())
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("")
+                    .setContentText(" your request");
+            notificationManager.notify(12123, notif.build());
+        }
+    }
+
+    class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
         private GestureDetector gestureDetector;
         private ClickListener clickListener;
 
-        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener){
-            this.clickListener=clickListener;
-            gestureDetector = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
                     return true;
@@ -170,6 +205,7 @@ public class ListFragment extends Fragment implements ClickListener{
 
             });
         }
+
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
             View child = rv.findChildViewUnder(e.getX(), e.getY());
@@ -188,10 +224,5 @@ public class ListFragment extends Fragment implements ClickListener{
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
