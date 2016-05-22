@@ -1,5 +1,6 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,19 +28,21 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListFragment extends Fragment implements ClickListener, RequestService.Callbacks, ShowRequestFormFragment.Callbacks {
+public class ListFragment extends Fragment implements ClickListener, RequestService.Callbacks{
 
     NotificationManager notificationManager;
     RequestService requestService;
     List<ListUser> list;
+    List<String> requestList;
     private RecyclerView recyclerView;
-
+    private RViewAdapter adapter;
 
     public ListFragment() {
         // Required empty public constructor
@@ -50,16 +53,38 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
+        Firebase requests = new Firebase(Constants.FIREBASE_URL_USER_REQUESTS.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,"")));
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
         notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        final RViewAdapter adapter = new RViewAdapter(getContext());
+        adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
+        requestList = new ArrayList<>();
+
+        requests.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("here",dataSnapshot.toString());
+                if(dataSnapshot.exists()){
+                    for(DataSnapshot snapshot :dataSnapshot.getChildren()){
+                        requestList.add(snapshot.getKey());
+                        Log.d("key",snapshot.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ListUser lu = dataSnapshot.getValue(ListUser.class);
                 lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
+                lu.setTried(true);
+                Log.d("contains",requestList.contains(dataSnapshot.getKey())+"");
                 list.add(0, lu);
                 adapter.addItem(lu);
             }
@@ -115,9 +140,9 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     @Override
     public void onClick(View view, final int position) {
         //Dialog code
-        Log.d("value", list.get(position).getName());
         DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName());
         dialogFragment.show(getFragmentManager(),"ShowRequestFormFragment");
+        dialogFragment.setTargetFragment(this,123);
 
     }
 
@@ -130,14 +155,14 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     public void update(int status, int position) {
         if (status == Constants.RIDE_REQUEST_ACCEPTED) {
             ListUser lu = list.get(position);
-            NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext())
+            NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity())
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(lu.getName() + " (" + lu.getRoll() + ")")
                     .setContentText(Utils.statusString(status) + " your request")
                     .setSubText("Car No: " + lu.getCarNo());
             notificationManager.notify(12123, notif.build());
         } else if (status == Constants.RIDE_REQUEST_REJECTED) {
-            NotificationCompat.Builder notif = new NotificationCompat.Builder(getContext())
+            NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity())
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("")
                     .setContentText(" your request");
@@ -146,36 +171,45 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     }
 
     @Override
-    public void update(String area, int position) {
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail("13BCE123")));
-        Map<String, Object> map = new HashMap<>();
-        Map<String, Object> current = new HashMap<>();
-        String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "");
-        current.put(myEmail, map);
-        map.put(Constants.USER_NAME, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME, ""));
-        map.put(Constants.AREA,area);
-        map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_WAITING);
-        firebase.updateChildren(current);
-        Intent i = new Intent(getContext(), RequestService.class);
-        i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail));
-        i.putExtra("position", position);
-        getContext().startService(i);
-        ServiceConnection mRequestConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                RequestService.LocalBinder binder = (RequestService.LocalBinder) service;
-                requestService = binder.getServiceInstance();
-                requestService.registerClient(ListFragment.this);
-            }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK) {
+            int position = data.getIntExtra("position",0);
+            String area = data.getStringExtra(Constants.AREA);
+            ListUser lu = list.get(position);
+            list.get(position).setTried();
+            adapter.updateTried(position);
+            Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(lu.getRoll())));
+            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> current = new HashMap<>();
+            String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "");
+            current.put(myEmail, map);
+            map.put(Constants.USER_NAME, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME, ""));
+            map.put(Constants.AREA, area);
+            map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_WAITING);
+            firebase.updateChildren(current);
+            Firebase fb = new Firebase(Constants.FIREBASE_URL_USER_REQUESTS.concat("/").concat(myEmail));
+            Map<String,Object> map1 = new HashMap<>();
+            map1.put(Utils.rollToEmail(lu.getRoll()),true);
+            fb.updateChildren(map1);
+            Intent i = new Intent(getContext(), RequestService.class);
+            i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail).concat("/"));
+            i.putExtra("position", position);
+            getContext().startService(i);
+            ServiceConnection mRequestConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    RequestService.LocalBinder binder = (RequestService.LocalBinder) service;
+                    requestService = binder.getServiceInstance();
+                    requestService.registerClient(ListFragment.this);
+                }
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-
-        getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
-
+                }
+            };
+            getContext().bindService(i,mRequestConnection,Context.BIND_AUTO_CREATE);
+        }
     }
 
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {

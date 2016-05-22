@@ -20,9 +20,13 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
         infater = LayoutInflater.from(context);
     }
 
+    public void updateTried(int position) {
+        list.get(position).setTried();
+        notifyItemChanged(position);
+    }
 
     public void updateCapacity(int position, int capacity) {
-        list.get(position).carCapacity = capacity;
+        list.get(position).setCarCapacity(capacity);
         notifyItemChanged(position);
     }
 
@@ -45,6 +49,8 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     @Override
     public void onBindViewHolder(RViewHolder holder, int position) {
         ListUser lu = list.get(position);
+        holder.itemView.setEnabled(!lu.getTried());
+        holder.itemView.setClickable(!lu.getTried());
         holder.from.setText((!lu.getToNirma()) ? "Nirma" : lu.getArea());
         holder.to.setText(lu.getToNirma() ? "Nirma" : lu.getArea());
         //holder.pic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(BitmapFactory.decodeFile(lu.getImg().getAbsolutePath()),holder.pic.getWidth()));

@@ -1,6 +1,8 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -47,8 +49,14 @@ public class ShowRequestFormFragment extends DialogFragment {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(editTextArea.getText().length() !=0 )
-                            ((Callbacks) new ListFragment()).update(editTextArea.getText().toString(),getArguments().getInt("position"));
+                        if (editTextArea.getText().length() != 0) {
+                            Intent i = new Intent();
+                            i.putExtra(Constants.AREA, editTextArea.getText().toString());
+                            i.putExtra("position", getArguments().getInt("position"));
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
+                        } else {
+                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -58,9 +66,5 @@ public class ShowRequestFormFragment extends DialogFragment {
                     }
                 });
         return builder.create();
-    }
-
-    interface Callbacks{
-        void update(String area,int position);
     }
 }

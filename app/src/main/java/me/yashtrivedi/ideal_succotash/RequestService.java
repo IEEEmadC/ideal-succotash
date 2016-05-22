@@ -71,7 +71,6 @@ public class RequestService extends Service {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 activity.update(Integer.parseInt(dataSnapshot.getValue().toString()),position);
-                stopForeground(true);
                 stopSelf();
             }
 

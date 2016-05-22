@@ -8,11 +8,30 @@ import java.io.File;
 public class ListUser {
     String userName, area, roll, carNo;
     int carCapacity;
-    Boolean toNirma;
+    Boolean toNirma, tried;
     //File img;
 
     public ListUser(){
+    }
 
+    public void setTried() {
+        this.tried = true;
+    }
+
+    public void setTried(Boolean tried) {
+        this.tried = tried;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public Boolean getTried() {
+        return tried;
+    }
+
+    public void setCarCapacity(int carCapacity) {
+        this.carCapacity = carCapacity;
     }
 
     public boolean equals(ListUser user){
