@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -367,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                 mSharedPrefEditor.putString(Constants.KEY_PROVIDER, authData.getProvider()).apply();
                 mSharedPrefEditor.putString(Constants.KEY_ENCODED_EMAIL, mEncodedEmail).apply();
-                mSharedPrefEditor.putString(Constants.KEY_NAME,acct.getDisplayName()).apply();
+                mSharedPrefEditor.putString(Constants.KEY_NAME, acct.getDisplayName()).apply();
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();

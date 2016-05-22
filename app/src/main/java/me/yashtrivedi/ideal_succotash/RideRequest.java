@@ -12,16 +12,16 @@ public class RideRequest {
         return area;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getName() {
         return userName;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getStatus() {

@@ -1,10 +1,7 @@
 package me.yashtrivedi.ideal_succotash;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -27,9 +23,10 @@ import java.util.List;
  */
 public class OfferedRideFragment extends Fragment {
 
-    private RecyclerView recyclerView;
     List<RideRequest> list;
-    public OfferedRideFragment(){
+    private RecyclerView recyclerView;
+
+    public OfferedRideFragment() {
 
     }
 
@@ -46,10 +43,10 @@ public class OfferedRideFragment extends Fragment {
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("here","x");
+                Log.d("here", "x");
                 RideRequest ru = dataSnapshot.getValue(RideRequest.class);
                 ru.setEmail(dataSnapshot.getKey());
-                list.add(0,ru);
+                list.add(0, ru);
                 adapter.addItem(ru);
 
             }
@@ -62,8 +59,8 @@ public class OfferedRideFragment extends Fragment {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 int pos = 0;
-                for(RideRequest ru : list){
-                    if(ru.getEmail().equals(dataSnapshot.getKey())){
+                for (RideRequest ru : list) {
+                    if (ru.getEmail().equals(dataSnapshot.getKey())) {
                         list.remove(ru);
                         adapter.removeItem(pos);
                         break;
@@ -84,7 +81,7 @@ public class OfferedRideFragment extends Fragment {
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
-       // getContext().startService(new Intent(getContext(),OfferService.class));
+        // getContext().startService(new Intent(getContext(),OfferService.class));
         return view;
     }
 

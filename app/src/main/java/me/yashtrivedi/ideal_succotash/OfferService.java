@@ -19,6 +19,7 @@ import java.util.List;
 
 public class OfferService extends Service {
     List<RideRequest> rides;
+
     public OfferService() {
     }
 
@@ -62,9 +63,9 @@ public class OfferService extends Service {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 RideRequest request = dataSnapshot.getValue(RideRequest.class);
-                if(request.getStatus()!=0){
-                    for(RideRequest r : rides){
-                        if(r.getEmail().equals(request.getEmail())){
+                if (request.getStatus() != 0) {
+                    for (RideRequest r : rides) {
+                        if (r.getEmail().equals(request.getEmail())) {
                             rides.remove(r);
                             break;
                         }

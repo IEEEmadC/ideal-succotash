@@ -38,10 +38,11 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     RequestService requestService;
     List<ListUser> list;
     List<String> requestList;
-    private RecyclerView recyclerView;
-    private RViewAdapter adapter;
     Firebase firebase;
     ChildEventListener childEventListener;
+    private RecyclerView recyclerView;
+    private RViewAdapter adapter;
+
     public ListFragment() {
         // Required empty public constructor
     }
@@ -78,9 +79,9 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
                 Map<String, Object> rr = lu.rideRequest;
                 if (rr != null) {
-                    for(String ss : rr.keySet())
-                        Log.d(dataSnapshot.getKey(),PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""));
-                    lu.setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,"")));
+                    for (String ss : rr.keySet())
+                        Log.d(dataSnapshot.getKey(), PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
+                    lu.setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
                 } else {
                     lu.setTried(false);
                 }
@@ -140,8 +141,8 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     @Override
     public void onClick(View view, int position) {
         //Dialog code
-        if(!list.get(position).getTried()) {
-            DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName(),list.get(position).getToNirma());
+        if (!list.get(position).getTried()) {
+            DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName(), list.get(position).getToNirma());
             dialogFragment.show(getFragmentManager(), "ShowRequestFormFragment");
             dialogFragment.setTargetFragment(this, 123);
         }
@@ -223,7 +224,6 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
 
         }
     }
-
 
 
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {

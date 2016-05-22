@@ -1,6 +1,5 @@
 package me.yashtrivedi.ideal_succotash;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,7 +8,7 @@ import java.util.Map;
 public class User {
     private String name;
     private String email;
-    private Map<String,String> timeStampJoined;
+    private Map<String, String> timeStampJoined;
 
     public User() {
     }

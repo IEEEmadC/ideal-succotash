@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class ShowOfferFormFragment extends DialogFragment {
 
-    EditText  editTextArea, editTextCarNo1, editTextCarNo2, editTextCarNo3, editTextCarNo4;
+    EditText editTextArea, editTextCarNo1, editTextCarNo2, editTextCarNo3, editTextCarNo4;
     CheckBox checkBoxToFromNirma;
     Firebase firebase;
     NumberPicker numberPickerCarCapacity;
@@ -160,8 +160,7 @@ public class ShowOfferFormFragment extends DialogFragment {
 
                 if (editable.length() == 0) {
                     editTextCarNo3.requestFocus();
-                }
-                else if(editable.length()==4){
+                } else if (editable.length() == 4) {
                     editTextArea.requestFocus();
                 }
             }
@@ -208,10 +207,6 @@ public class ShowOfferFormFragment extends DialogFragment {
         return builder.create();
     }
 
-    interface Callbacks {
-        void updateFab();
-    }
-
     public void postRequest() {
 
         if (editTextArea.getText().length() == 0 /*||numberPickerCarCapacity.getText().length() == 0*/ || editTextCarNo1.getText().length() == 0 || editTextCarNo2.getText().length() == 0 || editTextCarNo3.getText().length() == 0 || editTextCarNo4.getText().length() == 0) {
@@ -231,19 +226,23 @@ public class ShowOfferFormFragment extends DialogFragment {
             rideData.put(Constants.TO_NIRMA, checkBoxToFromNirma.isChecked());
             rideData.put(Constants.CAR_NO, carNo);
             rideData.put(Constants.AREA, editTextArea.getText().toString());
-            rideData.put(Constants.CAR_CAPACITY,numberPickerCarCapacity.getValue());
+            rideData.put(Constants.CAR_CAPACITY, numberPickerCarCapacity.getValue());
 
             //    rideData.put("carCapacity", Integer.parseInt(numberPickerCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
             firebase.updateChildren(parentData);
             SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-            prefs.putBoolean(Constants.KEY_OFFERED,true).apply();
-            prefs.putBoolean(Constants.TO_NIRMA,checkBoxToFromNirma.isChecked()).apply();
+            prefs.putBoolean(Constants.KEY_OFFERED, true).apply();
+            prefs.putBoolean(Constants.TO_NIRMA, checkBoxToFromNirma.isChecked()).apply();
 
-            getContext().startService(new Intent(getContext(),OfferService.class));
-            getFragmentManager().beginTransaction().replace(R.id.container,new OfferedRideFragment()).commit();
+            getContext().startService(new Intent(getContext(), OfferService.class));
+            getFragmentManager().beginTransaction().replace(R.id.container, new OfferedRideFragment()).commit();
         }
 
+    }
+
+    interface Callbacks {
+        void updateFab();
     }
 }
 

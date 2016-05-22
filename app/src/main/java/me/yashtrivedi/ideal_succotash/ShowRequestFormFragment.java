@@ -2,10 +2,10 @@ package me.yashtrivedi.ideal_succotash;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
-import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +17,13 @@ import android.widget.EditText;
  */
 public class ShowRequestFormFragment extends DialogFragment {
 
+    EditText editTextArea;
+
     public static ShowRequestFormFragment newInstance(int position, String name, Boolean toNirma) {
-        ShowRequestFormFragment showRequestFormFragment= new ShowRequestFormFragment();
+        ShowRequestFormFragment showRequestFormFragment = new ShowRequestFormFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("position",position);
-        bundle.putString("name",name);
+        bundle.putInt("position", position);
+        bundle.putString("name", name);
         bundle.putBoolean(Constants.TO_NIRMA, toNirma);
         showRequestFormFragment.setArguments(bundle);
         return showRequestFormFragment;
@@ -38,16 +40,15 @@ public class ShowRequestFormFragment extends DialogFragment {
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
-    EditText editTextArea;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.CustomTheme_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_Dialog);
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.dialog_request_form,null);
+        View v = inflater.inflate(R.layout.dialog_request_form, null);
         editTextArea = (EditText) v.findViewById(R.id.area);
-        editTextArea.setHint(getArguments().getBoolean(Constants.TO_NIRMA)?"Going to":"Coming from");
+        editTextArea.setHint(getArguments().getBoolean(Constants.TO_NIRMA) ? "Going to" : "Coming from");
         builder.setView(v)
-                .setTitle("Are you sure to ride with "+getArguments().getString("name"))
+                .setTitle("Are you sure to ride with " + getArguments().getString("name"))
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

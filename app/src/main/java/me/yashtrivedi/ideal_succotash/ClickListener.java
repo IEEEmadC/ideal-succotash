@@ -5,7 +5,8 @@ import android.view.View;
 /**
  * Created by yashtrivedi on 20/05/16.
  */
-interface ClickListener{
+interface ClickListener {
     void onClick(View view, int position);
+
     void onLongClick(View view, int position);
 }

@@ -3,13 +3,10 @@ package me.yashtrivedi.ideal_succotash;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.DrawableRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +16,12 @@ import com.firebase.client.Firebase;
 public class MainActivity extends AppCompatActivity implements ShowOfferFormFragment.Callbacks {
 
     private FloatingActionButton mfab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mfab = (FloatingActionButton)findViewById(R.id.fab);
+        mfab = (FloatingActionButton) findViewById(R.id.fab);
 
         FragmentManager fm = getSupportFragmentManager();
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.KEY_OFFERED, false)) {
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements ShowOfferFormFrag
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL,"null")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
+                Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
                 firebase.removeValue(); //remove the node from ride request as the user is not willing to go
                 mfab.setImageResource(R.drawable.ic_add_white_24dp);
                /* mfab.setOnClickListener(new View.OnClickListener() {

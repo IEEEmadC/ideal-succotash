@@ -1,8 +1,5 @@
 package me.yashtrivedi.ideal_succotash;
 
-import com.firebase.client.DataSnapshot;
-
-import java.io.File;
 import java.util.Map;
 
 /**
@@ -12,33 +9,29 @@ public class ListUser {
     String userName, area, roll, carNo;
     int carCapacity;
     Boolean toNirma, tried;
-    Map<String,Object> rideRequest;
+    Map<String, Object> rideRequest;
     //File img;
 
-    public ListUser(){
+    public ListUser() {
     }
 
     public void setTried() {
         this.tried = true;
     }
 
-    public void setTried(Boolean tried) {
-        this.tried = tried;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public Boolean getTried() {
         return tried;
+    }
+
+    public void setTried(Boolean tried) {
+        this.tried = tried;
     }
 
     public void setCarCapacity(int carCapacity) {
         this.carCapacity = carCapacity;
     }
 
-    public boolean equals(ListUser user){
+    public boolean equals(ListUser user) {
         return (this.roll.equals(user.getRoll()));
     }
 
@@ -68,6 +61,10 @@ public class ListUser {
 
     public String getArea() {
         return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getCarNo() {
