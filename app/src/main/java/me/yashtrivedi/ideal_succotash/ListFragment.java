@@ -220,13 +220,11 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 }
             };
             getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
-            ((Callbacks) new MainActivity()).updateFab();
+
         }
     }
 
-    interface Callbacks {
-        void updateFab();
-    }
+
 
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 

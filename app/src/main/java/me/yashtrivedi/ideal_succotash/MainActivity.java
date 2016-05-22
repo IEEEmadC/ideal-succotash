@@ -16,7 +16,7 @@ import android.view.View;
 
 import com.firebase.client.Firebase;
 
-public class MainActivity extends AppCompatActivity implements ListFragment.Callbacks {
+public class MainActivity extends AppCompatActivity implements ShowOfferFormFragment.Callbacks {
 
     private FloatingActionButton mfab;
     @Override
@@ -68,14 +68,14 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
 
     @Override
     public void updateFab() {
-        mfab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_close_white_24dp));
+        mfab.setImageResource(R.drawable.ic_add_white_24dp);
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL,"null")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
                 firebase.removeValue(); //remove the node from ride request as the user is not willing to go
-                mfab.setImageDrawable(ContextCompat.getDrawable(getBaseContext(), R.drawable.ic_add_white_24dp));
+                mfab.setImageResource(R.drawable.ic_add_white_24dp);
                /* mfab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

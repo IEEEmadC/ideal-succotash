@@ -194,6 +194,7 @@ public class ShowOfferFormFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         postRequest();
+                        ((Callbacks) new MainActivity()).updateFab();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -205,6 +206,10 @@ public class ShowOfferFormFragment extends DialogFragment {
 
 
         return builder.create();
+    }
+
+    interface Callbacks {
+        void updateFab();
     }
 
     public void postRequest() {
