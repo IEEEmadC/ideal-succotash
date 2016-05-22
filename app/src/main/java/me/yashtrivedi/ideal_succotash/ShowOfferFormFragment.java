@@ -238,6 +238,7 @@ public class ShowOfferFormFragment extends DialogFragment {
             getContext().startService(new Intent(getContext(),OfferService.class));
             getFragmentManager().beginTransaction().replace(R.id.container,new OfferedRideFragment()).commit();
         }
+
     }
 }
 
