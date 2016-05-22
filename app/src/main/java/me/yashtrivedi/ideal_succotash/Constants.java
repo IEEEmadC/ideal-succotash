@@ -38,5 +38,6 @@ public class Constants {
     static final String CAR_CAPACITY = "carCapacity";
     static final String AREA = "area";
     static final String REQUEST_STATUS = "status";
+    static final String REQUESTED_USER = "reqUser";
 
 }

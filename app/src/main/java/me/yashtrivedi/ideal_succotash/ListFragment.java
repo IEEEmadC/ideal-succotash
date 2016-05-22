@@ -125,10 +125,14 @@ public class ListFragment extends Fragment implements ClickListener{
                 Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
                 Map<String,Object> map = new HashMap<String, Object>();
                 Map<String,Object> current = new HashMap<String, Object>();
-                current.put(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,""),map);
+                String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL,"");
+                current.put(myEmail,map);
                 map.put(Constants.USER_NAME,PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME,""));
                 map.put(Constants.REQUEST_STATUS,Constants.RIDE_REQUEST_WAITING);
                 firebase.updateChildren(current);
+                Intent i = new Intent(getContext(),RequestService.class);
+                i.putExtra(Constants.REQUESTED_USER,Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail));
+                getContext().startService(i);
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override

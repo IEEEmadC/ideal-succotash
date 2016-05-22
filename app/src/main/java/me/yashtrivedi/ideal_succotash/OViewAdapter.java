@@ -35,12 +35,6 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
         this.prefDefine = prefDefine;
         Log.d("hi","a");
     }
-
-    public OViewAdapter(Context context){
-        layoutInflater = LayoutInflater.from(context);
-        this.context = context;
-        Log.d("hi","a");
-    }
     public void setList(List<RideRequest> list){
         this.list = list;
         notifyDataSetChanged();
@@ -64,11 +58,11 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(OViewHolder holder,int position) {
+    public void onBindViewHolder(final OViewHolder holder,final int position) {
 
         final RideRequest ru = list.get(position);
         Log.d("name",ru.getName());
-        /*View.OnClickListener mOnClickListner = new View.OnClickListener() {
+        View.OnClickListener mOnClickListner = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -78,35 +72,36 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
                 switch (view.getId()){
                     case R.id.cancel_request:
                         map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_REJECTED);
+                        ru.status=Constants.RIDE_REQUEST_REJECTED;
                         break;
                     case R.id.accept_request:
                         map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_ACCEPTED);
+                        ru.status=Constants.RIDE_REQUEST_ACCEPTED;
                         break;
                 }
                 holder.status.setVisibility(View.VISIBLE);
-                holder.status.setText(ru.getStatus()+"");
+                holder.status.setText(Utils.statusString(ru.getStatus()));
                 holder.acceptCancelButtonHolder.setVisibility(View.GONE);
                 firebase.updateChildren(map);
 
             }
-        };*/
+        };
         Boolean stat = ru.getStatus()==0;
         holder.name.setText(ru.getName() + "\n(" + Utils.emailToroll(ru.getEmail()) + ")");
         Log.d("here",ru.getStatus()+"");
         holder.acceptCancelButtonHolder.setVisibility(!stat ? View.GONE : View.VISIBLE);
         holder.status.setVisibility(stat?View.GONE:View.VISIBLE);
         if(ru.getStatus()!=0) {
-
-            holder.status.setText(ru.getStatus()+"");
+            holder.status.setText(Utils.statusString(ru.getStatus()));
         }else {
-//            holder.acceptButton.setOnClickListener(mOnClickListner);
-//            holder.cancelButton.setOnClickListener(mOnClickListner);
+            holder.acceptButton.setOnClickListener(mOnClickListner);
+            holder.cancelButton.setOnClickListener(mOnClickListner);
         }
     }
 
     @Override
     public int getItemCount() {
-        Log.d("size",list.size()+"");
+//        Log.d("size",list.size()+"");
         return list.size();
     }
 }

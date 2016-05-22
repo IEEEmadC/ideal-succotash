@@ -16,4 +16,13 @@ public class Utils {
     static String rollToEmail(String roll){
         return roll.concat("@nirmauni,ac,in").toLowerCase();
     }
+
+    static String statusString(int status){
+        switch (status){
+            case Constants.RIDE_REQUEST_ACCEPTED : return "Accepted";
+            case Constants.RIDE_REQUEST_REJECTED: return "Rejected";
+            case Constants.RIDE_REQUEST_WAITING: return "Waiting";
+        }
+        return "";
+    }
 }
