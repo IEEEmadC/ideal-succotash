@@ -231,7 +231,10 @@ public class ShowOfferFormFragment extends DialogFragment {
             //    rideData.put("carCapacity", Integer.parseInt(numberPickerCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);
             firebase.updateChildren(parentData);
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.KEY_OFFERED,true).apply();
+            SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+            prefs.putBoolean(Constants.KEY_OFFERED,true).apply();
+            prefs.putBoolean(Constants.TO_NIRMA,checkBoxToFromNirma.isChecked()).apply();
+
             getContext().startService(new Intent(getContext(),OfferService.class));
             getFragmentManager().beginTransaction().replace(R.id.container,new OfferedRideFragment()).commit();
         }

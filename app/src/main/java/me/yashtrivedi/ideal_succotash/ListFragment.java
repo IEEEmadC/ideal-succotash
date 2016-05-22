@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListFragment extends Fragment implements ClickListener, RequestService.Callbacks {
+public class ListFragment extends Fragment implements ClickListener, RequestService.Callbacks, ShowRequestFormFragment.Callbacks {
 
     NotificationManager notificationManager;
     RequestService requestService;
@@ -115,48 +116,9 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     public void onClick(View view, final int position) {
         //Dialog code
         Log.d("value", list.get(position).getName());
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
-                .setTitle("Are you sure to ride with " + list.get(position).getName() + "?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName());
+        dialogFragment.show(getFragmentManager(),"ShowRequestFormFragment");
 
-                        //notify user
-                        Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail(list.get(position).getRoll())));
-                        Map<String, Object> map = new HashMap<String, Object>();
-                        Map<String, Object> current = new HashMap<String, Object>();
-                        String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "");
-                        current.put(myEmail, map);
-                        map.put(Constants.USER_NAME, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME, ""));
-                        map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_WAITING);
-                        firebase.updateChildren(current);
-                        Intent i = new Intent(getContext(), RequestService.class);
-                        i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail));
-                        i.putExtra("position", position);
-                        getContext().startService(i);
-                        ServiceConnection mRequestConnection = new ServiceConnection() {
-                            @Override
-                            public void onServiceConnected(ComponentName name, IBinder service) {
-                                RequestService.LocalBinder binder = (RequestService.LocalBinder) service;
-                                requestService = binder.getServiceInstance();
-                                requestService.registerClient(ListFragment.this);
-                            }
-
-                            @Override
-                            public void onServiceDisconnected(ComponentName name) {
-
-                            }
-                        };
-
-                        getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
-                    }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        dialog.show();
     }
 
     @Override
@@ -181,6 +143,39 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                     .setContentText(" your request");
             notificationManager.notify(12123, notif.build());
         }
+    }
+
+    @Override
+    public void update(String area, int position) {
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(Utils.rollToEmail("13BCE123")));
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> current = new HashMap<>();
+        String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "");
+        current.put(myEmail, map);
+        map.put(Constants.USER_NAME, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_NAME, ""));
+        map.put(Constants.AREA,area);
+        map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_WAITING);
+        firebase.updateChildren(current);
+        Intent i = new Intent(getContext(), RequestService.class);
+        i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(myEmail));
+        i.putExtra("position", position);
+        getContext().startService(i);
+        ServiceConnection mRequestConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                RequestService.LocalBinder binder = (RequestService.LocalBinder) service;
+                requestService = binder.getServiceInstance();
+                requestService.registerClient(ListFragment.this);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+
+        getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {

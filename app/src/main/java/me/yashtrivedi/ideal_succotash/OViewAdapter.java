@@ -108,6 +108,7 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
             }
         };
         Boolean stat = ru.getStatus()==0;
+        holder.area.setText(ru.getArea());
         holder.name.setText(ru.getName() + "\n(" + Utils.emailToroll(ru.getEmail()) + ")");
         Log.d("here",ru.getStatus()+"");
         holder.acceptCancelButtonHolder.setVisibility(!stat ? View.GONE : View.VISIBLE);

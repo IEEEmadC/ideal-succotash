@@ -40,7 +40,8 @@ public class OfferService extends Service {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Ride Request");
                 if (rides.size() == 1) {
-                    builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you")
+                    Boolean toNirma = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.TO_NIRMA,false);
+                    builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you" + (toNirma?"from ":"to ") + request.getArea())
                             .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", null))
                             .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", null));
                 } else {

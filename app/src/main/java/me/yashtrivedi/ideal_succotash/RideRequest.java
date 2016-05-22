@@ -5,8 +5,12 @@ package me.yashtrivedi.ideal_succotash;
  */
 public class RideRequest {
 
-    String userName, email;
+    String userName, email, area;
     int status;
+
+    public String getArea() {
+        return area;
+    }
 
     public void setEmail(String email) {
         this.email = email;

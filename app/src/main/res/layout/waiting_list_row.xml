@@ -34,6 +34,12 @@
                 android:layout_margin="2dp"
                 android:text="Name" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/area"
+                android:drawableLeft="@drawable/ic_my_location_black_18dp"/>
+
 
         </LinearLayout>
 

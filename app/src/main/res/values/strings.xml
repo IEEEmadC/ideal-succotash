@@ -17,4 +17,7 @@
     <string name="to_location">To :</string>
     <string name="going_nirma_text">Going Nirma</string>
     <string name="going_home_text">Going Home</string>
+    <string name="dash">-</string>
+    <string name="capacity">Enter the no. of persons you want to take with you:</string>
+    <string name="area">Enter the going to Area</string>
 </resources>
