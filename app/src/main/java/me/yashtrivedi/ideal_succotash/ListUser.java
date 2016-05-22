@@ -1,6 +1,9 @@
 package me.yashtrivedi.ideal_succotash;
 
+import com.firebase.client.DataSnapshot;
+
 import java.io.File;
+import java.util.Map;
 
 /**
  * Created by yashtrivedi on 05/04/16.
@@ -9,6 +12,7 @@ public class ListUser {
     String userName, area, roll, carNo;
     int carCapacity;
     Boolean toNirma, tried;
+    Map<String,Object> rideRequest;
     //File img;
 
     public ListUser(){

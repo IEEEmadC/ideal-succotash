@@ -51,7 +51,7 @@ public class RequestService extends Service {
         startForeground(13123,builder.build());
         Bundle b = intent.getExtras();
         position = b.getInt("position");
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(b.getString(Constants.REQUESTED_USER,"")));
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER,"")));
         Log.d("firebase", firebase.toString());
         firebase.addChildEventListener(new ChildEventListener() {
 
@@ -70,7 +70,7 @@ public class RequestService extends Service {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                activity.update(Integer.parseInt(dataSnapshot.getValue().toString()),position);
+                activity.remove(position);
                 stopSelf();
             }
 
@@ -95,5 +95,6 @@ public class RequestService extends Service {
 
     interface Callbacks{
         void update(int status, int position);
+        void remove(int position);
     }
 }

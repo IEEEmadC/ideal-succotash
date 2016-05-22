@@ -19,14 +19,13 @@ import java.util.List;
 
 public class OfferService extends Service {
     List<RideRequest> rides;
-
     public OfferService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         rides = new ArrayList<>();
-        final Firebase rideReqs = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
+        final Firebase rideReqs = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, "")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
         rideReqs.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -60,7 +59,15 @@ public class OfferService extends Service {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                RideRequest request = dataSnapshot.getValue(RideRequest.class);
+                if(request.getStatus()!=0){
+                    for(RideRequest r : rides){
+                        if(r.getEmail().equals(request.getEmail())){
+                            rides.remove(r);
+                            break;
+                        }
+                    }
+                }
             }
 
             @Override

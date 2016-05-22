@@ -15,9 +15,10 @@ import java.util.List;
 public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     LayoutInflater infater;
     List<ListUser> list = new ArrayList<>();
-
+    Context context;
     public RViewAdapter(Context context) {
         infater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     public void updateTried(int position) {
@@ -51,6 +52,11 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
         ListUser lu = list.get(position);
         holder.itemView.setEnabled(!lu.getTried());
         holder.itemView.setClickable(!lu.getTried());
+        if(lu.getTried()){
+            holder.itemView.setActivated(false);
+            holder.itemView.setAlpha(0.5f);
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.blue_grey_500));
+        }
         holder.from.setText((!lu.getToNirma()) ? "Nirma" : lu.getArea());
         holder.to.setText(lu.getToNirma() ? "Nirma" : lu.getArea());
         //holder.pic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(BitmapFactory.decodeFile(lu.getImg().getAbsolutePath()),holder.pic.getWidth()));

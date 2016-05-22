@@ -69,7 +69,7 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
             @Override
             public void onClick(View view) {
 
-                Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(prefDefine).concat("/").concat(list.get(position).getEmail()));
+                Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(list.get(position).getEmail()));
                 Map<String, Object> map = new HashMap<>();
                 //Log.d("here",firebase.toString());
                 switch (view.getId()){

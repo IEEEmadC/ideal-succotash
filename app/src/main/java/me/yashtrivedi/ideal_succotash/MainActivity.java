@@ -28,11 +28,11 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
         FragmentManager fm = getSupportFragmentManager();
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Constants.KEY_OFFERED, false)) {
 
-            fm.beginTransaction().add(R.id.container, new OfferedRideFragment()).commit();
+            fm.beginTransaction().replace(R.id.container, new OfferedRideFragment()).commit();
 
 
         } else
-            fm.beginTransaction().add(R.id.container, new ListFragment()).commit();
+            fm.beginTransaction().replace(R.id.container, new ListFragment()).commit();
 
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.Call
             public void onClick(View view) {
                 SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-                Firebase firebase = new Firebase(Constants.FIREBASE_URL_REQUEST_RIDE.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL,"null")));
+                Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL,"null")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
                 firebase.removeValue(); //remove the node from ride request as the user is not willing to go
 
             }
