@@ -138,7 +138,15 @@ public class OfferedRideFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                //change new data in list : map : key: get riderequest : keyset :
+               int pos = 0;
+                for(RideRequest ru : list){
+                    if(ru.getEmail().equals(dataSnapshot.getKey())){
+                        RideRequest rr = dataSnapshot.getValue(RideRequest.class);
+                        list.set(pos, rr);
+                    }
+                    pos++;
+                }
             }
 
             @Override
