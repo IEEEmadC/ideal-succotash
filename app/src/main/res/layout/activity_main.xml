@@ -27,6 +27,7 @@
         app:backgroundTint="@color/colorAccent"
         app:pressedTranslationZ="12dp"
         android:src="@drawable/ic_close_black_24dp" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab2"
         android:layout_width="wrap_content"
@@ -38,6 +39,7 @@
         app:backgroundTint="@color/colorCancel"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
+        android:tag="abcd"
         android:src="@drawable/ic_done_black_24dp" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

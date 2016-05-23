@@ -194,6 +194,11 @@ public class ListFragment extends Fragment implements ClickListener {
             map.put(Constants.AREA, area);
             map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_WAITING);
             firebase.updateChildren(current);
+            Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat((myEmail)));
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put(Utils.rollToEmail(lu.getRoll()),true);
+            firebase2.updateChildren(map1);
+
             Intent i = new Intent(getContext(), RequestService.class);
             i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
             i.putExtra("position", position);
@@ -215,6 +220,8 @@ public class ListFragment extends Fragment implements ClickListener {
                 }
             };
             getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);*/
+
+
 
         }
     }

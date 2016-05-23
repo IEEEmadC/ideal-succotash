@@ -28,6 +28,7 @@ public class RequestService extends Service {
     ChildEventListener listener;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        b = intent.getExtras();
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),13123,i,0);
@@ -41,7 +42,7 @@ public class RequestService extends Service {
                 .setContentIntent(pendingIntent)
                 .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Cancel", null));
         startForeground(13123, builder.build());
-        b = intent.getExtras();
+
         firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));
         Log.d("firebase", firebase.toString());
         listener = new ChildEventListener() {
