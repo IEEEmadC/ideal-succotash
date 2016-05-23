@@ -27,7 +27,8 @@ public class RequestService extends Service {
     public void registerClient(Fragment fragment) {
         activity = (Callbacks) fragment;
     }
-
+    Firebase firebase;
+    ChildEventListener listener;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -41,9 +42,9 @@ public class RequestService extends Service {
         startForeground(13123, builder.build());
         Bundle b = intent.getExtras();
         position = b.getInt("position");
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));
+        firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));
         Log.d("firebase", firebase.toString());
-        firebase.addChildEventListener(new ChildEventListener() {
+        listener = new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -55,12 +56,15 @@ public class RequestService extends Service {
                 Log.d("return", dataSnapshot.getValue().toString());
                 activity.update(Integer.parseInt(dataSnapshot.getValue().toString()), position);
                 stopForeground(true);
+                firebase.removeEventListener(listener);
                 stopSelf();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 activity.remove(position);
+                stopForeground(true);
+                firebase.removeEventListener(listener);
                 stopSelf();
             }
 
@@ -73,7 +77,8 @@ public class RequestService extends Service {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        };
+        firebase.addChildEventListener(listener);
         return super.onStartCommand(intent, flags, startId);
     }
 
