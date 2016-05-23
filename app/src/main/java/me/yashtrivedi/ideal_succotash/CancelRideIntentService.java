@@ -1,6 +1,7 @@
 package me.yashtrivedi.ideal_succotash;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.util.Log;
 
@@ -33,7 +34,8 @@ public class CancelRideIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             final String param1 = intent.getStringExtra("myEmail");
-            Log.d("intent",param1);
+            final int param3 = intent.getIntExtra("notif",13123);
+            ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(param3);
             final String param2 = intent.getStringExtra("requested");
             if (Constants.ACTION_CANCEL_RIDE.equals(action)) {
                 handleActionCancel(param1, param2);
@@ -77,7 +79,7 @@ public class CancelRideIntentService extends IntentService {
                     Log.d("Remove",s);
                     Log.d("Remove",reqEmail)
 ;                    if(!s.equals(reqEmail)){
-                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(s));
+                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(s).concat("/").concat(myEmail));
                         Log.d("remove",firebase2.toString());
                         firebase2.removeValue();
                     }

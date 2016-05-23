@@ -52,11 +52,13 @@ public class OfferService extends Service {
                         Intent aIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
                         aIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
                         aIntent.putExtra("myEmail",request.getEmail());
+                        aIntent.putExtra("notif",13123);
                         Log.d("servicemyEmail",request.getEmail());
                         aIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent aPendingIntent = PendingIntent.getService(getApplicationContext(),13123,aIntent,0);
                         Intent rIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
                         rIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
+                        rIntent.putExtra("notif",13123);
                         rIntent.putExtra("myEmail",request.getEmail());
                         rIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent rPendingIntent = PendingIntent.getService(getApplicationContext(),13123,rIntent,0);

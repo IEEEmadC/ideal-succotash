@@ -36,6 +36,7 @@ public class RequestService extends Service {
         iCancel.putExtra("myEmail",b.getString("myEmail"));
         iCancel.putExtra("requested",b.getString(Constants.KEY_ENCODED_EMAIL));
         iCancel.setAction(Constants.ACTION_CANCEL_RIDE);
+        iCancel.putExtra("notif",13123);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Requesting Ride")
