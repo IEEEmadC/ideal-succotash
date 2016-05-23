@@ -57,6 +57,11 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     @Override
     public void onBindViewHolder(RViewHolder holder, int position) {
         ListUser lu = list.get(position);
+        holder.itemView.setBackgroundColor(Color.WHITE);
+        holder.itemView.setEnabled(true);
+        holder.itemView.setClickable(true);
+        holder.itemView.setActivated(true);
+        holder.itemView.setAlpha(1.0f);
         if(lu.rideRequest!=null && lu.rideRequest.containsKey(PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_ENCODED_EMAIL,"null"))){
             holder.itemView.setEnabled(false);
             holder.itemView.setClickable(false);

@@ -24,6 +24,12 @@ public class OfferService extends Service {
     }
 
     @Override
+    public void onRebind(Intent intent) {
+        super.onRebind(intent);
+        rides = new ArrayList<>();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         rides = new ArrayList<>();
         final Firebase rideReqs = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, "")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
