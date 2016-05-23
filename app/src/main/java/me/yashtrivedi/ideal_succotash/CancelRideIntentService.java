@@ -2,7 +2,15 @@ package me.yashtrivedi.ideal_succotash;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
+import android.util.Log;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -14,12 +22,6 @@ import android.content.Context;
 public class CancelRideIntentService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "me.yashtrivedi.ideal_succotash.action.FOO";
-    private static final String ACTION_BAZ = "me.yashtrivedi.ideal_succotash.action.BAZ";
-
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "me.yashtrivedi.ideal_succotash.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "me.yashtrivedi.ideal_succotash.extra.PARAM2";
 
     public CancelRideIntentService() {
         super("CancelRideIntentService");
@@ -30,14 +32,15 @@ public class CancelRideIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+            final String param1 = intent.getStringExtra("myEmail");
+            Log.d("intent",param1);
+            final String param2 = intent.getStringExtra("requested");
+            if (Constants.ACTION_CANCEL_RIDE.equals(action)) {
+                handleActionCancel(param1, param2);
+            } else if (Constants.ACTION_ACCEPT_RIDE.equals(action)) {
+                handleActionAccept(param1, param2);
+            } else if (Constants.ACTION_REJECT_RIDE.equals(action)) {
+                handleActionReject(param1, param2);
             }
         }
     }
@@ -46,17 +49,52 @@ public class CancelRideIntentService extends IntentService {
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionFoo(String param1, String param2) {
+    private void handleActionCancel(String myEmail, String reqEmail) {
         // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(Utils.rollToEmail(reqEmail)).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
+        firebase.removeValue();
+        Log.d("Cancel",firebase.toString());
+        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(reqEmail));
+        firebase1.removeValue();
     }
 
     /**
      * Handle action Baz in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionBaz(String param1, String param2) {
+    private void handleActionAccept(final String myEmail, final String reqEmail) {
         // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(reqEmail).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
+        Map<String,Object> map = new HashMap<>();
+        Log.d("mail",myEmail);
+        map.put(Constants.REQUEST_STATUS,Constants.RIDE_REQUEST_ACCEPTED);
+        firebase.updateChildren(map);
+        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail));
+        firebase1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(String s : ((HashMap<String,Object>)dataSnapshot.getValue()).keySet()){
+                    Log.d("Remove",s);
+                    Log.d("Remove",reqEmail)
+;                    if(!s.equals(reqEmail)){
+                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(s));
+                        Log.d("remove",firebase2.toString());
+                        firebase2.removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    private void handleActionReject(String myEmail, String reqEmail) {
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(reqEmail).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
+        firebase.removeValue();
+        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(reqEmail));
+        firebase1.removeValue();
     }
 }

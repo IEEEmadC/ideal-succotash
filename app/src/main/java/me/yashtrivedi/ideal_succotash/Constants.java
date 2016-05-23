@@ -41,4 +41,8 @@ public class Constants {
     static final String REQUEST_STATUS = "status";
     static final String REQUESTED_USER = "reqUser";
 
+    static final String ACTION_CANCEL_RIDE = "cancelRide";
+    static final String ACTION_REJECT_RIDE = "rejectRide";
+    static final String ACTION_ACCEPT_RIDE = "acceptRide";
+
 }

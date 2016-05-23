@@ -33,14 +33,15 @@ public class RequestService extends Service {
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),13123,i,0);
         Intent iCancel = new Intent(getApplicationContext(),CancelRideIntentService.class);
-        iCancel.putExtra(Constants.REQUESTED_USER,Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));
-
+        iCancel.putExtra("myEmail",b.getString("myEmail"));
+        iCancel.putExtra("requested",b.getString(Constants.KEY_ENCODED_EMAIL));
+        iCancel.setAction(Constants.ACTION_CANCEL_RIDE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Requesting Ride")
 //                        .setOngoing(true)
                 .setContentIntent(pendingIntent)
-                .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Cancel", null));
+                .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Cancel", PendingIntent.getService(getApplicationContext(),13123,iCancel,0)));
         startForeground(13123, builder.build());
 
         firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));

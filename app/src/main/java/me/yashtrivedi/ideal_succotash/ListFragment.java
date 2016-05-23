@@ -198,12 +198,12 @@ public class ListFragment extends Fragment implements ClickListener {
             Map<String, Object> map1 = new HashMap<>();
             map1.put(Utils.rollToEmail(lu.getRoll()),true);
             firebase2.updateChildren(map1);
-
             Intent i = new Intent(getContext(), RequestService.class);
             i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
             i.putExtra("position", position);
             i.putExtra("name", lu.getName());
             i.putExtra(Constants.KEY_ENCODED_EMAIL, lu.getRoll());
+            i.putExtra("myEmail",myEmail);
             i.putExtra(Constants.CAR_NO, lu.getCarNo());
             getContext().startService(i);
             /*ServiceConnection mRequestConnection = new ServiceConnection() {

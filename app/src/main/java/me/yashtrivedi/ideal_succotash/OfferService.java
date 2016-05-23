@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -45,12 +46,24 @@ public class OfferService extends Service {
                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),13123,intent,0);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle("Ride Request");
+                            .setContentTitle("Ride Request")
+                            .setContentIntent(pendingIntent);
                     if (rides.size() == 1) {
+                        Intent aIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
+                        aIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
+                        aIntent.putExtra("myEmail",request.getEmail());
+                        Log.d("servicemyEmail",request.getEmail());
+                        aIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
+                        PendingIntent aPendingIntent = PendingIntent.getService(getApplicationContext(),13123,aIntent,0);
+                        Intent rIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
+                        rIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
+                        rIntent.putExtra("myEmail",request.getEmail());
+                        rIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
+                        PendingIntent rPendingIntent = PendingIntent.getService(getApplicationContext(),13123,rIntent,0);
                         Boolean toNirma = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.TO_NIRMA, false);
                         builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you" + (toNirma ? "from " : "to ") + request.getArea())
-                                .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", null))
-                                .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", null));
+                                .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", rPendingIntent))
+                                .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", aPendingIntent));
                     } else {
                         String text = "";
                         for (RideRequest rideRequest : rides) {
