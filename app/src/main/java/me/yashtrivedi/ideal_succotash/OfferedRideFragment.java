@@ -1,14 +1,20 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -39,7 +45,35 @@ public class OfferedRideFragment extends Fragment {
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
         final OViewAdapter adapter = new OViewAdapter(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
         list = new ArrayList<>();
-
+        FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        CoordinatorLayout parent = (CoordinatorLayout) getActivity().findViewById(R.id.parent);
+        mfab.animate().translationX(15 + 3*mfab.getWidth()/4 - parent.getWidth()/2).rotation(45);
+        mfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Long Tap to Cancel", Toast.LENGTH_SHORT).show();
+            }
+        });
+        /*CoordinatorLayout.LayoutParams centerParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        centerParams.anchorGravity = Gravity.CENTER_HORIZONTAL;
+        centerParams.anchorGravity = Gravity.BOTTOM;
+        centerParams.setAnchorId(centerParams.getAnchorId());
+        mfab.setLayoutParams(centerParams);*/
+        mfab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null")));
+                firebase.removeValue();
+                sharedPrefrences.edit().putBoolean(Constants.KEY_OFFERED,false).apply();
+                ListFragment listFragment = new ListFragment();
+                Bundle b = new Bundle();
+                b.putBoolean("animation",true);
+                listFragment.setArguments(b);
+                getFragmentManager().beginTransaction().replace(R.id.container, listFragment).commit();
+                return true;
+            }
+        });
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

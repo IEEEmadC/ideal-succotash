@@ -9,6 +9,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -60,17 +62,41 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
 
     }*/
 
+    public void showRequestForm() {
+        DialogFragment dialogFragment = ShowOfferFormFragment.newInstance();
+        dialogFragment.show(getFragmentManager(), "ShowOfferFormFragment");
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
+        FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        if(getArguments().getBoolean("animation",false)){
+            mfab.animate().translationX(0).rotation(0);
+        }
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
         notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
         requestList = new ArrayList<>();
+
+        mfab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRequestForm();
+            }
+        });
+        mfab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return true;
+            }
+        });
+
 
         childEventListener = new ChildEventListener() {
             @Override

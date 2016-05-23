@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -193,7 +194,6 @@ public class ShowOfferFormFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         postRequest();
-                        ((Callbacks) new MainActivity()).updateFab();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -234,15 +234,10 @@ public class ShowOfferFormFragment extends DialogFragment {
             SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
             prefs.putBoolean(Constants.KEY_OFFERED, true).apply();
             prefs.putBoolean(Constants.TO_NIRMA, checkBoxToFromNirma.isChecked()).apply();
-
             getContext().startService(new Intent(getContext(), OfferService.class));
             getFragmentManager().beginTransaction().replace(R.id.container, new OfferedRideFragment()).commit();
         }
 
-    }
-
-    interface Callbacks {
-        void updateFab();
     }
 }
 
