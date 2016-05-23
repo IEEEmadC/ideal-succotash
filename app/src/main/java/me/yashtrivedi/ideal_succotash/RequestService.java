@@ -59,14 +59,14 @@ public class RequestService extends Service {
                 if (status == Constants.RIDE_REQUEST_ACCEPTED) {
                     NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle(b.getString(Constants.REQUESTED_USER) + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
+                            .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                             .setContentText(Utils.statusString(status) + " your request")
                             .setSubText("Car No: " + b.getString(Constants.CAR_NO));
                     notificationManager.notify(12123, notif.build());
                 } else if (status == Constants.RIDE_REQUEST_REJECTED) {
                     NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle(b.getString(Constants.REQUESTED_USER) + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
+                            .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                             .setContentText(Utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request");
                     notificationManager.notify(12123, notif.build());
                 }
@@ -80,7 +80,7 @@ public class RequestService extends Service {
                 //activity.remove(position);
                 NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(b.getString(Constants.REQUESTED_USER) + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
+                        .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                         .setContentText("Cancelled the Ride");
                 notificationManager.notify(12123, notif.build());
                 stopForeground(true);

@@ -104,13 +104,6 @@ public class OfferedRideFragment extends Fragment {
         centerParams.anchorGravity = Gravity.BOTTOM;
         centerParams.setAnchorId(centerParams.getAnchorId());
         mfab.setLayoutParams(centerParams);*/
-        mfab.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("action",MotionEventCompat.getActionMasked(event)+"");
-                return false;
-            }
-        });
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
