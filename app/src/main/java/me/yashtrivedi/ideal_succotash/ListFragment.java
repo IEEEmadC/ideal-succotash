@@ -74,10 +74,11 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if(getArguments().getBoolean("animation",false)){
-            mfab.animate().translationX(0).rotation(0);
+        if(getArguments()!=null && getArguments().getBoolean("animation",false)){
+            mfab.animate().rotation(0);
         }
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
+        recyclerView.requestFocus();
         firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
         notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         adapter = new RViewAdapter(getContext());
@@ -206,8 +207,6 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 .setContentTitle(lu.getName() + " (" + lu.getRoll() + ")")
                 .setContentText("Cancelled the Ride");
         notificationManager.notify(12123, notif.build());
-        list.remove(position);
-        adapter.removeItem(position);
     }
 
     @Override
