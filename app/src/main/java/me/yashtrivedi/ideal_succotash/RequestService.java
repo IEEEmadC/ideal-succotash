@@ -1,5 +1,6 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -17,31 +18,30 @@ import com.firebase.client.FirebaseError;
 
 public class RequestService extends Service {
 
-    private final IBinder mBinder = new LocalBinder();
-    Callbacks activity;
-    int position;
+    Bundle b;
 
+    NotificationManager notificationManager;
     public RequestService() {
     }
 
-    public void registerClient(Fragment fragment) {
-        activity = (Callbacks) fragment;
-    }
     Firebase firebase;
     ChildEventListener listener;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent;
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),13123,i,0);
+        Intent iCancel = new Intent(getApplicationContext(),CancelRideIntentService.class);
+        iCancel.putExtra(Constants.REQUESTED_USER,Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Requesting Ride")
 //                        .setOngoing(true)
+                .setContentIntent(pendingIntent)
                 .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Cancel", null));
         startForeground(13123, builder.build());
-        Bundle b = intent.getExtras();
-        position = b.getInt("position");
+        b = intent.getExtras();
         firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(b.getString(Constants.REQUESTED_USER, "")));
         Log.d("firebase", firebase.toString());
         listener = new ChildEventListener() {
@@ -54,7 +54,22 @@ public class RequestService extends Service {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d("return", dataSnapshot.getValue().toString());
-                activity.update(Integer.parseInt(dataSnapshot.getValue().toString()), position);
+//                activity.update(Integer.parseInt(dataSnapshot.getValue().toString()), position);
+                int status = Integer.parseInt(dataSnapshot.getValue().toString());
+                if (status == Constants.RIDE_REQUEST_ACCEPTED) {
+                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle(b.getString(Constants.REQUESTED_USER) + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
+                            .setContentText(Utils.statusString(status) + " your request")
+                            .setSubText("Car No: " + b.getString(Constants.CAR_NO));
+                    notificationManager.notify(12123, notif.build());
+                } else if (status == Constants.RIDE_REQUEST_REJECTED) {
+                    NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle(b.getString(Constants.REQUESTED_USER) + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
+                            .setContentText(Utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request");
+                    notificationManager.notify(12123, notif.build());
+                }
                 stopForeground(true);
                 firebase.removeEventListener(listener);
                 stopSelf();
@@ -62,7 +77,12 @@ public class RequestService extends Service {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                activity.remove(position);
+                //activity.remove(position);
+                NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle(b.getString(Constants.REQUESTED_USER) + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
+                        .setContentText("Cancelled the Ride");
+                notificationManager.notify(12123, notif.build());
                 stopForeground(true);
                 firebase.removeEventListener(listener);
                 stopSelf();
@@ -85,18 +105,6 @@ public class RequestService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        return mBinder;
-    }
-
-    interface Callbacks {
-        void update(int status, int position);
-
-        void remove(int position);
-    }
-
-    public class LocalBinder extends Binder {
-        public RequestService getServiceInstance() {
-            return RequestService.this;
-        }
+        return null;
     }
 }

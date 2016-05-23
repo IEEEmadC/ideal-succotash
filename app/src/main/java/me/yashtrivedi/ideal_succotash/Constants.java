@@ -9,11 +9,13 @@ public class Constants {
     static final String FIREBASE_LOCATION_RIDES = "availableRides";
     static final String FIREBASE_LOCATION_UID_MAP = "uidMap";
     static final String FIREBASE_LOCATION_REQUEST_RIDE = "rideRequest";
+    static final String FIREBASE_LOCATION_USER_REQUEST = "userRequests";
 
     /*Firebase URL*/
     static final String FIREBASE_URL = "https://ideal-succotash.firebaseio.com";
     static final String FIREBASE_URL_USERS = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_USERS);
     static final String FIREBASE_URL_RIDES = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_RIDES);
+    static final String FIREBASE_URL_USER_REQUEST = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_USER_REQUEST);
 
     static final String FIREBASE_PROPERTY_TIMESTAMP = "timestamp";
 

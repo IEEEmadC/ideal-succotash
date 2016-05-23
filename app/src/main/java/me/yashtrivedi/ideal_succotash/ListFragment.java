@@ -2,22 +2,16 @@ package me.yashtrivedi.ideal_succotash;
 
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -34,10 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListFragment extends Fragment implements ClickListener, RequestService.Callbacks {
+public class ListFragment extends Fragment implements ClickListener {
 
     NotificationManager notificationManager;
-    RequestService requestService;
+    //    RequestService requestService;
     List<ListUser> list;
     List<String> requestList;
     Firebase firebase;
@@ -74,7 +68,7 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if(getArguments()!=null && getArguments().getBoolean("animation",false)){
+        if (getArguments() != null && getArguments().getBoolean("animation", false)) {
             mfab.animate().rotation(0);
         }
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
@@ -121,10 +115,10 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 for (ListUser lu : list) {
                     if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
                         int capacity = dataSnapshot.getValue(ListUser.class).carCapacity;
-                        Map<String,Object> rr = dataSnapshot.getValue(ListUser.class).rideRequest;
+                        Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).rideRequest;
                         list.get(pos).carCapacity = capacity;
                         list.get(pos).rideRequest = rr;
-                        adapter.updateCapacity(pos, capacity,rr);
+                        adapter.updateCapacity(pos, capacity, rr);
                         break;
                     }
                     pos++;
@@ -182,35 +176,6 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
     }
 
     @Override
-    public void update(int status, int position) {
-        ListUser lu = list.get(position);
-        if (status == Constants.RIDE_REQUEST_ACCEPTED) {
-            NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity())
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(lu.getName() + " (" + lu.getRoll() + ")")
-                    .setContentText(Utils.statusString(status) + " your request")
-                    .setSubText("Car No: " + lu.getCarNo());
-            notificationManager.notify(12123, notif.build());
-        } else if (status == Constants.RIDE_REQUEST_REJECTED) {
-            NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity())
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(lu.getName() + " (" + lu.getRoll() + ")")
-                    .setContentText(Utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request");
-            notificationManager.notify(12123, notif.build());
-        }
-    }
-
-    @Override
-    public void remove(int position) {
-        ListUser lu = list.get(position);
-        NotificationCompat.Builder notif = new NotificationCompat.Builder(getActivity())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(lu.getName() + " (" + lu.getRoll() + ")")
-                .setContentText("Cancelled the Ride");
-        notificationManager.notify(12123, notif.build());
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
@@ -232,8 +197,11 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
             Intent i = new Intent(getContext(), RequestService.class);
             i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
             i.putExtra("position", position);
+            i.putExtra(Constants.REQUESTED_USER, lu.getName());
+            i.putExtra(Constants.KEY_ENCODED_EMAIL, lu.getRoll());
+            i.putExtra(Constants.CAR_NO, lu.getCarNo());
             getContext().startService(i);
-            ServiceConnection mRequestConnection = new ServiceConnection() {
+            /*ServiceConnection mRequestConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     RequestService.LocalBinder binder = (RequestService.LocalBinder) service;
@@ -246,7 +214,7 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
 
                 }
             };
-            getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);
+            getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);*/
 
         }
     }

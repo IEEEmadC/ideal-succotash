@@ -42,7 +42,7 @@ public class OfferService extends Service {
                     rides.add(0, request);
                     NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    PendingIntent pendingIntent;
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),13123,intent,0);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Ride Request");
