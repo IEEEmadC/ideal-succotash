@@ -1,5 +1,6 @@
 package me.yashtrivedi.ideal_succotash;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -127,6 +128,7 @@ public class OfferedRideFragment extends Fragment {
                 fab1.setClickable(false);
                 fab2.setClickable(false);
                 isFabOpen = false;
+                getContext().stopService(new Intent(getContext(),OfferService.class));
                 getFragmentManager().beginTransaction().replace(R.id.container, listFragment).commit();
             }
         });

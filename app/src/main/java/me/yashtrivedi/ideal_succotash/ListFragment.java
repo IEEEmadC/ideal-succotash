@@ -106,11 +106,10 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
                 Map<String, Object> rr = lu.rideRequest;
                 if (rr != null) {
-                    for (String ss : rr.keySet())
-                        Log.d(dataSnapshot.getKey(), PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                     lu.setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
                 } else {
                     lu.setTried(false);
+                    lu.rideRequest = null;
                 }
                 list.add(0, lu);
                 adapter.addItem(lu);
@@ -122,8 +121,10 @@ public class ListFragment extends Fragment implements ClickListener, RequestServ
                 for (ListUser lu : list) {
                     if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
                         int capacity = dataSnapshot.getValue(ListUser.class).carCapacity;
+                        Map<String,Object> rr = dataSnapshot.getValue(ListUser.class).rideRequest;
                         list.get(pos).carCapacity = capacity;
-                        adapter.updateCapacity(pos, capacity);
+                        list.get(pos).rideRequest = rr;
+                        adapter.updateCapacity(pos, capacity,rr);
                         break;
                     }
                     pos++;

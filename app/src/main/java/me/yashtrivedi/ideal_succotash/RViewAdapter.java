@@ -32,8 +32,9 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
         notifyItemChanged(position);
     }
 
-    public void updateCapacity(int position, int capacity) {
+    public void updateCapacity(int position, int capacity, Map<String,Object> rideRequest) {
         list.get(position).setCarCapacity(capacity);
+        list.get(position).rideRequest = rideRequest;
         notifyItemChanged(position);
     }
 
@@ -69,6 +70,7 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
                 case Constants.RIDE_REQUEST_WAITING: holder.itemView.setBackgroundColor(Color.YELLOW);
                     break;
                 default:
+                    holder.itemView.setBackgroundColor(Color.WHITE);
                     break;
             }
         }
