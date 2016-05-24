@@ -47,4 +47,10 @@ public class Constants {
     public static final String ACTION_REJECT_RIDE = "rejectRide";
     public static final String ACTION_ACCEPT_RIDE = "acceptRide";
 
+    public static final String THREAD_NAME = "name";
+    public static final String THREAD_EMAIL = "email";
+    public static final String THREAD_TIME = "time";
+    public static final String THREAD_READ = "read";
+    public static final String THREAD_UNREAD_COUNT = "unreadCount";
+
 }
