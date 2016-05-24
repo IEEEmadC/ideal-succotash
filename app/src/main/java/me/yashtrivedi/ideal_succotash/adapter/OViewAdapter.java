@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.Utils;
+import me.yashtrivedi.ideal_succotash.model.RideRequest;
 
 /**
  * Created by amit on 21-May-16.
@@ -38,6 +43,11 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
     public void setList(List<RideRequest> list) {
         this.list = list;
         notifyDataSetChanged();
+    }
+
+    public void set(int position, RideRequest rr){
+        list.set(position,rr);
+        notifyItemChanged(position);
     }
 
     public void removeItem(int ru) {
@@ -71,11 +81,11 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
                 switch (view.getId()) {
                     case R.id.cancel_request:
                         map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_REJECTED);
-                        ru.status = Constants.RIDE_REQUEST_REJECTED;
+                        ru.setStatus(Constants.RIDE_REQUEST_REJECTED);
                         break;
                     case R.id.accept_request:
                         map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_ACCEPTED);
-                        ru.status = Constants.RIDE_REQUEST_ACCEPTED;
+                        ru.setStatus(Constants.RIDE_REQUEST_ACCEPTED);
                         break;
                 }
                 holder.status.setVisibility(View.VISIBLE);

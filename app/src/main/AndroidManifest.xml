@@ -11,26 +11,37 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activity.MainActivity" />
 
         <service
-            android:name=".OfferService"
+            android:name=".service.OfferService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".RequestService"
+            android:name=".service.RequestService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".CancelRideIntentService"
-            android:exported="false"></service>
+            android:name=".service.CancelRideIntentService"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

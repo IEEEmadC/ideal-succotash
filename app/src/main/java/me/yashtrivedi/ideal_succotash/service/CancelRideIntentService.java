@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.service;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -12,6 +12,9 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.Utils;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -79,7 +82,7 @@ public class CancelRideIntentService extends IntentService {
                     Log.d("Remove",s);
                     Log.d("Remove",reqEmail)
 ;                    if(!s.equals(reqEmail)){
-                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(s).concat("/").concat(myEmail));
+                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(s).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
                         Log.d("remove",firebase2.toString());
                         firebase2.removeValue();
                     }

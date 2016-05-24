@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.fragment;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -27,6 +27,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.yashtrivedi.ideal_succotash.ClickListener;
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.service.RequestService;
+import me.yashtrivedi.ideal_succotash.Utils;
+import me.yashtrivedi.ideal_succotash.adapter.RViewAdapter;
+import me.yashtrivedi.ideal_succotash.model.ListUser;
 
 public class ListFragment extends Fragment implements ClickListener {
 
@@ -98,12 +106,12 @@ public class ListFragment extends Fragment implements ClickListener {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ListUser lu = dataSnapshot.getValue(ListUser.class);
                 lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
-                Map<String, Object> rr = lu.rideRequest;
+                Map<String, Object> rr = lu.getRideRequest();
                 if (rr != null) {
                     lu.setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
                 } else {
                     lu.setTried(false);
-                    lu.rideRequest = null;
+                    lu.setRideRequest(null);
                 }
                 list.add(0, lu);
                 adapter.addItem(lu);
@@ -114,10 +122,10 @@ public class ListFragment extends Fragment implements ClickListener {
                 int pos = 0;
                 for (ListUser lu : list) {
                     if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
-                        int capacity = dataSnapshot.getValue(ListUser.class).carCapacity;
-                        Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).rideRequest;
-                        list.get(pos).carCapacity = capacity;
-                        list.get(pos).rideRequest = rr;
+                        int capacity = dataSnapshot.getValue(ListUser.class).getCapacity();
+                        Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).getRideRequest();
+                        list.get(pos).setCarCapacity(capacity);
+                        list.get(pos).setRideRequest(rr);
                         adapter.updateCapacity(pos, capacity, rr);
                         break;
                     }

@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -40,6 +40,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.ImageHelper;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.Utils;
+import me.yashtrivedi.ideal_succotash.model.User;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, OnClickListener {
 
@@ -120,36 +126,38 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             if (acct.getEmail().split("@")[1].equals("nirmauni.ac.in")) {
                 ((TextView) findViewById(R.id.title_text)).setText(acct.getDisplayName());
                 mStatusTextView.setText(getResources().getString(R.string.signed_in_fmt, acct.getEmail()));
-                new AsyncTask<String, Void, Bitmap>() {
+                try {
+                    new AsyncTask<String, Void, Bitmap>() {
 
-                    @Override
-                    protected void onPreExecute() {
-                        imageProgress.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    protected Bitmap doInBackground(String... params) {
-
-                        try {
-                            URL url = new URL(params[0]);
-                            InputStream in = url.openStream();
-                            return BitmapFactory.decodeStream(in);
-                        } catch (Exception e) {
-                            //* TODO log error *//
+                        @Override
+                        protected void onPreExecute() {
+                            imageProgress.setVisibility(View.VISIBLE);
                         }
-                        return null;
-                    }
 
-                    @Override
-                    protected void onPostExecute(Bitmap bitmap) {
-                        imageProgress.setVisibility(View.INVISIBLE);
-                        try {
-                            imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
-                                    imageView.getWidth()));
-                        } catch (NullPointerException e) {
+                        @Override
+                        protected Bitmap doInBackground(String... params) {
+
+                            try {
+                                URL url = new URL(params[0]);
+                                InputStream in = url.openStream();
+                                return BitmapFactory.decodeStream(in);
+                            } catch (Exception e) {
+                                //* TODO log error *//
+                            }
+                            return null;
                         }
-                    }
-                }.execute(acct.getPhotoUrl().toString());
+
+                        @Override
+                        protected void onPostExecute(Bitmap bitmap) {
+                            imageProgress.setVisibility(View.INVISIBLE);
+                            try {
+                                imageView.setImageBitmap(ImageHelper.getRoundedCornerBitmap(bitmap,
+                                        imageView.getWidth()));
+                            } catch (NullPointerException e) {
+                            }
+                        }
+                    }.execute(acct.getPhotoUrl().toString());
+                }catch(NullPointerException ne){}
                 updateUI(true);
                 getGoogleOAuthTokenAndLogin();
             } else {

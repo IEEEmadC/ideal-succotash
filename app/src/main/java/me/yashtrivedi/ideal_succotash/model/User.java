@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.model;
 
 import java.util.Map;
 

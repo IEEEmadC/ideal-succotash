@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,6 +17,12 @@ import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.Utils;
+import me.yashtrivedi.ideal_succotash.activity.MainActivity;
+import me.yashtrivedi.ideal_succotash.model.RideRequest;
 
 public class OfferService extends Service {
     List<RideRequest> rides;

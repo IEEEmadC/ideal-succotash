@@ -1,10 +1,9 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.model.ListUser;
 
 /**
  * Created by yashtrivedi on 05/04/16.
@@ -34,7 +37,7 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
 
     public void updateCapacity(int position, int capacity, Map<String,Object> rideRequest) {
         list.get(position).setCarCapacity(capacity);
-        list.get(position).rideRequest = rideRequest;
+        list.get(position).setRideRequest(rideRequest);
         notifyItemChanged(position);
     }
 
@@ -62,12 +65,12 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
         holder.itemView.setClickable(true);
         holder.itemView.setActivated(true);
         holder.itemView.setAlpha(1.0f);
-        if(lu.rideRequest!=null && lu.rideRequest.containsKey(PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_ENCODED_EMAIL,"null"))){
+        if(lu.getRideRequest()!=null && lu.getRideRequest().containsKey(PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_ENCODED_EMAIL,"null"))){
             holder.itemView.setEnabled(false);
             holder.itemView.setClickable(false);
             holder.itemView.setActivated(false);
             holder.itemView.setAlpha(0.5f);
-            switch((int) ((HashMap) lu.rideRequest.get(PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_ENCODED_EMAIL,"null"))).get("status")) {
+            switch((int) ((HashMap) lu.getRideRequest().get(PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_ENCODED_EMAIL,"null"))).get("status")) {
                 case Constants.RIDE_REQUEST_ACCEPTED: holder.itemView.setBackgroundColor(Color.GREEN);
                     break;
                 case Constants.RIDE_REQUEST_REJECTED: holder.itemView.setBackgroundColor(Color.RED);

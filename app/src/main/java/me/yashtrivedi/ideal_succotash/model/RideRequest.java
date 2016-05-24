@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.model;
 
 /**
  * Created by yashtrivedi on 21/05/16.
@@ -7,6 +7,10 @@ public class RideRequest {
 
     String userName, email, area;
     int status;
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public String getArea() {
         return area;

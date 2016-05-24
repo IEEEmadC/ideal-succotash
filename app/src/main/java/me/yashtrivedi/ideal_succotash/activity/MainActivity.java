@@ -1,9 +1,14 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.activity;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.fragment.ListFragment;
+import me.yashtrivedi.ideal_succotash.fragment.OfferedRideFragment;
 
 public class MainActivity extends AppCompatActivity {
 

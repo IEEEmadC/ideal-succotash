@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="me.yashtrivedi.ideal_succotash.MainActivity">
+    tools:context=".activity.MainActivity">
 
     <CheckBox
         android:id="@+id/to_from_check_box"

@@ -1,28 +1,20 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -31,6 +23,12 @@ import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.service.OfferService;
+import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.adapter.OViewAdapter;
+import me.yashtrivedi.ideal_succotash.model.RideRequest;
 
 /**
  * Created by amit on 21-May-16.
@@ -143,7 +141,10 @@ public class OfferedRideFragment extends Fragment {
                 for(RideRequest ru : list){
                     if(ru.getEmail().equals(dataSnapshot.getKey())){
                         RideRequest rr = dataSnapshot.getValue(RideRequest.class);
+                        rr.setEmail(dataSnapshot.getKey());
                         list.set(pos, rr);
+                        adapter.set(pos,rr);
+                        break;
                     }
                     pos++;
                 }

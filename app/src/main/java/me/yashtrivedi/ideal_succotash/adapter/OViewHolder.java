@@ -1,10 +1,12 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import me.yashtrivedi.ideal_succotash.R;
 
 /**
  * Created by amit on 21-May-16.

@@ -5,19 +5,19 @@ package me.yashtrivedi.ideal_succotash;
  */
 public class Utils {
 
-    static String encodeEmail(String unencodedEmail) {
+    public static String encodeEmail(String unencodedEmail) {
         return unencodedEmail.replace(".", ",");
     }
 
-    static String emailToroll(String email) {
+    public static String emailToroll(String email) {
         return email.split("@")[0].toUpperCase();
     }
 
-    static String rollToEmail(String roll) {
+    public static String rollToEmail(String roll) {
         return roll.concat("@nirmauni,ac,in").toLowerCase();
     }
 
-    static String statusString(int status) {
+    public static String statusString(int status) {
         switch (status) {
             case Constants.RIDE_REQUEST_ACCEPTED:
                 return "Accepted";

@@ -1,4 +1,4 @@
-package me.yashtrivedi.ideal_succotash;
+package me.yashtrivedi.ideal_succotash.model;
 
 import java.util.Map;
 
@@ -13,6 +13,14 @@ public class ListUser {
     //File img;
 
     public ListUser() {
+    }
+
+    public Map<String, Object> getRideRequest() {
+        return rideRequest;
+    }
+
+    public void setRideRequest(Map<String, Object> rideRequest) {
+        this.rideRequest = rideRequest;
     }
 
     public void setTried() {
