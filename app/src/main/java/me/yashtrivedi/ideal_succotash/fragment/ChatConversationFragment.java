@@ -1,14 +1,21 @@
 package me.yashtrivedi.ideal_succotash.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -34,6 +41,12 @@ public class ChatConversationFragment extends Fragment {
     EditText messageView;
     CViewAdapter adapter;
     public ChatConversationFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
     }
 
     @Override
@@ -83,43 +96,68 @@ public class ChatConversationFragment extends Fragment {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_white_24dp));
+        fab.hide();
+        messageView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if(messageView.getText().toString().trim().length()>0){
+                        fab.show();
+                    }
+                    else {
+                        fab.hide();
+                    }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener()   {
             @Override
             public void onClick(View v) {
-                final Message m = new Message();
-                m.setFrom(Utils.getMyEmail(getContext()));
-                m.setMsg(messageView.getText().toString());
-                messageView.setText("");
-                m.setTime(Calendar.getInstance().getTimeInMillis());
-                firebase.push().setValue(m);
-                final Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(getArguments().getString(Constants.THREAD_EMAIL)).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
-                firebase1.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        int count = Integer.parseInt(((Map<String, Object>) dataSnapshot.getValue()).get(Constants.THREAD_UNREAD_COUNT).toString());
-                        Map<String, Object> map = new HashMap<String, Object>();
-                        map.put(Constants.THREAD_READ, false);
-                        map.put(Constants.THREAD_UNREAD_COUNT, count++);
-                        map.put(Constants.THREAD_TIME, m.getTime());
-                        map.put(Constants.THREAD_LAST_MSG,m.getMsg());
-                        firebase1.updateChildren(map);
-                    }
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                    final Message m = new Message();
+                    m.setFrom(Utils.getMyEmail(getContext()));
+                    m.setMsg(messageView.getText().toString());
+                    messageView.setText("");
+                    m.setTime(Calendar.getInstance().getTimeInMillis());
+                    firebase.push().setValue(m);
+                    final Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(getArguments().getString(Constants.THREAD_EMAIL)).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
+                    firebase1.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int count = Integer.parseInt(((Map<String, Object>) dataSnapshot.getValue()).get(Constants.THREAD_UNREAD_COUNT).toString());
+                            Map<String, Object> map = new HashMap<String, Object>();
+                            map.put(Constants.THREAD_READ, false);
+                            map.put(Constants.THREAD_UNREAD_COUNT, count++);
+                            map.put(Constants.THREAD_TIME, m.getTime());
+                            map.put(Constants.THREAD_LAST_MSG, m.getMsg());
+                            firebase1.updateChildren(map);
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
 
-                Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
-                Map<String, Object> map = new HashMap<>();
-                map.put(Constants.THREAD_READ, true);
-                map.put(Constants.THREAD_UNREAD_COUNT, 0);
-                map.put(Constants.THREAD_TIME, m.getTime());
-                map.put(Constants.THREAD_LAST_MSG,m.getMsg());
-                firebase2.updateChildren(map);
-            }
+                        }
+                    });
+
+                    Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(Constants.THREAD_READ, true);
+                    map.put(Constants.THREAD_UNREAD_COUNT, 0);
+                    map.put(Constants.THREAD_TIME, m.getTime());
+                    map.put(Constants.THREAD_LAST_MSG, m.getMsg());
+                    firebase2.updateChildren(map);
+                }
+
         });
 
         return v;

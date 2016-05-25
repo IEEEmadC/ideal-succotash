@@ -63,30 +63,33 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
         Long diff = Calendar.getInstance().getTimeInMillis() - thread.getTime();
         String tag = "ms";
         Log.d("time",diff.toString());
-        if(diff>=1000){
-            diff/=1000;
-            tag = "sec";
-            Log.d("sec",diff.toString());
+        diff /= 1000; //these are the seconds
+
+
+        if(diff>=0 && diff<60){
+            tag="just now";
         }
-        if(diff>=60){
+        else if(diff>=60 && diff<3600){
             diff/=60;
-            tag = "min";
-            Log.d("min",diff.toString());
+            tag=diff+" min ago";
+
         }
-        if(diff>=60){
-            diff/=60;
-            tag = "hour";
-            Log.wtf("hour",diff.toString());
+        else if(diff>=3600 && diff<86400){
+            diff/=3600;
+            tag=diff+" hour ago";
         }
-        if(diff>=24){
-            diff/=24;
-            tag = "day";
+        else if(diff>=86400 && diff<604800){
+            diff/=86400;
+            tag=diff+" day ago";
         }
-        if(diff>=7){
-            diff/=7;
-            tag = "week";
+        else if(diff>=604800){   //seconds in 1 week
+            diff/=604800;
+            tag=diff+" week ago";
         }
-        holder.date.setText(diff + " " + tag + " ago");
+
+
+
+        holder.date.setText(tag);
         holder.name.setText(Utils.decodeEmail(thread.getEmail()));
         holder.msg.setText(thread.getMessage());
     }
