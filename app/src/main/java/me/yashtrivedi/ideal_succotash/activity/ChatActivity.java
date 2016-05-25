@@ -34,6 +34,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+
         fragmentManager.beginTransaction().replace(R.id.container,new ChatThreadFragment()).commit();
 
     }

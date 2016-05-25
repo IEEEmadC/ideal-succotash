@@ -117,7 +117,10 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
         Bundle b = new Bundle();
         b.putString(Constants.THREAD_EMAIL,t.getEmail());
         b.putString(Constants.CONVERSATION_PUSH_ID,t.getKey());
-        getFragmentManager().beginTransaction().replace(R.id.container,new ChatConversationFragment(),null).addToBackStack("chat").commit();
+        ChatConversationFragment chatConversationFragment = new ChatConversationFragment();
+        chatConversationFragment.setArguments(b);
+        getFragmentManager().beginTransaction().replace(R.id.container,chatConversationFragment,null).addToBackStack("chat").commit();
+
     }
 
     @Override

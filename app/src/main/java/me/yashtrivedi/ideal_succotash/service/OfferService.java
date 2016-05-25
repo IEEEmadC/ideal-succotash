@@ -86,6 +86,7 @@ public class OfferService extends Service {
                         builder.setContentText(rides.size() + " Requests")
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
                     }
+
                     notificationManager.notify("onetwothree",12345, builder.build());
                 }
             }
