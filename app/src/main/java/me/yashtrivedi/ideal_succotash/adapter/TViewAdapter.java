@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.model.Threads;
 
 /**
@@ -82,7 +83,7 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
             tag = "week";
         }
         holder.date.setText(diff + " " + tag + " ago");
-        holder.name.setText(thread.getEmail());
+        holder.name.setText(Utils.decodeEmail(thread.getEmail()));
 //        holder.msg.setText(thread.getMessage());
     }
 

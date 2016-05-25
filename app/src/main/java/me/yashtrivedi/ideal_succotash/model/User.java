@@ -6,14 +6,27 @@ import java.util.Map;
  * Created by yashtrivedi on 26/04/16.
  */
 public class User {
-    private String name;
-    private String email;
-    private Map<String, String> timeStampJoined;
+    String name;
+    String email;
+    Long timeStampJoined;
+    Map<String,Object> chats;
 
     public User() {
     }
 
-    public User(String name, String email, Map<String, String> timeStampJoined) {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Map<String, Object> getChats() {
+        return chats;
+    }
+
+    public void setChats(Map<String, Object> chats) {
+        this.chats = chats;
+    }
+
+    public User(String name, String email, Long timeStampJoined) {
         this.name = name;
         this.email = email;
         this.timeStampJoined = timeStampJoined;
@@ -23,7 +36,7 @@ public class User {
         return email;
     }
 
-    public Map<String, String> getTimeStampJoined() {
+    public Long getTimeStampJoined() {
         return timeStampJoined;
     }
 

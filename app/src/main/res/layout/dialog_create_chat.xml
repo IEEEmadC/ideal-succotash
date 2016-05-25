@@ -6,9 +6,8 @@
     android:padding="@dimen/activity_vertical_margin">
 
     <android.support.v7.widget.AppCompatAutoCompleteTextView
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
-        android:id="@+id/addName"
-        android:completionThreshold="3" />
+        android:id="@+id/addName" />
 
 </LinearLayout>
