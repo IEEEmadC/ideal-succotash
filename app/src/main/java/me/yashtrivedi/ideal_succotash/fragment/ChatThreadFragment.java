@@ -16,6 +16,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import me.yashtrivedi.ideal_succotash.Constants;
@@ -38,7 +39,7 @@ public class ChatThreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        View v = inflater.inflate(R.layout.fragment_chat, container);
         adapter = new TViewAdapter(getContext());
         list = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.thread_list);
@@ -69,6 +70,7 @@ public class ChatThreadFragment extends Fragment {
                 int oldPosition = 0;
                 for (Threads lt : list) {
                     if (lt.getKey().equals(t.getKey())) {
+
                         break;
                     }
                     oldPosition++;

@@ -1,8 +1,11 @@
 package me.yashtrivedi.ideal_succotash.service;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Parcel;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
@@ -14,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 
 /**
@@ -31,14 +35,21 @@ public class CancelRideIntentService extends IntentService {
         super("CancelRideIntentService");
     }
 
-
+    NotificationManager notificationManager;
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
             final String param1 = intent.getStringExtra("myEmail");
             final int param3 = intent.getIntExtra("notif",13123);
-            ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(param3);
+            final String paramTag = intent.getStringExtra("paramTag");
+            //((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(paramTag,param3);
+
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            notificationManager.cancel("onetwothree",12345);
+            //notificationManager.cancelAll();
+
             final String param2 = intent.getStringExtra("requested");
             if (Constants.ACTION_CANCEL_RIDE.equals(action)) {
                 handleActionCancel(param1, param2);
@@ -49,6 +60,8 @@ public class CancelRideIntentService extends IntentService {
             }
         }
     }
+
+
 
     /**
      * Handle action Foo in the provided background thread with the provided
@@ -101,5 +114,7 @@ public class CancelRideIntentService extends IntentService {
         firebase.removeValue();
         Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(reqEmail));
         firebase1.removeValue();
+
+
     }
 }

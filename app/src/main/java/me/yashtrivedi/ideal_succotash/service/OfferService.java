@@ -45,6 +45,7 @@ public class OfferService extends Service {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 RideRequest request = dataSnapshot.getValue(RideRequest.class);
                 request.setEmail(dataSnapshot.getKey());
+                String paramTag = request.getEmail();
                 if (request.getStatus() == Constants.RIDE_REQUEST_WAITING) {
                     rides.add(0, request);
                     NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -59,12 +60,14 @@ public class OfferService extends Service {
                         aIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
                         aIntent.putExtra("myEmail",request.getEmail());
                         aIntent.putExtra("notif",13123);
+                        aIntent.putExtra("paramTag",paramTag);
                         Log.d("servicemyEmail",request.getEmail());
                         aIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent aPendingIntent = PendingIntent.getService(getApplicationContext(),13123,aIntent,0);
                         Intent rIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
                         rIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
                         rIntent.putExtra("notif",13123);
+                        rIntent.putExtra("paramTag",paramTag);
                         rIntent.putExtra("myEmail",request.getEmail());
                         rIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent rPendingIntent = PendingIntent.getService(getApplicationContext(),13123,rIntent,0);
@@ -83,7 +86,7 @@ public class OfferService extends Service {
                         builder.setContentText(rides.size() + " Requests")
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
                     }
-                    notificationManager.notify(12345, builder.build());
+                    notificationManager.notify("onetwothree",12345, builder.build());
                 }
             }
 
