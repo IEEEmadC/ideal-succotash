@@ -81,7 +81,8 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
                 suggestions.clear();
                 for(User user : itemsAll){
                     if(user.getName().toLowerCase().contains(constraint.toString().toLowerCase()) || Utils.emailToroll(user.getEmail()).toLowerCase().contains(constraint.toString().toLowerCase())){
-                        suggestions.add(user);
+                        if(!suggestions.contains(user))
+                             suggestions.add(user);
                     }
                 }
                 FilterResults results = new FilterResults();
