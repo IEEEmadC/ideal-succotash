@@ -63,12 +63,12 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
         Long diff = Calendar.getInstance().getTimeInMillis() - thread.getTime();
         String tag = "ms";
         Log.d("time",diff.toString());
-        if(diff>1000){
+        if(diff>=1000){
             diff/=1000;
             tag = "sec";
             Log.d("sec",diff.toString());
         }
-        if(diff>60){
+        if(diff>=60){
             diff/=60;
             tag = "min";
             Log.d("min",diff.toString());
@@ -88,7 +88,7 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
         }
         holder.date.setText(diff + " " + tag + " ago");
         holder.name.setText(Utils.decodeEmail(thread.getEmail()));
-//        holder.msg.setText(thread.getMessage());
+        holder.msg.setText(thread.getMessage());
     }
 
     @Override

@@ -95,7 +95,7 @@ public class ChatConversationFragment extends Fragment {
                 firebase1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        int count = (int) ((Map<String, Object>) dataSnapshot.getValue()).get(Constants.THREAD_UNREAD_COUNT);
+                        int count = Integer.parseInt(((Map<String, Object>) dataSnapshot.getValue()).get(Constants.THREAD_UNREAD_COUNT).toString());
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put(Constants.THREAD_READ, false);
                         map.put(Constants.THREAD_UNREAD_COUNT, count++);

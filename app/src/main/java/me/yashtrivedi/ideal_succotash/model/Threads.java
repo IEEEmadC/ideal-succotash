@@ -32,6 +32,10 @@ public class Threads {
     public Threads() {
     }
 
+    public String getMessage(){
+        return msg;
+    }
+
     public String getName() {
         return name;
     }

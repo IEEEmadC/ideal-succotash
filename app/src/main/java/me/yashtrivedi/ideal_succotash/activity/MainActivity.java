@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         startActivity(new Intent(this,ChatActivity.class));
-        finish();
         return true;
     }
 }

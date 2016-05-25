@@ -108,15 +108,21 @@ public class ShowCreateChatFragment extends DialogFragment {
                         map1.put(Constants.THREAD_TIME, time);
                         map1.put(Constants.THREAD_UNREAD_COUNT, 0);
                         firebase2.setValue(map1);
-                        Firebase firebase3 = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(threadID));
+                        Firebase firebase3 = new Firebase(Constants.FIREBASE_URL_CHATS);
                         Map<String,Object> map2 = new HashMap<>();
                         map2.put(Utils.getMyEmail(getContext()),true);
-                        map2.put(email,true);
-                        firebase3.updateChildren(map2);
+                        map2.put(Utils.encodeEmail(email),true);
+                        Map<String,Object> map3 = new HashMap<>();
+                        map3.put("members",map2);
+                        Map<String,Object> map4 = new HashMap<>();
+                        map4.put(threadID,map3);
+                        firebase3.updateChildren(map4);
                         Bundle b = new Bundle();
                         b.putString(Constants.THREAD_EMAIL,email);
                         b.putString(Constants.CONVERSATION_PUSH_ID,threadID);
-                        getFragmentManager().beginTransaction().replace(R.id.container,new ChatConversationFragment(),null).addToBackStack("chat").commit();
+                        ChatConversationFragment fragment = new ChatConversationFragment();
+                        fragment.setArguments(b);
+                        getFragmentManager().beginTransaction().replace(R.id.container,fragment,null).addToBackStack("chat").commit();
 
                     }
                 })
