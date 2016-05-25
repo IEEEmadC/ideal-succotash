@@ -39,7 +39,7 @@ public class ChatConversationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat_conversation, container, false);
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.conv);
+        final RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.conv);
         messageView = (EditText) v.findViewById(R.id.new_msg);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -54,6 +54,7 @@ public class ChatConversationFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 adapter.add(dataSnapshot.getValue(Message.class));
+                recyclerView.scrollToPosition(0);
                 Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
                 Map<String, Object> map = new HashMap<>();
                 map.put(Constants.THREAD_READ, true);
@@ -89,6 +90,7 @@ public class ChatConversationFragment extends Fragment {
                 final Message m = new Message();
                 m.setFrom(Utils.getMyEmail(getContext()));
                 m.setMsg(messageView.getText().toString());
+                messageView.setText("");
                 m.setTime(Calendar.getInstance().getTimeInMillis());
                 firebase.push().setValue(m);
                 final Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(getArguments().getString(Constants.THREAD_EMAIL)).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));

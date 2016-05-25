@@ -2,13 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent"
-    android:layout_marginLeft="50dp">
+    android:layout_marginLeft="50dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
 
-    <android.support.design.widget.CoordinatorLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true">
+        android:background="@color/colorAccent"
+        android:layout_alignParentRight="true"
+        android:padding="3dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +25,8 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:id="@+id/time"
-        android:gravity="bottom|end"/>
+        android:layout_below="@id/msg"
+        android:layout_alignParentRight="true"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
 </RelativeLayout>
