@@ -42,8 +42,14 @@ public class ChatThreadFragment extends Fragment {
         adapter = new TViewAdapter(getContext());
         list = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.thread_list);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment dialogFragment = ShowCreateChatFragment.newInstance();
+                dialogFragment.show(getFragmentManager(), "ShowCreateChatFragment");
+            }
+        });
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
         firebase.keepSynced(true);
         firebase.addChildEventListener(new ChildEventListener() {
@@ -96,16 +102,8 @@ public class ChatThreadFragment extends Fragment {
 
             }
         });
-
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFragment dialogFragment = ShowCreateChatFragment.newInstance();
-                dialogFragment.show(getFragmentManager(), "ShowCreateChatFragment");
-            }
-        });
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
         return v;
     }
 }

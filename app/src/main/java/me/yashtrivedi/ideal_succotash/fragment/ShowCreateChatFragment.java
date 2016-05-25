@@ -3,6 +3,7 @@ package me.yashtrivedi.ideal_succotash.fragment;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,12 +94,13 @@ public class ShowCreateChatFragment extends DialogFragment{
         .setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Long time = Calendar.getInstance().getTimeInMillis();
                 Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS)).push();
                 Map<String,Object> map = new HashMap<>();
                 map.put(Constants.THREAD_EMAIL,Utils.encodeEmail(appCompatAutoCompleteTextView.getText().toString()));
                 map.put(Constants.THREAD_NAME,name);
                 map.put(Constants.THREAD_READ,true);
-                map.put(Constants.THREAD_TIME,ServerValue.TIMESTAMP);
+                map.put(Constants.THREAD_TIME, time);
                 map.put(Constants.THREAD_UNREAD_COUNT,0);
                 firebase1.setValue(map);
                 String threadID = firebase1.getKey();
@@ -106,7 +109,7 @@ public class ShowCreateChatFragment extends DialogFragment{
                 map1.put(Constants.THREAD_EMAIL,Utils.getMyEmail(getContext()));
                 map1.put(Constants.THREAD_NAME,Utils.getMyName(getContext()));
                 map1.put(Constants.THREAD_READ,true);
-                map1.put(Constants.THREAD_TIME,true);
+                map1.put(Constants.THREAD_TIME,time);
                 map1.put(Constants.THREAD_UNREAD_COUNT,0);
                 firebase2.setValue(map1);
             }
