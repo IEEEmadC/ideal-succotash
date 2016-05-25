@@ -2,6 +2,7 @@ package me.yashtrivedi.ideal_succotash.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -100,7 +101,8 @@ public class ChatThreadFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //create new chat
+                DialogFragment dialogFragment = ShowCreateChatFragment.newInstance();
+                dialogFragment.show(getFragmentManager(), "ShowCreateChatFragment");
             }
         });
 

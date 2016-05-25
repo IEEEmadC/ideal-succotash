@@ -78,7 +78,7 @@ public class ShowOfferFormFragment extends DialogFragment {
 
         /* Get the layout inflater */
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View rootView = inflater.inflate(R.layout.dialog_offer_form, null);
+        View rootView = inflater.inflate(R.layout.dialog_offer_form, null,false);
 
         editTextCarNo1 = (EditText) rootView.findViewById(R.id.edit_text_car_no1);
         editTextCarNo2 = (EditText) rootView.findViewById(R.id.edit_text_car_no2);

@@ -193,22 +193,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onStart() {
         super.onStart();
-
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            Log.d("D", "Got cached sign-in");
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
     }
 
     @Override
@@ -327,7 +311,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onPause() {
         super.onPause();
-        //firebase.removeAuthStateListener(mAuthStateListener);
+        firebase.removeAuthStateListener(mAuthStateListener);
     }
 
     @Override
@@ -350,10 +334,27 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     startActivity(intent);
                     finish();
                 }
+                else{
+                    OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+                    if (opr.isDone()) {
+                        Log.d("D", "Got cached sign-in");
+                        GoogleSignInResult result = opr.get();
+                        handleSignInResult(result);
+                    } else {
+                        showProgressDialog();
+                        opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                            @Override
+                            public void onResult(GoogleSignInResult googleSignInResult) {
+                                hideProgressDialog();
+                                handleSignInResult(googleSignInResult);
+                            }
+                        });
+                    }
+                }
             }
         };
         /* Add auth listener to Firebase ref */
-        //firebase.addAuthStateListener(mAuthStateListener);
+        firebase.addAuthStateListener(mAuthStateListener);
     }
 
     private class MyAuthHandler implements Firebase.AuthResultHandler {

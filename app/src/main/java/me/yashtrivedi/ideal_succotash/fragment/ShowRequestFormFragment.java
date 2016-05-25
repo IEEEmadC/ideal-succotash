@@ -47,7 +47,7 @@ public class ShowRequestFormFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_Dialog);
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.dialog_request_form, null);
+        View v = inflater.inflate(R.layout.dialog_request_form, null,false);
         editTextArea = (EditText) v.findViewById(R.id.area);
         editTextArea.setHint(getArguments().getBoolean(Constants.TO_NIRMA) ? "Going to" : "Coming from");
         builder.setView(v)

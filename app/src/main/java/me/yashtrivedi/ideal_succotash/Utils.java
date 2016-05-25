@@ -37,7 +37,8 @@ public class Utils {
     }
 
     public static int getInsertPositionByTime(List<Threads> list, int start, int end, long time){
-        int size = end - start + 1;
+        if(list.size()==0)
+            return 0;
         Long latest = list.get(start).getTime();
         Long oldest = list.get(end).getTime();
         if(time < oldest) {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
     Context context;
     LayoutInflater inflater;
     public TViewAdapter(Context context) {
+        list = new ArrayList<>();
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
