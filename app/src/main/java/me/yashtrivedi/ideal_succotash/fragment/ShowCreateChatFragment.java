@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
@@ -43,6 +44,12 @@ public class ShowCreateChatFragment extends DialogFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomTheme_Dialog);
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -51,16 +58,13 @@ public class ShowCreateChatFragment extends DialogFragment {
         appCompatAutoCompleteTextView = (AppCompatAutoCompleteTextView) v.findViewById(R.id.addName);
         appCompatAutoCompleteTextView.setAdapter(adapter);
         appCompatAutoCompleteTextView.requestFocus();
-        appCompatAutoCompleteTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        appCompatAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 appCompatAutoCompleteTextView.setText(Utils.decodeEmail(adapter.getItem(position).getEmail()));
                 name = adapter.getItem(position).getName();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                Log.d("position",position+"");
             }
         });
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_USERS);
@@ -85,10 +89,11 @@ public class ShowCreateChatFragment extends DialogFragment {
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        String email = appCompatAutoCompleteTextView.getText().toString();
                         Long time = Calendar.getInstance().getTimeInMillis();
                         Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS)).push();
                         Map<String, Object> map = new HashMap<>();
-                        map.put(Constants.THREAD_EMAIL, Utils.encodeEmail(appCompatAutoCompleteTextView.getText().toString()));
+                        map.put(Constants.THREAD_EMAIL, Utils.encodeEmail(email));
                         map.put(Constants.THREAD_NAME, name);
                         map.put(Constants.THREAD_READ, true);
                         map.put(Constants.THREAD_TIME, time);
@@ -103,6 +108,16 @@ public class ShowCreateChatFragment extends DialogFragment {
                         map1.put(Constants.THREAD_TIME, time);
                         map1.put(Constants.THREAD_UNREAD_COUNT, 0);
                         firebase2.setValue(map1);
+                        Firebase firebase3 = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(threadID));
+                        Map<String,Object> map2 = new HashMap<>();
+                        map2.put(Utils.getMyEmail(getContext()),true);
+                        map2.put(email,true);
+                        firebase3.updateChildren(map2);
+                        Bundle b = new Bundle();
+                        b.putString(Constants.THREAD_EMAIL,email);
+                        b.putString(Constants.CONVERSATION_PUSH_ID,threadID);
+                        getFragmentManager().beginTransaction().replace(R.id.container,new ChatConversationFragment(),null).addToBackStack("chat").commit();
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

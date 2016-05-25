@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import me.yashtrivedi.ideal_succotash.R;
@@ -21,10 +22,9 @@ import me.yashtrivedi.ideal_succotash.model.User;
  */
 public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterable{
 
-    List<User> items, itemsAll, suggestions;
+    List<User> itemsAll, suggestions;
     public AutoCompleteAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
-        items = new ArrayList<>();
         itemsAll = new ArrayList<>();
         suggestions = new ArrayList<>();
     }
@@ -32,13 +32,17 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
     @Override
     public void add(User object) {
         super.add(object);
-        items.add(0,object);
         itemsAll.add(0,object);
     }
 /*
     @Override
     public int getCount() {
         return super.getCount();
+    }*/
+
+    /*@Override
+    public User getItem(int position) {
+        return itemsAll.get(position);
     }*/
 
     @Override
@@ -48,7 +52,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
             LayoutInflater inflater = LayoutInflater.from(getContext());
             v = inflater.inflate(R.layout.autocomplete_item,null);
         }
-        User user = items.get(position);
+        User user = itemsAll.get(position);
         if(user != null){
             TextView name = (TextView) v.findViewById(R.id.name);
             name.setText(user.getName());
@@ -91,13 +95,15 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             List<User> featuredList = (List<User>) results.values;
-            if(results!=null && results.count>0){
-                clear();
-                for(User c : featuredList){
-                    add(c);
+            try {
+                if (results != null && results.count > 0) {
+                    clear();
+                    for (User c : featuredList) {
+                        add(c);
+                    }
+                    notifyDataSetChanged();
                 }
-                notifyDataSetChanged();
-            }
+            }catch(ConcurrentModificationException ce){}
         }
     };
 }

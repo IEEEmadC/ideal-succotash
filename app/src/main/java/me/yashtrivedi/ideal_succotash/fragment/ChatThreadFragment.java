@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import me.yashtrivedi.ideal_succotash.ClickListener;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.RecyclerTouchListener;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.adapter.TViewAdapter;
 import me.yashtrivedi.ideal_succotash.model.Threads;
@@ -28,7 +30,7 @@ import me.yashtrivedi.ideal_succotash.model.Threads;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ChatThreadFragment extends Fragment {
+public class ChatThreadFragment extends Fragment implements ClickListener {
 
     TViewAdapter adapter;
     List<Threads> list;
@@ -39,7 +41,7 @@ public class ChatThreadFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container);
+        View v = inflater.inflate(R.layout.fragment_chat_thread, container, false);
         adapter = new TViewAdapter(getContext());
         list = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.thread_list);
@@ -70,7 +72,6 @@ public class ChatThreadFragment extends Fragment {
                 int oldPosition = 0;
                 for (Threads lt : list) {
                     if (lt.getKey().equals(t.getKey())) {
-
                         break;
                     }
                     oldPosition++;
@@ -106,6 +107,21 @@ public class ChatThreadFragment extends Fragment {
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView,this));
         return v;
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        Threads t = adapter.get(position);
+        Bundle b = new Bundle();
+        b.putString(Constants.THREAD_EMAIL,t.getEmail());
+        b.putString(Constants.CONVERSATION_PUSH_ID,t.getKey());
+        getFragmentManager().beginTransaction().replace(R.id.container,new ChatConversationFragment(),null).addToBackStack("chat").commit();
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+
     }
 }

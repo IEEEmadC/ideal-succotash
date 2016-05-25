@@ -29,6 +29,10 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
         inflater = LayoutInflater.from(context);
     }
 
+    public Threads get(int positon){
+        return list.get(positon);
+    }
+
     public void add(int position, Threads thread){
         list.add(position,thread);
         notifyItemInserted(position);

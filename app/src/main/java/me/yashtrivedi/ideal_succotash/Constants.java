@@ -52,5 +52,10 @@ public class Constants {
     public static final String THREAD_TIME = "time";
     public static final String THREAD_READ = "read";
     public static final String THREAD_UNREAD_COUNT = "unreadCount";
+    public static final String THREAD_LAST_MSG = "msg";
+
+    public static final int MESSAGE_VIEW_OWN = 1;
+    public static final int MESSAGE_VIEW_OTHERS = 2;
+    public static final String CONVERSATION_PUSH_ID = "pushID";
 
 }

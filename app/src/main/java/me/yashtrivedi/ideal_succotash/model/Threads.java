@@ -4,7 +4,7 @@ package me.yashtrivedi.ideal_succotash.model;
  * Created by yashtrivedi on 24/05/16.
  */
 public class Threads {
-    String name, email, key;
+    String name, email, key, msg;
     Long time;
     Boolean read;
     int unreadCount;
