@@ -124,6 +124,11 @@ public class ListFragment extends Fragment implements ClickListener {
                     if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
                         int capacity = dataSnapshot.getValue(ListUser.class).getCapacity();
                         Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).getRideRequest();
+                        if (rr != null) {
+                            list.get(pos).setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
+                        } else {
+                            list.get(pos).setTried(false);
+                        }
                         list.get(pos).setCarCapacity(capacity);
                         list.get(pos).setRideRequest(rr);
                         adapter.updateCapacity(pos, capacity, rr);
