@@ -69,16 +69,16 @@ public class OfferService extends Service {
                         rIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent rPendingIntent = PendingIntent.getService(getApplicationContext(),13123,rIntent,0);
                         Boolean toNirma = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.TO_NIRMA, false);
-                        builder.setContentText(request.getName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you" + (toNirma ? "from " : "to ") + request.getArea())
+                        builder.setContentText(request.getuserName() + " (" + Utils.emailToroll(request.getEmail()) + ") is willing to ride with you" + (toNirma ? "from " : "to ") + request.getArea())
                                 .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Reject", rPendingIntent))
                                 .addAction(new NotificationCompat.Action(R.drawable.ic_done_black_24dp, "Accept", aPendingIntent));
                     } else {
                         String text = "";
                         for (RideRequest rideRequest : rides) {
                             if (text.equals(""))
-                                text += rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                                text += rideRequest.getuserName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
                             else
-                                text += "\n" + rideRequest.getName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
+                                text += "\n" + rideRequest.getuserName() + " (" + Utils.emailToroll(rideRequest.getEmail()) + ")";
                         }
                         builder.setContentText(rides.size() + " Requests")
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text));

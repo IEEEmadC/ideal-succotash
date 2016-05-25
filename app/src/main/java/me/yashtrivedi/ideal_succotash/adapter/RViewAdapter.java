@@ -85,7 +85,7 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
         holder.from.setText((!lu.getToNirma()) ? "Nirma" : lu.getArea());
         holder.to.setText(lu.getToNirma() ? "Nirma" : lu.getArea());
         //holder.pic.setImageBitmap(ImageHelper.getRoundedCornerBitmap(BitmapFactory.decodeFile(lu.getImg().getAbsolutePath()),holder.pic.getWidth()));
-        holder.name.setText(lu.getName() + " (" + lu.getRoll() + ")");
+        holder.name.setText(lu.getuserName() + " (" + lu.getRoll() + ")");
         holder.capacity.setText(lu.getCapacity() + "");
     }
 

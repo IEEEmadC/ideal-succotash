@@ -70,7 +70,7 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
     @Override
     public void onBindViewHolder(final OViewHolder holder, final int position) {
         final RideRequest ru = list.get(position);
-        //Log.d("name",ru.getName());
+        //Log.d("name",ru.getuserName());
         View.OnClickListener mOnClickListner = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,7 +115,7 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
         };
         Boolean stat = ru.getStatus() == 0;
         holder.area.setText(ru.getArea());
-        holder.name.setText(ru.getName() + "\n(" + Utils.emailToroll(ru.getEmail()) + ")");
+        holder.name.setText(ru.getuserName() + "\n(" + Utils.emailToroll(ru.getEmail()) + ")");
         Log.d("here", ru.getStatus() + "");
         holder.acceptCancelButtonHolder.setVisibility(!stat ? View.GONE : View.VISIBLE);
         holder.status.setVisibility(stat ? View.GONE : View.VISIBLE);

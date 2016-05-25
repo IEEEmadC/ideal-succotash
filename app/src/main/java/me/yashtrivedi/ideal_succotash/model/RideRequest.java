@@ -1,5 +1,7 @@
 package me.yashtrivedi.ideal_succotash.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by yashtrivedi on 21/05/16.
  */
@@ -16,7 +18,7 @@ public class RideRequest {
         return area;
     }
 
-    public String getName() {
+    public String getuserName() {
         return userName;
     }
 

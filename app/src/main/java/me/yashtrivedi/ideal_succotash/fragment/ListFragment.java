@@ -172,7 +172,7 @@ public class ListFragment extends Fragment implements ClickListener {
     public void onClick(View view, int position) {
         //Dialog code
         if (!list.get(position).getTried()) {
-            DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getName(), list.get(position).getToNirma());
+            DialogFragment dialogFragment = ShowRequestFormFragment.newInstance(position, list.get(position).getuserName(), list.get(position).getToNirma());
             dialogFragment.show(getFragmentManager(), "ShowRequestFormFragment");
             dialogFragment.setTargetFragment(this, 123);
         }
@@ -209,7 +209,7 @@ public class ListFragment extends Fragment implements ClickListener {
             Intent i = new Intent(getContext(), RequestService.class);
             i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
             i.putExtra("position", position);
-            i.putExtra("name", lu.getName());
+            i.putExtra("name", lu.getuserName());
             i.putExtra(Constants.KEY_ENCODED_EMAIL, lu.getRoll());
             i.putExtra("myEmail",myEmail);
             i.putExtra(Constants.CAR_NO, lu.getCarNo());

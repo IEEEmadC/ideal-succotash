@@ -1,11 +1,14 @@
 package me.yashtrivedi.ideal_succotash.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Map;
 
 /**
  * Created by yashtrivedi on 05/04/16.
  */
 public class ListUser {
+
     String userName, area, roll, carNo;
     int carCapacity;
     Boolean toNirma, tried;
@@ -59,11 +62,11 @@ public class ListUser {
         this.roll = roll;
     }
 
-    public String getName() {
+    public String getuserName() {
         return userName;
     }
 
-    public void setName(String name) {
+    public void setuserName(String name) {
         this.userName = name;
     }
 
