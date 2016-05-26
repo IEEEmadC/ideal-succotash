@@ -40,7 +40,9 @@ public class ChatConversationFragment extends Fragment {
 
     EditText messageView;
     CViewAdapter adapter;
+    FloatingActionButton fab;
     public ChatConversationFragment() {
+
     }
 
     @Override
@@ -54,6 +56,9 @@ public class ChatConversationFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new CViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.hide();
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_white_24dp));
 
         final Firebase firebase = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)).concat("/").concat("messages"));
         firebase.keepSynced(true);
@@ -90,9 +95,6 @@ public class ChatConversationFragment extends Fragment {
             }
         });
 
-        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_white_24dp));
-        fab.hide();
         messageView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -155,5 +157,12 @@ public class ChatConversationFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add_white_24dp));
+        fab.show();
     }
 }

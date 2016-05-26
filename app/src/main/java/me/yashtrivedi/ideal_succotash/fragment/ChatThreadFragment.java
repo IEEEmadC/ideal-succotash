@@ -34,7 +34,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
 
     TViewAdapter adapter;
     List<Threads> list;
-
+    FloatingActionButton fab;
     public ChatThreadFragment() {
     }
 
@@ -119,6 +119,8 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
         b.putString(Constants.CONVERSATION_PUSH_ID,t.getKey());
         ChatConversationFragment chatConversationFragment = new ChatConversationFragment();
         chatConversationFragment.setArguments(b);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.hide();
         getFragmentManager().beginTransaction().replace(R.id.container,chatConversationFragment,null).addToBackStack("chat").commit();
 
     }

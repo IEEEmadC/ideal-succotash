@@ -20,6 +20,7 @@ import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.fragment.ListFragment;
 import me.yashtrivedi.ideal_succotash.fragment.OfferedRideFragment;
+import me.yashtrivedi.ideal_succotash.service.ChatNotificationService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        Intent serviceIntent = new Intent(MainActivity.this, ChatNotificationService.class);
+        startService(serviceIntent);
     }
 
     @Override

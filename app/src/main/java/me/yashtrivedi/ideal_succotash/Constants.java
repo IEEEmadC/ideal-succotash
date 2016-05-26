@@ -11,7 +11,7 @@ public class Constants {
     public static final String FIREBASE_LOCATION_REQUEST_RIDE = "rideRequest";
     public static final String FIREBASE_LOCATION_USER_REQUEST = "userRequests";
     public static final String FIREBASE_LOCATION_CHATS = "chats";
-
+    public static final String FIREBASE_LOCATION_MESSAGES = "messages";
     /*Firebase URL*/
     public static final String FIREBASE_URL = "https://ideal-succotash.firebaseio.com";
     public static final String FIREBASE_URL_USERS = FIREBASE_URL.concat("/").concat(FIREBASE_LOCATION_USERS);

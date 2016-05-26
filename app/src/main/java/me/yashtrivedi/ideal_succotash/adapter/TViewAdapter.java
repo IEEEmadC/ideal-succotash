@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import me.yashtrivedi.ideal_succotash.R;
@@ -91,7 +90,7 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
 
         holder.date.setText(tag);
         holder.name.setText(Utils.decodeEmail(thread.getEmail()));
-        holder.msg.setText(thread.getMessage());
+        holder.msg.setText(thread.getmsg());
     }
 
     @Override

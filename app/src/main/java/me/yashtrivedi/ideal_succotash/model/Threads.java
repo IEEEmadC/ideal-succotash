@@ -32,7 +32,7 @@ public class Threads {
     public Threads() {
     }
 
-    public String getMessage(){
+    public String getmsg(){
         return msg;
     }
 
