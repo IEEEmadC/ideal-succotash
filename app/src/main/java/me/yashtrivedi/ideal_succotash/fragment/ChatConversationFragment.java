@@ -44,12 +44,6 @@ public class ChatConversationFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat_conversation, container, false);
         final RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.conv);
@@ -126,7 +120,7 @@ public class ChatConversationFragment extends Fragment {
 
                     final Message m = new Message();
                     m.setFrom(Utils.getMyEmail(getContext()));
-                    m.setMsg(messageView.getText().toString());
+                    m.setMsg(messageView.getText().toString().trim());
                     messageView.setText("");
                     m.setTime(Calendar.getInstance().getTimeInMillis());
                     firebase.push().setValue(m);

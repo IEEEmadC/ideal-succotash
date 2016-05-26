@@ -4,6 +4,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -44,7 +47,7 @@ public class RequestService extends Service {
 ;        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Requesting Ride")
-//                        .setOngoing(true)
+                .setVibrate(new long[0])
                 .setContentIntent(pendingIntent)
                 .addAction(new NotificationCompat.Action(R.drawable.ic_close_black_24dp, "Cancel", PendingIntent.getService(getApplicationContext(),13123,iCancel,0)));
         startForeground(13123, builder.build());
@@ -60,21 +63,28 @@ public class RequestService extends Service {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d("return", dataSnapshot.getValue().toString());
-//                activity.update(Integer.parseInt(dataSnapshot.getValue().toString()), position);
                 int status = Integer.parseInt(dataSnapshot.getValue().toString());
+
                 if (status == Constants.RIDE_REQUEST_ACCEPTED) {
+                    Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
+                            .setVibrate(new long[0])
                             .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                             .setContentText(Utils.statusString(status) + " your request")
-                            .setSubText("Car No: " + b.getString(Constants.CAR_NO));
+                            .setSubText("Car No: " + b.getString(Constants.CAR_NO))
+                            .setSound(notificationUri);
+
+
                     notificationManager.notify(12123, notif.build());
                 } else if (status == Constants.RIDE_REQUEST_REJECTED) {
+                    Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
+                            .setVibrate(new long[0])
                             .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
-                            .setContentText(Utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request");
+                            .setContentText(Utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request")
+                            .setSound(notificationUri);
                     notificationManager.notify(12123, notif.build());
                 }
                 stopForeground(true);
@@ -84,9 +94,9 @@ public class RequestService extends Service {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //activity.remove(position);
                 NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.mipmap.ic_launcher)
+                        .setVibrate(new long[0])
                         .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                         .setContentText("Cancelled the Ride");
                 notificationManager.notify(12123, notif.build());

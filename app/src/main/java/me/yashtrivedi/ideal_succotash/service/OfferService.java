@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -51,17 +54,19 @@ public class OfferService extends Service {
                     NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),13123,intent,0);
+                    Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Ride Request")
-                            .setContentIntent(pendingIntent);
+                            .setContentIntent(pendingIntent)
+                            .setSound(notificationUri)
+                            .setVibrate(new long[0]);
                     if (rides.size() == 1) {
                         Intent aIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
                         aIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
                         aIntent.putExtra("myEmail",request.getEmail());
                         aIntent.putExtra("notif",13123);
                         aIntent.putExtra("paramTag",paramTag);
-                        Log.d("servicemyEmail",request.getEmail());
                         aIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent aPendingIntent = PendingIntent.getService(getApplicationContext(),13123,aIntent,0);
                         Intent rIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);

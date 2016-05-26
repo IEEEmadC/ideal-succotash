@@ -52,7 +52,7 @@ public class ListFragment extends Fragment implements ClickListener {
         // Required empty public constructor
     }
 
-    /*@Override
+    @Override
     public void onResume() {
         super.onResume();
         firebase.addChildEventListener(childEventListener);
@@ -63,7 +63,7 @@ public class ListFragment extends Fragment implements ClickListener {
         super.onPause();
         firebase.removeEventListener(childEventListener);
 
-    }*/
+    }
 
     public void showRequestForm() {
         DialogFragment dialogFragment = ShowOfferFormFragment.newInstance();
@@ -83,6 +83,7 @@ public class ListFragment extends Fragment implements ClickListener {
         recyclerView = (RecyclerView) v.findViewById(R.id.list);
         recyclerView.requestFocus();
         firebase = new Firebase(Constants.FIREBASE_URL_RIDES);
+        firebase.keepSynced(true);
         notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
@@ -162,7 +163,7 @@ public class ListFragment extends Fragment implements ClickListener {
 
             }
         };
-        firebase.addChildEventListener(childEventListener);
+//        firebase.addChildEventListener(childEventListener);
         DefaultItemAnimator animator = new DefaultItemAnimator();
         animator.setAddDuration(500);
         animator.setRemoveDuration(1000);
