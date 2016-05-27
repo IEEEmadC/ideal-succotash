@@ -12,31 +12,35 @@ import me.yashtrivedi.ideal_succotash.model.Threads;
  */
 public class Utils {
 
-    public static String encodeEmail(String unencodedEmail) {
+    Context context;
+    public Utils(Context context){
+        this.context = context;
+    }
+    public String encodeEmail(String unencodedEmail) {
         return unencodedEmail.replace(".", ",");
     }
 
-    public static String decodeEmail(String encodedEmail) {
+    public String decodeEmail(String encodedEmail) {
         return encodedEmail.replace(",", ".");
     }
 
-    public static String emailToroll(String email) {
+    public String emailToroll(String email) {
         return email.split("@")[0].toUpperCase();
     }
 
-    public static String rollToEmail(String roll) {
+    public String rollToEmail(String roll) {
         return roll.concat("@nirmauni,ac,in").toLowerCase();
     }
 
-    public static String getMyEmail(Context context){
+    public String getMyEmail(){
         return PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_ENCODED_EMAIL,"");
     }
 
-    public static String getMyName(Context context){
+    public String getMyName(){
         return PreferenceManager.getDefaultSharedPreferences(context).getString(Constants.KEY_NAME,"");
     }
 
-    public static int getInsertPositionByTime(List<Threads> list, int start, int end, long time){
+    public int getInsertPositionByTime(List<Threads> list, int start, int end, long time){
         if(list.size()==0)
             return 0;
         Long latest = list.get(start).getTime();
@@ -58,7 +62,7 @@ public class Utils {
         }
     }
 
-    public static String statusString(int status) {
+    public String statusString(int status) {
         switch (status) {
             case Constants.RIDE_REQUEST_ACCEPTED:
                 return "Accepted";

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.model.Threads;
@@ -89,10 +90,17 @@ public class TViewAdapter extends RecyclerView.Adapter<TViewHolder> {
 
 
         holder.date.setText(tag);
-        holder.name.setText(Utils.decodeEmail(thread.getEmail()));
+        holder.name.setText(thread.getName() + " (" + BaseApplication.utils.emailToroll(thread.getEmail()) + ") ");
         holder.msg.setText(thread.getmsg());
     }
 
+    public ArrayList<String> getAllEmails(){
+        ArrayList<String> emailList = new ArrayList<>();
+        for(int i=0; i<list.size();i++){
+            emailList.add(list.get(i).getEmail());
+        }
+        return emailList;
+    }
     @Override
     public int getItemCount() {
         return list.size();

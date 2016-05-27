@@ -16,6 +16,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -69,7 +70,7 @@ public class CancelRideIntentService extends IntentService {
      */
     private void handleActionCancel(String myEmail, String reqEmail) {
         // TODO: Handle action Foo
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(Utils.rollToEmail(reqEmail)).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.rollToEmail(reqEmail)).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
         firebase.removeValue();
         Log.d("Cancel",firebase.toString());
         Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(reqEmail));

@@ -25,12 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.activity.ChatActivity;
 import me.yashtrivedi.ideal_succotash.activity.MainActivity;
 import me.yashtrivedi.ideal_succotash.fragment.ChatThreadFragment;
+import me.yashtrivedi.ideal_succotash.model.Threads;
 
 /**
  * Created by amit on 26-May-16.
@@ -40,6 +42,7 @@ public class ChatNotificationService extends Service {
 
     Firebase firebase;
     String chatId;
+    static List<Threads> list;
 
     public ChatNotificationService() {
 
@@ -48,80 +51,33 @@ public class ChatNotificationService extends Service {
     @Override
     public int onStartCommand(final Intent intent, final int flags, int startId) {
         // Toast.makeText(getBaseContext(), "service started", Toast.LENGTH_LONG).show();
-        firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getBaseContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
+        //startForeground(123110, null);
+        list = new ArrayList<>();
+        firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
 
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                notifyMessage(dataSnapshot, getApplicationContext());
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                chatId = dataSnapshot.getKey();
-                Firebase firebaseChat = new Firebase(Constants.FIREBASE_URL.concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(chatId).concat("/").concat(Constants.FIREBASE_LOCATION_MESSAGES));
-                Query query = firebaseChat.orderByChild("time").limitToLast(1);
-                query.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                        String values[] = dataSnapshot.getValue().toString().split(",");
-                        String emailValues[] = values[2].split("=");
-                        String emailTemp = emailValues[1] + "," + values[3] + "," + values[4];
-                        String emailTemp2 = emailValues[1] + "." + values[3] + "." + values[4];
-                        String emailTe2[] = emailTemp2.split(Pattern.quote("}"));
-                        String email = emailTemp.split(Pattern.quote("}"))[0];
-                        String message = values[1].split("=")[1];
-
-
-                        if (!(email.equals(Utils.getMyEmail(getBaseContext())))) {
-
-                            Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                            Intent intent2 = new Intent(getApplicationContext(), ChatActivity.class);
-                            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 13110, intent2, 0);
-                            NotificationCompat.Builder notif = new NotificationCompat.Builder(getApplicationContext())
-                                    .setSmallIcon(R.mipmap.ic_launcher)
-                                    .setVibrate(new long[0])
-                                    .setContentTitle(emailTe2[0])
-                                    .setContentText(message)
-                                    .setSound(notificationUri)
-                                    .setContentIntent(pendingIntent)
-                                    .setAutoCancel(true);
-                            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                            notificationManager.notify("onethreetwo", 12345, notif.build());
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        Log.d("childChanged1231", dataSnapshot.getKey());
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-
+                notifyMessage(dataSnapshot, getApplicationContext());
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                for (Threads t : list) {
+                    if (t.getKey().equals(dataSnapshot.getKey())) {
+                        list.remove(t);
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -136,6 +92,63 @@ public class ChatNotificationService extends Service {
         });
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public static void notifyMessage(DataSnapshot dataSnapshot, Context context) {
+        Threads t = dataSnapshot.getValue(Threads.class);
+        t.setKey(dataSnapshot.getKey());
+
+        if (t.getUnreadCount() > 0)
+            list.add(t);
+
+        if (list.size() == 1) {
+            Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Intent intent2 = new Intent(context, ChatActivity.class);
+            intent2.putExtra(Constants.THREAD_EMAIL, t.getEmail());
+            intent2.putExtra(Constants.CONVERSATION_PUSH_ID, t.getKey());
+            intent2.putExtra("toChat", true);
+            intent2.putExtra(Constants.USER_NAME, t.getName());
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 13110, intent2, 0);
+            NotificationCompat.Builder notif = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setVibrate(new long[0])
+                    .setContentTitle(t.getName() + " (" + BaseApplication.utils.emailToroll(t.getEmail()) + ") ")
+                    .setContentText(t.getmsg())
+                    .setSound(notificationUri)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify("onethreetwo", 12345, notif.build());
+        } else if(list.size()>1) {
+            String text = "";
+            for(Threads thread : list){
+                if(text.equals("")){
+                    text.concat(thread.getName()).concat(": ").concat(thread.getmsg());
+                }
+                else{
+                    text.concat("/n").concat(thread.getName()).concat(": ").concat(thread.getmsg());
+                }
+            }
+            Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Intent intent2 = new Intent(context, ChatActivity.class);
+            intent2.putExtra(Constants.THREAD_EMAIL, t.getEmail());
+            intent2.putExtra(Constants.CONVERSATION_PUSH_ID, t.getKey());
+            intent2.putExtra("toChat", true);
+            intent2.putExtra(Constants.USER_NAME, t.getName());
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 13110, intent2, 0);
+            NotificationCompat.Builder notif = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setVibrate(new long[0])
+                    .setContentTitle("New Messages")
+                    .setContentText(text)
+                    .setSound(notificationUri)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify("onethreetwo", 12345, notif.build());
+        }
+
+
     }
 
     @Nullable

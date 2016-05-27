@@ -18,10 +18,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -36,9 +38,10 @@ public class ShowCreateChatFragment extends DialogFragment {
     AutoCompleteAdapter adapter;
     String name;
 
-    public static ShowCreateChatFragment newInstance() {
+    public static ShowCreateChatFragment newInstance(ArrayList<String> array) {
         ShowCreateChatFragment fragment = new ShowCreateChatFragment();
         Bundle b = new Bundle();
+        b.putStringArrayList("Emails",array);
         fragment.setArguments(b);
         return fragment;
     }
@@ -58,11 +61,11 @@ public class ShowCreateChatFragment extends DialogFragment {
         appCompatAutoCompleteTextView = (AppCompatAutoCompleteTextView) v.findViewById(R.id.addName);
         appCompatAutoCompleteTextView.setAdapter(adapter);
         appCompatAutoCompleteTextView.requestFocus();
-
+        final ArrayList<String> emails = getArguments().getStringArrayList("Emails");
         appCompatAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                appCompatAutoCompleteTextView.setText(Utils.decodeEmail(adapter.getItem(position).getEmail()));
+                appCompatAutoCompleteTextView.setText(BaseApplication.utils.decodeEmail(adapter.getItem(position).getEmail()));
                 name = adapter.getItem(position).getName();
                 Log.d("position",position+"");
             }
@@ -72,7 +75,7 @@ public class ShowCreateChatFragment extends DialogFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot d : dataSnapshot.getChildren()) {
-                    if(!d.getKey().equals(Utils.getMyEmail(getContext()))) {
+                    if(!d.getKey().equals(BaseApplication.utils.getMyEmail())&&!(emails.contains(d.getKey()))) {
                         User u = d.getValue(User.class);
                         u.setEmail(d.getKey());
                         adapter.add(u);
@@ -91,34 +94,34 @@ public class ShowCreateChatFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String email = appCompatAutoCompleteTextView.getText().toString();
                         Long time = Calendar.getInstance().getTimeInMillis();
-                        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS)).push();
+                        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS)).push();
                         Map<String, Object> map = new HashMap<>();
-                        map.put(Constants.THREAD_EMAIL, Utils.encodeEmail(email));
+                        map.put(Constants.THREAD_EMAIL, BaseApplication.utils.encodeEmail(email));
                         map.put(Constants.THREAD_NAME, name);
                         map.put(Constants.THREAD_READ, true);
                         map.put(Constants.THREAD_TIME, time);
                         map.put(Constants.THREAD_UNREAD_COUNT, 0);
                         firebase1.setValue(map);
                         String threadID = firebase1.getKey();
-                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.encodeEmail(appCompatAutoCompleteTextView.getText().toString())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(threadID));
+                        Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.encodeEmail(appCompatAutoCompleteTextView.getText().toString())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(threadID));
                         Map<String, Object> map1 = new HashMap<>();
-                        map1.put(Constants.THREAD_EMAIL, Utils.getMyEmail(getContext()));
-                        map1.put(Constants.THREAD_NAME, Utils.getMyName(getContext()));
+                        map1.put(Constants.THREAD_EMAIL, BaseApplication.utils.getMyEmail());
+                        map1.put(Constants.THREAD_NAME, BaseApplication.utils.getMyName());
                         map1.put(Constants.THREAD_READ, true);
                         map1.put(Constants.THREAD_TIME, time);
                         map1.put(Constants.THREAD_UNREAD_COUNT, 0);
                         firebase2.setValue(map1);
                         Firebase firebase3 = new Firebase(Constants.FIREBASE_URL_CHATS);
                         Map<String,Object> map2 = new HashMap<>();
-                        map2.put(Utils.getMyEmail(getContext()),true);
-                        map2.put(Utils.encodeEmail(email),true);
+                        map2.put(BaseApplication.utils.getMyEmail(),true);
+                        map2.put(BaseApplication.utils.encodeEmail(email),true);
                         Map<String,Object> map3 = new HashMap<>();
                         map3.put("members",map2);
                         Map<String,Object> map4 = new HashMap<>();
                         map4.put(threadID,map3);
                         firebase3.updateChildren(map4);
                         Bundle b = new Bundle();
-                        b.putString(Constants.THREAD_EMAIL,email);
+                        b.putString(Constants.THREAD_EMAIL,BaseApplication.utils.encodeEmail(email));
                         b.putString(Constants.CONVERSATION_PUSH_ID,threadID);
                         ChatConversationFragment fragment = new ChatConversationFragment();
                         fragment.setArguments(b);

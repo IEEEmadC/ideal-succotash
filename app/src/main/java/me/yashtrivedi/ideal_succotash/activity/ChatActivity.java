@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.firebase.client.ChildEventListener;
@@ -22,6 +23,7 @@ import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.adapter.TViewAdapter;
+import me.yashtrivedi.ideal_succotash.fragment.ChatConversationFragment;
 import me.yashtrivedi.ideal_succotash.fragment.ChatThreadFragment;
 import me.yashtrivedi.ideal_succotash.fragment.ShowCreateChatFragment;
 import me.yashtrivedi.ideal_succotash.model.Threads;
@@ -32,11 +34,22 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
 
+        Bundle b = getIntent().getExtras();
+        if(b!=null&&b.getBoolean("toChat",false)){
+            ChatConversationFragment chatConversationFragment = new ChatConversationFragment();
+            chatConversationFragment.setArguments(b);
+            fragmentManager.beginTransaction().replace(R.id.container,chatConversationFragment).commit();
+        }
+        else
         fragmentManager.beginTransaction().replace(R.id.container,new ChatThreadFragment()).commit();
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        getSupportFragmentManager().popBackStack();
+        return true;
     }
 
 }

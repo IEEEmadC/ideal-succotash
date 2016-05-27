@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -89,7 +90,7 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
                         break;
                 }
                 holder.status.setVisibility(View.VISIBLE);
-                holder.status.setText(Utils.statusString(ru.getStatus()));
+                holder.status.setText(BaseApplication.utils.statusString(ru.getStatus()));
                 holder.acceptCancelButtonHolder.setVisibility(View.GONE);
                 firebase.updateChildren(map);
                 Firebase ride = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine).concat("/").concat(Constants.CAR_CAPACITY));
@@ -115,12 +116,12 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
         };
         Boolean stat = ru.getStatus() == 0;
         holder.area.setText(ru.getArea());
-        holder.name.setText(ru.getuserName() + "\n(" + Utils.emailToroll(ru.getEmail()) + ")");
+        holder.name.setText(ru.getuserName() + "\n(" + BaseApplication.utils.emailToroll(ru.getEmail()) + ")");
         Log.d("here", ru.getStatus() + "");
         holder.acceptCancelButtonHolder.setVisibility(!stat ? View.GONE : View.VISIBLE);
         holder.status.setVisibility(stat ? View.GONE : View.VISIBLE);
         if (ru.getStatus() != 0) {
-            holder.status.setText(Utils.statusString(ru.getStatus()));
+            holder.status.setText(BaseApplication.utils.statusString(ru.getStatus()));
         } else {
             holder.acceptButton.setOnClickListener(mOnClickListner);
             holder.cancelButton.setOnClickListener(mOnClickListner);

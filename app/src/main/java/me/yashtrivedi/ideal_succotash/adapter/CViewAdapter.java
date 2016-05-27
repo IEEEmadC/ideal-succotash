@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -37,7 +38,7 @@ public class CViewAdapter extends RecyclerView.Adapter<CViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position).getFrom().equals(Utils.getMyEmail(context)) ? Constants.MESSAGE_VIEW_OWN : Constants.MESSAGE_VIEW_OTHERS;
+        return list.get(position).getFrom().equals(BaseApplication.utils.getMyEmail()) ? Constants.MESSAGE_VIEW_OWN : Constants.MESSAGE_VIEW_OTHERS;
     }
 
     @Override

@@ -2,20 +2,26 @@ package me.yashtrivedi.ideal_succotash.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -28,6 +34,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -41,7 +48,7 @@ public class ChatConversationFragment extends Fragment {
 
     EditText messageView;
     CViewAdapter adapter;
-    FloatingActionButton fab;
+    FloatingActionButton fab,fab2;
     Firebase firebase;
     ChildEventListener listener;
 
@@ -50,9 +57,16 @@ public class ChatConversationFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat_conversation, container, false);
         final RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.conv);
+        getActivity().setTitle(getArguments().getString(Constants.USER_NAME));
         messageView = (EditText) v.findViewById(R.id.new_msg);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -60,15 +74,10 @@ public class ChatConversationFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new CViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
-            @Override
-            public void onHidden(FloatingActionButton fab) {
-                super.onHidden(fab);
-                fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_white_24dp));
-            }
-        });
-
+        fab2 = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab2.hide();
+        fab = (FloatingActionButton) v.findViewById(R.id.fab_chat);
+        fab.hide();
         firebase = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)).concat("/").concat("messages"));
         firebase.keepSynced(true);
         listener = new ChildEventListener() {
@@ -76,7 +85,7 @@ public class ChatConversationFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) throws NullPointerException{
                 adapter.add(dataSnapshot.getValue(Message.class));
                 recyclerView.scrollToPosition(0);
-                Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
+                Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
                 Map<String, Object> map = new HashMap<>();
                 map.put(Constants.THREAD_READ, true);
                 map.put(Constants.THREAD_UNREAD_COUNT, 0);
@@ -125,12 +134,19 @@ public class ChatConversationFragment extends Fragment {
 
             }
         });
+
+        messageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerView.scrollToPosition(0);
+            }
+        });
         fab.setOnClickListener(new View.OnClickListener()   {
             @Override
             public void onClick(View v) {
-
+                    fab.hide();
                     final Message m = new Message();
-                    m.setFrom(Utils.getMyEmail(getContext()));
+                    m.setFrom(BaseApplication.utils.getMyEmail());
                     m.setMsg(messageView.getText().toString().trim());
                     messageView.setText("");
                     m.setTime(Calendar.getInstance().getTimeInMillis());
@@ -154,8 +170,7 @@ public class ChatConversationFragment extends Fragment {
 
                         }
                     });
-
-                    Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
+                    Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
                     Map<String, Object> map = new HashMap<>();
                     map.put(Constants.THREAD_READ, true);
                     map.put(Constants.THREAD_UNREAD_COUNT, 0);
@@ -169,10 +184,13 @@ public class ChatConversationFragment extends Fragment {
         return v;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add_white_24dp));
-        fab.show();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        fab2.show();
     }
+
+
 }

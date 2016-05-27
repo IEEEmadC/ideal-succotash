@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.model.User;
@@ -27,6 +28,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
         super(context, textViewResourceId);
         itemsAll = new ArrayList<>();
         suggestions = new ArrayList<>();
+
     }
 
     @Override
@@ -34,16 +36,21 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
         super.add(object);
         itemsAll.add(0,object);
     }
+
 /*
     @Override
     public int getCount() {
         return super.getCount();
     }*/
 
-    /*@Override
+    @Override
     public User getItem(int position) {
-        return itemsAll.get(position);
-    }*/
+
+        if(suggestions==null||suggestions.size()==0)
+            return itemsAll.get(itemsAll.size()-position-1);
+
+        return suggestions.get(suggestions.size()-position-1);
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,7 +64,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
             TextView name = (TextView) v.findViewById(R.id.name);
             name.setText(user.getName());
             TextView email = (TextView) v.findViewById(R.id.email);
-            email.setText(Utils.emailToroll(user.getEmail()));
+            email.setText(BaseApplication.utils.emailToroll(user.getEmail()));
         }
         return v;
     }
@@ -80,7 +87,7 @@ public class AutoCompleteAdapter extends ArrayAdapter<User> implements Filterabl
             if(constraint!=null){
                 suggestions.clear();
                 for(User user : itemsAll){
-                    if(user.getName().toLowerCase().contains(constraint.toString().toLowerCase()) || Utils.emailToroll(user.getEmail()).toLowerCase().contains(constraint.toString().toLowerCase())){
+                    if(user.getName().toLowerCase().contains(constraint.toString().toLowerCase()) || BaseApplication.utils.emailToroll(user.getEmail()).toLowerCase().contains(constraint.toString().toLowerCase())){
                         if(!suggestions.contains(user))
                              suggestions.add(user);
                     }

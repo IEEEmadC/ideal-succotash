@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.ClickListener;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
@@ -52,10 +53,9 @@ public class ListFragment extends Fragment implements ClickListener {
         // Required empty public constructor
     }
 
-    @Override
+ /*   @Override
     public void onResume() {
         super.onResume();
-        firebase.addChildEventListener(childEventListener);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ListFragment extends Fragment implements ClickListener {
         firebase.removeEventListener(childEventListener);
 
     }
-
+*/
     public void showRequestForm() {
         DialogFragment dialogFragment = ShowOfferFormFragment.newInstance();
         dialogFragment.show(getFragmentManager(), "ShowOfferFormFragment");
@@ -107,7 +107,7 @@ public class ListFragment extends Fragment implements ClickListener {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ListUser lu = dataSnapshot.getValue(ListUser.class);
-                lu.setRoll(Utils.emailToroll(dataSnapshot.getKey()));
+                lu.setRoll(BaseApplication.utils.emailToroll(dataSnapshot.getKey()));
                 Map<String, Object> rr = lu.getRideRequest();
                 if (rr != null) {
                     lu.setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
@@ -123,7 +123,7 @@ public class ListFragment extends Fragment implements ClickListener {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 int pos = 0;
                 for (ListUser lu : list) {
-                    if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
+                    if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
                         int capacity = dataSnapshot.getValue(ListUser.class).getCapacity();
                         Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).getRideRequest();
                         if (rr != null) {
@@ -144,7 +144,7 @@ public class ListFragment extends Fragment implements ClickListener {
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 int pos = 0;
                 for (ListUser lu : list) {
-                    if (lu.getRoll().equals(Utils.emailToroll(dataSnapshot.getKey()))) {
+                    if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
                         list.remove(lu);
                         adapter.removeItem(pos);
                         break;
@@ -163,7 +163,8 @@ public class ListFragment extends Fragment implements ClickListener {
 
             }
         };
-//        firebase.addChildEventListener(childEventListener);
+
+        firebase.addChildEventListener(childEventListener);
         DefaultItemAnimator animator = new DefaultItemAnimator();
         animator.setAddDuration(500);
         animator.setRemoveDuration(1000);
@@ -200,7 +201,7 @@ public class ListFragment extends Fragment implements ClickListener {
             list.get(position).setTried();
             adapter.updateTried(position);
             Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/")
-                    .concat(Utils.rollToEmail(lu.getRoll())).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
+                    .concat(BaseApplication.utils.rollToEmail(lu.getRoll())).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
             Map<String, Object> map = new HashMap<>();
             Map<String, Object> current = new HashMap<>();
             String myEmail = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "");
@@ -211,10 +212,10 @@ public class ListFragment extends Fragment implements ClickListener {
             firebase.updateChildren(current);
             Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat((myEmail)));
             Map<String, Object> map1 = new HashMap<>();
-            map1.put(Utils.rollToEmail(lu.getRoll()),true);
+            map1.put(BaseApplication.utils.rollToEmail(lu.getRoll()),true);
             firebase2.updateChildren(map1);
             Intent i = new Intent(getContext(), RequestService.class);
-            i.putExtra(Constants.REQUESTED_USER, Utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
+            i.putExtra(Constants.REQUESTED_USER, BaseApplication.utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
             i.putExtra("position", position);
             i.putExtra("name", lu.getuserName());
             i.putExtra(Constants.KEY_ENCODED_EMAIL, lu.getRoll());

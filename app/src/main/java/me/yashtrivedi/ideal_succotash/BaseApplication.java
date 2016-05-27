@@ -9,11 +9,13 @@ import com.firebase.client.Firebase;
  */
 public class BaseApplication extends Application {
 
+    public static Utils utils;
     @Override
     public void onCreate() {
         super.onCreate();
         Firebase.setAndroidContext(this);
         Firebase.getDefaultConfig().setPersistenceEnabled(true);
+        utils = new Utils(getApplicationContext());
     }
 
 

@@ -15,6 +15,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -40,9 +41,10 @@ public class MainActivity extends AppCompatActivity {
             b.putBoolean("animation",false);
             f.setArguments(b);
             fm.beginTransaction().replace(R.id.container, f).commit();
+
         }
 
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(Utils.getMyEmail(this)));
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.getMyEmail()));
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

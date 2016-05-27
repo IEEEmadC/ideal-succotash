@@ -41,6 +41,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.ImageHelper;
 import me.yashtrivedi.ideal_succotash.R;
@@ -253,7 +254,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             unprocessedEmail = mSharedPref.getString(Constants.KEY_GOOGLE_EMAIL, null);
         }
 
-        mEncodedEmail = Utils.encodeEmail(unprocessedEmail);
+        mEncodedEmail = BaseApplication.utils.encodeEmail(unprocessedEmail);
         final String userName = acct.getDisplayName();
         //final Firebase userLocation = new Firebase(Constants.FIREBASE_URL_USERS).child(mEncodedEmail);
 

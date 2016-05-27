@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.ClickListener;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
@@ -56,6 +57,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat_thread, container, false);
+        getActivity().setTitle("Chats");
         adapter = new TViewAdapter(getContext());
         list = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.thread_list);
@@ -63,11 +65,11 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialogFragment = ShowCreateChatFragment.newInstance();
+                DialogFragment dialogFragment = ShowCreateChatFragment.newInstance( adapter.getAllEmails());
                 dialogFragment.show(getFragmentManager(), "ShowCreateChatFragment");
             }
         });
-        firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
+        firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
         firebase.keepSynced(true);
         listener = new ChildEventListener() {
             @Override
@@ -75,7 +77,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
                 try {
                     Threads t = dataSnapshot.getValue(Threads.class);
                     t.setKey(dataSnapshot.getKey());
-                    int position = Utils.getInsertPositionByTime(list, 0, list.size() - 1, t.getTime());
+                    int position = BaseApplication.utils.getInsertPositionByTime(list, 0, list.size() - 1, t.getTime());
                     list.add(position, t);
                     adapter.add(position, t);
                 }catch (NullPointerException ne){}
@@ -92,7 +94,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
                         }
                         oldPosition++;
                     }
-                    int newPosition = Utils.getInsertPositionByTime(list, 0, oldPosition, t.getTime());
+                    int newPosition = BaseApplication.utils.getInsertPositionByTime(list, 0, oldPosition, t.getTime());
                     list.remove(oldPosition);
                     list.add(newPosition, t);
                     adapter.move(oldPosition, newPosition, t.getTime());
@@ -135,6 +137,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
         Bundle b = new Bundle();
         b.putString(Constants.THREAD_EMAIL,t.getEmail());
         b.putString(Constants.CONVERSATION_PUSH_ID,t.getKey());
+        b.putString(Constants.USER_NAME,t.getName());
         ChatConversationFragment chatConversationFragment = new ChatConversationFragment();
         chatConversationFragment.setArguments(b);
         getFragmentManager().beginTransaction().replace(R.id.container,chatConversationFragment,null).addToBackStack("chat").commit();

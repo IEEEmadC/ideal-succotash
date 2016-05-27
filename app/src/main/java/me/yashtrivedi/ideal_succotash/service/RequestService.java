@@ -17,6 +17,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -70,7 +71,7 @@ public class RequestService extends Service {
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setVibrate(new long[0])
                             .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
-                            .setContentText(Utils.statusString(status) + " your request")
+                            .setContentText(BaseApplication.utils.statusString(status) + " your request")
                             .setSubText("Car No: " + b.getString(Constants.CAR_NO))
                             .setSound(notificationUri);
 
@@ -82,7 +83,7 @@ public class RequestService extends Service {
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setVibrate(new long[0])
                             .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
-                            .setContentText(Utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request")
+                            .setContentText(BaseApplication.utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request")
                             .setSound(notificationUri);
                     notificationManager.notify(12123, notif.build());
                 }
