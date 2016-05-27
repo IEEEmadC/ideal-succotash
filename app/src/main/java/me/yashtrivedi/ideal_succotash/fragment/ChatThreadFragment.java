@@ -35,6 +35,20 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
     TViewAdapter adapter;
     List<Threads> list;
     FloatingActionButton fab;
+    Firebase firebase;
+    ChildEventListener listener;
+    @Override
+    public void onResume() {
+        super.onResume();
+//        firebase.addChildEventListener(listener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        firebase.removeEventListener(listener);
+    }
+
     public ChatThreadFragment() {
     }
 
@@ -45,7 +59,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
         adapter = new TViewAdapter(getContext());
         list = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.thread_list);
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,37 +67,40 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
                 dialogFragment.show(getFragmentManager(), "ShowCreateChatFragment");
             }
         });
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
+        firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
         firebase.keepSynced(true);
-        firebase.addChildEventListener(new ChildEventListener() {
+        listener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Threads t = dataSnapshot.getValue(Threads.class);
-                t.setKey(dataSnapshot.getKey());
-                int position = Utils.getInsertPositionByTime(list, 0, list.size() - 1, t.getTime());
-                list.add(position, t);
-                adapter.add(position, t);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) throws NullPointerException{
+                try {
+                    Threads t = dataSnapshot.getValue(Threads.class);
+                    t.setKey(dataSnapshot.getKey());
+                    int position = Utils.getInsertPositionByTime(list, 0, list.size() - 1, t.getTime());
+                    list.add(position, t);
+                    adapter.add(position, t);
+                }catch (NullPointerException ne){}
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Threads t = dataSnapshot.getValue(Threads.class);
-                t.setKey(dataSnapshot.getKey());
-                int oldPosition = 0;
-                for (Threads lt : list) {
-                    if (lt.getKey().equals(t.getKey())) {
-                        break;
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) throws NullPointerException{
+                    Threads t = dataSnapshot.getValue(Threads.class);
+                    t.setKey(dataSnapshot.getKey());
+                    int oldPosition = 0;
+                    for (Threads lt : list) {
+                        if (lt.getKey().equals(t.getKey())) {
+                            break;
+                        }
+                        oldPosition++;
                     }
-                    oldPosition++;
-                }
-                int newPosition = Utils.getInsertPositionByTime(list, 0, oldPosition, t.getTime());
-                list.remove(oldPosition);
-                list.add(newPosition, t);
-                adapter.move(oldPosition, newPosition, t.getTime());
+                    int newPosition = Utils.getInsertPositionByTime(list, 0, oldPosition, t.getTime());
+                    list.remove(oldPosition);
+                    list.add(newPosition, t);
+                    adapter.move(oldPosition, newPosition, t.getTime());
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) throws NullPointerException{
+
                 int oldPosition = 0;
                 for (Threads lt : list) {
                     if (lt.getKey().equals(dataSnapshot.getKey())) {
@@ -104,7 +121,8 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        };
+        firebase.addChildEventListener(listener);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(),recyclerView,this));
@@ -119,8 +137,6 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
         b.putString(Constants.CONVERSATION_PUSH_ID,t.getKey());
         ChatConversationFragment chatConversationFragment = new ChatConversationFragment();
         chatConversationFragment.setArguments(b);
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.hide();
         getFragmentManager().beginTransaction().replace(R.id.container,chatConversationFragment,null).addToBackStack("chat").commit();
 
     }

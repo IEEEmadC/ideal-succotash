@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,9 @@ public class ChatConversationFragment extends Fragment {
     EditText messageView;
     CViewAdapter adapter;
     FloatingActionButton fab;
+    Firebase firebase;
+    ChildEventListener listener;
+
     public ChatConversationFragment() {
 
     }
@@ -57,14 +61,19 @@ public class ChatConversationFragment extends Fragment {
         adapter = new CViewAdapter(getContext());
         recyclerView.setAdapter(adapter);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.hide();
-        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_white_24dp));
-
-        final Firebase firebase = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)).concat("/").concat("messages"));
-        firebase.keepSynced(true);
-        firebase.addChildEventListener(new ChildEventListener() {
+        fab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onHidden(FloatingActionButton fab) {
+                super.onHidden(fab);
+                fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_white_24dp));
+            }
+        });
+
+        firebase = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)).concat("/").concat("messages"));
+        firebase.keepSynced(true);
+        listener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) throws NullPointerException{
                 adapter.add(dataSnapshot.getValue(Message.class));
                 recyclerView.scrollToPosition(0);
                 Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(Utils.getMyEmail(getContext())).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
@@ -75,7 +84,7 @@ public class ChatConversationFragment extends Fragment {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) throws NullPointerException{
 
             }
 
@@ -93,8 +102,8 @@ public class ChatConversationFragment extends Fragment {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
-
+        };
+        firebase.addChildEventListener(listener);
         messageView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -133,7 +142,8 @@ public class ChatConversationFragment extends Fragment {
                             int count = Integer.parseInt(((Map<String, Object>) dataSnapshot.getValue()).get(Constants.THREAD_UNREAD_COUNT).toString());
                             Map<String, Object> map = new HashMap<String, Object>();
                             map.put(Constants.THREAD_READ, false);
-                            map.put(Constants.THREAD_UNREAD_COUNT, count++);
+                            map.put(Constants.THREAD_UNREAD_COUNT, ++count);
+                            Log.d("new count",count+"");
                             map.put(Constants.THREAD_TIME, m.getTime());
                             map.put(Constants.THREAD_LAST_MSG, m.getMsg());
                             firebase1.updateChildren(map);
