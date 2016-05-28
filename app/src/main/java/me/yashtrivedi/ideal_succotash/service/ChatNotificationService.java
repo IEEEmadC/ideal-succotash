@@ -123,7 +123,7 @@ public class ChatNotificationService extends Service {
             String text = "";
             for(Threads thread : list){
                 if(text.equals("")){
-                    text.concat(thread.getName()).concat(": ").concat(thread.getmsg());
+                    text+=thread.getName()+": "+thread.getmsg();
                 }
                 else{
                     text.concat("/n").concat(thread.getName()).concat(": ").concat(thread.getmsg());

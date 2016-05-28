@@ -123,6 +123,7 @@ public class ShowCreateChatFragment extends DialogFragment {
                         Bundle b = new Bundle();
                         b.putString(Constants.THREAD_EMAIL,BaseApplication.utils.encodeEmail(email));
                         b.putString(Constants.CONVERSATION_PUSH_ID,threadID);
+                        b.putString(Constants.USER_NAME,name);
                         ChatConversationFragment fragment = new ChatConversationFragment();
                         fragment.setArguments(b);
                         getFragmentManager().beginTransaction().replace(R.id.container,fragment,null).addToBackStack("chat").commit();
