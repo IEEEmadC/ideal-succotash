@@ -54,7 +54,7 @@ public class ShowCreateChatFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomTheme_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_DialogSingle);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View v = inflater.inflate(R.layout.dialog_create_chat, null, false);
         adapter = new AutoCompleteAdapter(getContext(), R.layout.autocomplete_item);
