@@ -1,5 +1,6 @@
 package me.yashtrivedi.ideal_succotash.activity;
 
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,6 +47,8 @@ public class ChatActivity extends AppCompatActivity {
         else
         fragmentManager.beginTransaction().replace(R.id.container,new ChatThreadFragment()).commit();
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel("onethreetwo",12345);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

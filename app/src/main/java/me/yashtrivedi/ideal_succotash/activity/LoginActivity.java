@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
         firebase = new Firebase(Constants.FIREBASE_URL);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(this);
