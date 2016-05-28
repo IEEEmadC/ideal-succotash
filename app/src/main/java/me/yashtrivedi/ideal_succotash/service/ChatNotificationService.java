@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import me.yashtrivedi.ideal_succotash.BaseApplication;
+import me.yashtrivedi.ideal_succotash.BootReceiver;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
@@ -49,8 +50,18 @@ public class ChatNotificationService extends Service {
     }
 
     @Override
-    public int onStartCommand(final Intent intent, final int flags, int startId) {
-        // Toast.makeText(getBaseContext(), "service started", Toast.LENGTH_LONG).show();
+    public void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent(getApplicationContext(), BootReceiver.class);
+        intent.setAction("Chat_Service_Destroyed");
+        Log.d("service","destroyed");
+        Toast.makeText(getApplicationContext(),"service destroyed",Toast.LENGTH_LONG).show();
+        sendBroadcast(intent);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+         Toast.makeText(getBaseContext(), "service started", Toast.LENGTH_LONG).show();
         //startForeground(123110, null);
         if(BaseApplication.utils.getMyEmail()==null){
             stopSelf();
@@ -84,7 +95,8 @@ public class ChatNotificationService extends Service {
                             .setContentText(t.getmsg())
                             .setSound(notificationUri)
                             .setContentIntent(pendingIntent)
-                            .setAutoCancel(true);
+                            .setAutoCancel(true)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH);
                     NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify("onethreetwo", 12345, notif.build());
                 } else if(list.size()>1) {
@@ -111,7 +123,8 @@ public class ChatNotificationService extends Service {
                             .setContentText(text)
                             .setSound(notificationUri)
                             .setContentIntent(pendingIntent)
-                            .setAutoCancel(true);
+                            .setAutoCancel(true)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH);
                     NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify("onethreetwo", 12345, notif.build());
                 }
@@ -147,7 +160,8 @@ public class ChatNotificationService extends Service {
                                 .setContentText(t.getmsg())
                                 .setSound(notificationUri)
                                 .setContentIntent(pendingIntent)
-                                .setAutoCancel(true);
+                                .setAutoCancel(true)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH);
                         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.notify("onethreetwo", 12345, notif.build());
                     } else if(list.size()>1) {
@@ -174,7 +188,8 @@ public class ChatNotificationService extends Service {
                                 .setContentText(text)
                                 .setSound(notificationUri)
                                 .setContentIntent(pendingIntent)
-                                .setAutoCancel(true);
+                                .setAutoCancel(true)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH);
                         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.notify("onethreetwo", 12345, notif.build());
                     }
@@ -208,7 +223,7 @@ public class ChatNotificationService extends Service {
             }
         });
 
-        return START_STICKY;
+        return super.onStartCommand(intent,flags,startId);
     }
 
     @Override

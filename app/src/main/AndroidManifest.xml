@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -24,6 +25,7 @@
         <receiver android:name=".BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="Chat_Service_Destroyed"/>
             </intent-filter>
         </receiver>
         <service

@@ -73,9 +73,8 @@ public class RequestService extends Service {
                             .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                             .setContentText(BaseApplication.utils.statusString(status) + " your request")
                             .setSubText("Car No: " + b.getString(Constants.CAR_NO))
-                            .setSound(notificationUri);
-
-
+                            .setSound(notificationUri)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH);
                     notificationManager.notify(12123, notif.build());
                 } else if (status == Constants.RIDE_REQUEST_REJECTED) {
                     Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -84,7 +83,8 @@ public class RequestService extends Service {
                             .setVibrate(new long[0])
                             .setContentTitle(b.getString("name") + " (" + b.getString(Constants.KEY_ENCODED_EMAIL) + ")")
                             .setContentText(BaseApplication.utils.statusString(Constants.RIDE_REQUEST_REJECTED) + " your request")
-                            .setSound(notificationUri);
+                            .setSound(notificationUri)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH);
                     notificationManager.notify(12123, notif.build());
                 }
                 stopForeground(true);

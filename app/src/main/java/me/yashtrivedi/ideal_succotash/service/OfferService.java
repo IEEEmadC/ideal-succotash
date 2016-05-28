@@ -61,6 +61,7 @@ public class OfferService extends Service {
                             .setContentTitle("Ride Request")
                             .setContentIntent(pendingIntent)
                             .setSound(notificationUri)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .setVibrate(new long[0]);
                     if (rides.size() == 1) {
                         Intent aIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
