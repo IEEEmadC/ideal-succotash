@@ -26,8 +26,8 @@ public class SplashScreen extends AwesomeSplash {
         configSplash.setRevealFlagY(Flags.REVEAL_BOTTOM); //or Flags.REVEAL_TOP
 
         configSplash.setPathSplash(Constants.DROID_LOGO); //set path String
-        configSplash.setOriginalHeight(450); //in relation to your svg (path) resource
-        configSplash.setOriginalWidth(450); //in relation to your svg (path) resource
+        configSplash.setOriginalHeight(475); //in relation to your svg (path) resource
+        configSplash.setOriginalWidth(475); //in relation to your svg (path) resource
         configSplash.setAnimPathStrokeDrawingDuration(3000);
         configSplash.setPathSplashStrokeSize(3); //I advise value be <5
         configSplash.setPathSplashStrokeColor(R.color.colorAccent); //any color you want form colors.xml

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ideal-succotash</string>
+    <string name="app_name">Hitch</string>
     <string name="title_text">Google Sign-In</string>
     <string name="signed_in">Signed in</string>
     <string name="signing_in">Signing in…</string>

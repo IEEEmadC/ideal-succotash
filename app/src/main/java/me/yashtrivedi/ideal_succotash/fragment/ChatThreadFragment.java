@@ -1,5 +1,7 @@
 package me.yashtrivedi.ideal_succotash.fragment;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -58,6 +60,7 @@ public class ChatThreadFragment extends Fragment implements ClickListener {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat_thread, container, false);
         getActivity().setTitle("Chats");
+        ((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE)).cancel("onethreetwo",12345);
         adapter = new TViewAdapter(getContext());
         list = new ArrayList<>();
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.thread_list);

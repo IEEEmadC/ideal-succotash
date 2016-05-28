@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -41,7 +42,6 @@ import me.yashtrivedi.ideal_succotash.model.Threads;
 public class ChatNotificationService extends Service {
 
     Firebase firebase;
-    String chatId;
     static List<Threads> list;
 
     public ChatNotificationService() {
@@ -52,6 +52,9 @@ public class ChatNotificationService extends Service {
     public int onStartCommand(final Intent intent, final int flags, int startId) {
         // Toast.makeText(getBaseContext(), "service started", Toast.LENGTH_LONG).show();
         //startForeground(123110, null);
+        if(BaseApplication.utils.getMyEmail()==null){
+            stopSelf();
+        }
         list = new ArrayList<>();
         firebase = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS));
 
@@ -122,7 +125,13 @@ public class ChatNotificationService extends Service {
                 t.setKey(dataSnapshot.getKey());
 
                 if (t.getUnreadCount() > 0){
-                    list.add(t);
+                    for (Threads tr : list) {
+                        if (tr.getKey().equals(t.getKey())) {
+                            list.remove(tr);
+                            list.add(BaseApplication.utils.getInsertPositionByTime(list,0,list.size()-1,t.getTime()),t);
+                            break;
+                        }
+                    }
                     if (list.size() == 1) {
                         Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                         Intent intent2 = new Intent(getApplicationContext(), ChatActivity.class);
@@ -199,16 +208,9 @@ public class ChatNotificationService extends Service {
             }
         });
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
-    public static void notifyMessage(DataSnapshot dataSnapshot, Context context) {
-
-
-
-    }
-
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;

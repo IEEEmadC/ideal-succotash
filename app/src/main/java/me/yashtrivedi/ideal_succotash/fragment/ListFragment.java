@@ -17,6 +17,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -38,6 +43,8 @@ import me.yashtrivedi.ideal_succotash.adapter.RViewAdapter;
 import me.yashtrivedi.ideal_succotash.model.ListUser;
 import me.yashtrivedi.ideal_succotash.RecyclerTouchListener;
 
+import static android.R.style.Animation;
+
 public class ListFragment extends Fragment implements ClickListener {
 
     NotificationManager notificationManager;
@@ -48,23 +55,22 @@ public class ListFragment extends Fragment implements ClickListener {
     ChildEventListener childEventListener;
     private RecyclerView recyclerView;
     private RViewAdapter adapter;
-
     public ListFragment() {
         // Required empty public constructor
     }
 
- /*   @Override
-    public void onResume() {
-        super.onResume();
-    }
+    /*   @Override
+       public void onResume() {
+           super.onResume();
+       }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        firebase.removeEventListener(childEventListener);
+       @Override
+       public void onPause() {
+           super.onPause();
+           firebase.removeEventListener(childEventListener);
 
-    }
-*/
+       }
+   */
     public void showRequestForm() {
         DialogFragment dialogFragment = ShowOfferFormFragment.newInstance();
         dialogFragment.show(getFragmentManager(), "ShowOfferFormFragment");
@@ -76,7 +82,7 @@ public class ListFragment extends Fragment implements ClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
-        FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        final FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         if (getArguments() != null && getArguments().getBoolean("animation", false)) {
             mfab.animate().rotation(0);
         }
@@ -102,10 +108,12 @@ public class ListFragment extends Fragment implements ClickListener {
             }
         });
 
-
         childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (list.size() == 0) {
+
+                }
                 ListUser lu = dataSnapshot.getValue(ListUser.class);
                 lu.setRoll(BaseApplication.utils.emailToroll(dataSnapshot.getKey()));
                 Map<String, Object> rr = lu.getRideRequest();
@@ -142,6 +150,9 @@ public class ListFragment extends Fragment implements ClickListener {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                if (list.size() == 1) {
+
+                }
                 int pos = 0;
                 for (ListUser lu : list) {
                     if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
@@ -212,14 +223,14 @@ public class ListFragment extends Fragment implements ClickListener {
             firebase.updateChildren(current);
             Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat((myEmail)));
             Map<String, Object> map1 = new HashMap<>();
-            map1.put(BaseApplication.utils.rollToEmail(lu.getRoll()),true);
+            map1.put(BaseApplication.utils.rollToEmail(lu.getRoll()), true);
             firebase2.updateChildren(map1);
             Intent i = new Intent(getContext(), RequestService.class);
             i.putExtra(Constants.REQUESTED_USER, BaseApplication.utils.rollToEmail(list.get(position).getRoll()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
             i.putExtra("position", position);
             i.putExtra("name", lu.getuserName());
             i.putExtra(Constants.KEY_ENCODED_EMAIL, lu.getRoll());
-            i.putExtra("myEmail",myEmail);
+            i.putExtra("myEmail", myEmail);
             i.putExtra(Constants.CAR_NO, lu.getCarNo());
             getContext().startService(i);
             /*ServiceConnection mRequestConnection = new ServiceConnection() {
@@ -236,7 +247,6 @@ public class ListFragment extends Fragment implements ClickListener {
                 }
             };
             getContext().bindService(i, mRequestConnection, Context.BIND_AUTO_CREATE);*/
-
 
 
         }
