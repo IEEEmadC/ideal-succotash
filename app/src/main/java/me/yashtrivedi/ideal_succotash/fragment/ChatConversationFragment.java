@@ -40,6 +40,7 @@ import me.yashtrivedi.ideal_succotash.R;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.adapter.CViewAdapter;
 import me.yashtrivedi.ideal_succotash.model.Message;
+import me.yashtrivedi.ideal_succotash.model.Threads;
 
 /**
  * Created by yashtrivedi on 25/05/16.
@@ -48,9 +49,10 @@ public class ChatConversationFragment extends Fragment {
 
     EditText messageView;
     CViewAdapter adapter;
-    FloatingActionButton fab,fab2;
+    FloatingActionButton fab, fab2;
     Firebase firebase;
     ChildEventListener listener;
+    String chatID;
 
     public ChatConversationFragment() {
 
@@ -59,7 +61,7 @@ public class ChatConversationFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -68,6 +70,8 @@ public class ChatConversationFragment extends Fragment {
         final RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.conv);
         getActivity().setTitle(getArguments().getString(Constants.USER_NAME));
         messageView = (EditText) v.findViewById(R.id.new_msg);
+        chatID = getArguments().getString(Constants.CONVERSATION_PUSH_ID);
+        Log.d("receivedPushID", chatID);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
@@ -78,14 +82,14 @@ public class ChatConversationFragment extends Fragment {
         fab2.hide();
         fab = (FloatingActionButton) v.findViewById(R.id.fab_chat);
         fab.hide();
-        firebase = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)).concat("/").concat("messages"));
+        firebase = new Firebase(Constants.FIREBASE_URL_CHATS.concat("/").concat(chatID).concat("/").concat("messages"));
         firebase.keepSynced(true);
         listener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) throws NullPointerException{
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) throws NullPointerException {
                 adapter.add(dataSnapshot.getValue(Message.class));
                 recyclerView.scrollToPosition(0);
-                Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
+                Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(chatID));
                 Map<String, Object> map = new HashMap<>();
                 map.put(Constants.THREAD_READ, true);
                 map.put(Constants.THREAD_UNREAD_COUNT, 0);
@@ -93,7 +97,7 @@ public class ChatConversationFragment extends Fragment {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) throws NullPointerException{
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) throws NullPointerException {
 
             }
 
@@ -121,12 +125,11 @@ public class ChatConversationFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    if(messageView.getText().toString().trim().length()>0){
-                        fab.show();
-                    }
-                    else {
-                        fab.hide();
-                    }
+                if (messageView.getText().toString().trim().length() > 0) {
+                    fab.show();
+                } else {
+                    fab.hide();
+                }
             }
 
             @Override
@@ -141,43 +144,45 @@ public class ChatConversationFragment extends Fragment {
                 recyclerView.scrollToPosition(0);
             }
         });
-        fab.setOnClickListener(new View.OnClickListener()   {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    fab.hide();
-                    final Message m = new Message();
-                    m.setFrom(BaseApplication.utils.getMyEmail());
-                    m.setMsg(messageView.getText().toString().trim());
-                    messageView.setText("");
-                    m.setTime(Calendar.getInstance().getTimeInMillis());
-                    firebase.push().setValue(m);
-                    final Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(getArguments().getString(Constants.THREAD_EMAIL)).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
-                    firebase1.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            int count = Integer.parseInt(((Map<String, Object>) dataSnapshot.getValue()).get(Constants.THREAD_UNREAD_COUNT).toString());
-                            Map<String, Object> map = new HashMap<String, Object>();
-                            map.put(Constants.THREAD_READ, false);
-                            map.put(Constants.THREAD_UNREAD_COUNT, ++count);
-                            Log.d("new count",count+"");
-                            map.put(Constants.THREAD_TIME, m.getTime());
-                            map.put(Constants.THREAD_LAST_MSG, m.getMsg());
-                            firebase1.updateChildren(map);
-                        }
+                fab.hide();
+                final Message m = new Message();
+                m.setFrom(BaseApplication.utils.getMyEmail());
+                m.setMsg(messageView.getText().toString().trim());
+                messageView.setText("");
+                m.setTime(Calendar.getInstance().getTimeInMillis());
+                firebase.push().setValue(m);
+                final Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(getArguments().getString(Constants.THREAD_EMAIL)).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(chatID));
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                firebase1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int count = dataSnapshot.getValue(Threads.class).getUnreadCount();
+                        Log.d("current count", count + "");
+                        Map<String, Object> map = new HashMap<>();
+                        map.put(Constants.THREAD_READ, false);
+                        map.put(Constants.THREAD_UNREAD_COUNT, ++count);
+                        Log.d("new count", count + "");
+                        map.put(Constants.THREAD_TIME, m.getTime());
+                        map.put(Constants.THREAD_LAST_MSG, m.getMsg());
+                        firebase1.updateChildren(map);
+                    }
 
-                        }
-                    });
-                    Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(getArguments().getString(Constants.CONVERSATION_PUSH_ID)));
-                    Map<String, Object> map = new HashMap<>();
-                    map.put(Constants.THREAD_READ, true);
-                    map.put(Constants.THREAD_UNREAD_COUNT, 0);
-                    map.put(Constants.THREAD_TIME, m.getTime());
-                    map.put(Constants.THREAD_LAST_MSG, m.getMsg());
-                    firebase2.updateChildren(map);
-                }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+                Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_USERS.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_CHATS).concat("/").concat(chatID));
+                Map<String, Object> map = new HashMap<>();
+                map.put(Constants.THREAD_READ, true);
+                map.put(Constants.THREAD_UNREAD_COUNT, 0);
+                map.put(Constants.THREAD_TIME, m.getTime());
+                map.put(Constants.THREAD_LAST_MSG, m.getMsg());
+                firebase2.updateChildren(map);
+            }
 
         });
 
@@ -188,7 +193,7 @@ public class ChatConversationFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         fab2.show();
     }
 

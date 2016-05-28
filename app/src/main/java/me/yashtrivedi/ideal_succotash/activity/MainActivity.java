@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Intent serviceIntent = new Intent(MainActivity.this, ChatNotificationService.class);
-//        startService(serviceIntent);
+        startService(serviceIntent);
     }
 
     @Override

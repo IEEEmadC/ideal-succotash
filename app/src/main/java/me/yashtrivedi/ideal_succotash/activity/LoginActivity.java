@@ -336,7 +336,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                  * already holds userName/provider data from the latest session
                  */
 
-                if (authData != null) {
+                Log.d("email",BaseApplication.utils.getMyEmail());
+                Log.d("name",BaseApplication.utils.getMyName());
+                if (authData != null && BaseApplication.utils.getMyEmail()!=null) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);

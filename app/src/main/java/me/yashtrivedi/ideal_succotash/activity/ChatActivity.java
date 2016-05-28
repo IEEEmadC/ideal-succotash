@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -48,7 +49,10 @@ public class ChatActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        getSupportFragmentManager().popBackStack();
+        if(getSupportFragmentManager().getBackStackEntryCount()>0)
+            getSupportFragmentManager().popBackStack();
+        else
+            finish();
         return true;
     }
 
