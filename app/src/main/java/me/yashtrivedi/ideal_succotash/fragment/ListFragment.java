@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +30,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import net.frederico.showtipsview.ShowTipsBuilder;
+import net.frederico.showtipsview.ShowTipsView;
+import net.frederico.showtipsview.ShowTipsViewInterface;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +43,7 @@ import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.ClickListener;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
+import me.yashtrivedi.ideal_succotash.activity.MainActivity;
 import me.yashtrivedi.ideal_succotash.service.RequestService;
 import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.adapter.RViewAdapter;
@@ -100,8 +106,35 @@ public class ListFragment extends Fragment implements ClickListener {
         requestList = new ArrayList<>();
 
         if(list.size()==0)
-            noRidesImg.setVisibility(View.VISIBLE);
+        noRidesImg.setVisibility(View.VISIBLE);
 
+        final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
+                .setTarget(mfab)
+                .setTitle("Create Ride button")
+                .setDescription("Tap this button if you want to create a ride")
+                .setDelay(100)
+                .build();
+
+        showTips.setAlpha(0.8f);
+        showTips.show(getActivity());
+
+
+
+       /*final ShowTipsView showTips2 = new ShowTipsBuilder(getActivity()).setTarget()
+                .setTitle("A magnific button")
+                .setDescription("This button do nothing so good")
+                .setDelay(200)
+                .build();
+        showTips2.setAlpha(0.8f);
+*/
+        showTips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+  //              showTips2.show(getActivity());
+            }
+        });
+
+//        showTips.setDisplayOneTime(true);
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

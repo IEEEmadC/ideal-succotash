@@ -10,5 +10,9 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/sad2"
+        android:id="@+id/no_requests_img"/>
 </FrameLayout>
