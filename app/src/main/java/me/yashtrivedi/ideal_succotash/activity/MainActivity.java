@@ -9,11 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import net.frederico.showtipsview.ShowTipsBuilder;
+import net.frederico.showtipsview.ShowTipsView;
 
 import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
@@ -74,6 +78,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
+        MenuItem menuItem = menu.findItem(R.id.chat_icon);
+        ImageButton chatIcon = (ImageButton) MenuItemCompat.getActionView(menuItem);
+        Log.d("chatiCon",chatIcon.toString()==null?"isNull":chatIcon.toString());
+
+        ShowTipsView showTipsView = new ShowTipsBuilder(this).
+                setTarget(chatIcon)
+                .setTitle("Chat Button")
+                .setDescription("This button do nothing so good")
+                .setDelay(100)
+                .build();
+        showTipsView.setAlpha(0.8f);
+        showTipsView.show(this);
         return true;
     }
 

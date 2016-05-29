@@ -25,16 +25,16 @@ public class SplashScreen extends AwesomeSplash {
         configSplash.setRevealFlagX(Flags.REVEAL_RIGHT);  //or Flags.REVEAL_LEFT
         configSplash.setRevealFlagY(Flags.REVEAL_BOTTOM); //or Flags.REVEAL_TOP
         configSplash.setPathSplash(Constants.DROID_LOGO); //set path String
-        configSplash.setOriginalHeight(320); //in relation to your svg (path) resource
+        configSplash.setOriginalHeight(390); //in relation to your svg (path) resource
         configSplash.setOriginalWidth(310); //in relation to your svg (path) resource
         configSplash.setAnimPathStrokeDrawingDuration(2000);
         configSplash.setPathSplashStrokeSize(3); //I advise value be <5
         configSplash.setPathSplashStrokeColor(R.color.colorPrimaryDark); //any color you want form colors.xml
         configSplash.setAnimPathFillingDuration(1000);
         configSplash.setPathSplashFillColor(R.color.colorPrimary); //path object filling color
-        configSplash.setTitleSplash("HITCH");
-        configSplash.setTitleTextSize(70);
-        configSplash.setTitleFont("fonts/Pacifico.ttf");
+        configSplash.setTitleSplash("the carpooling app");
+        configSplash.setTitleTextSize(40);
+        configSplash.setTitleFont("fonts/GoodDog.otf");
     }
 
     @Override

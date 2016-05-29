@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -43,6 +44,7 @@ public class OfferedRideFragment extends Fragment {
     private RecyclerView recyclerView;
     FloatingActionButton mfab,fab1,fab2;
     Animation fab_open,fab_close,fab_scale,fab_unscale;
+    ImageView noRequestsImg;
     public OfferedRideFragment() {
 
     }
@@ -53,6 +55,7 @@ public class OfferedRideFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_offered_ride, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        noRequestsImg = (ImageView) view.findViewById(R.id.no_requests_img);
         final Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
         final OViewAdapter adapter = new OViewAdapter(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
         list = new ArrayList<>();
@@ -131,6 +134,7 @@ public class OfferedRideFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Log.d("here", "x");
+                noRequestsImg.setVisibility(View.GONE);
                 RideRequest ru = dataSnapshot.getValue(RideRequest.class);
                 ru.setEmail(dataSnapshot.getKey());
                 list.add(0, ru);
@@ -164,6 +168,9 @@ public class OfferedRideFragment extends Fragment {
                         break;
                     }
                     pos++;
+                }
+                if(list.size()==0){
+                    noRequestsImg.setVisibility(View.VISIBLE);
                 }
             }
 
