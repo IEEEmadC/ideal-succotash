@@ -105,6 +105,8 @@ public class RequestService extends Service {
                 notificationManager.notify(12123, notif.build());
                 stopForeground(true);
                 firebase.removeEventListener(listener);
+                Intent i = new Intent(getApplicationContext(),StartRideService.class);
+                stopService(i);
                 stopSelf();
             }
 

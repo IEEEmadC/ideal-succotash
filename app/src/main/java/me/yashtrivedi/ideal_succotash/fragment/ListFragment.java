@@ -160,51 +160,55 @@ public class ListFragment extends Fragment implements ClickListener {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                int pos = 0;
-                for (ListUser lu : list) {
-                    if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
-                        int capacity = dataSnapshot.getValue(ListUser.class).getCapacity();
-                        Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).getRideRequest();
-                        if (rr != null) {
-                            list.get(pos).setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
-                        } else {
-                            list.get(pos).setTried(false);
+                try {
+                    int pos = 0;
+                    for (ListUser lu : list) {
+                        if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
+                            int capacity = dataSnapshot.getValue(ListUser.class).getCapacity();
+                            Map<String, Object> rr = dataSnapshot.getValue(ListUser.class).getRideRequest();
+                            if (rr != null) {
+                                list.get(pos).setTried(rr.containsKey(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")));
+                            } else {
+                                list.get(pos).setTried(false);
+                            }
+                            list.get(pos).setCarCapacity(capacity);
+                            list.get(pos).setRideRequest(rr);
+                            adapter.updateCapacity(pos, capacity, rr);
+                            if (lu.isStarted()) {
+                                list.remove(pos);
+                                adapter.removeItem(pos);
+                            }
+                            break;
                         }
-                        list.get(pos).setCarCapacity(capacity);
-                        list.get(pos).setRideRequest(rr);
-                        adapter.updateCapacity(pos, capacity, rr);
-                        if(lu.isStarted()){
-                            list.remove(pos);
-                            adapter.removeItem(pos);
-                        }
-                        break;
+                        pos++;
                     }
-                    pos++;
-                }
-                if(list.size()==0)
-                    noRidesImg.setVisibility(View.VISIBLE);
-                else
-                    noRidesImg.setVisibility(View.GONE);
+                    if (list.size() == 0)
+                        noRidesImg.setVisibility(View.VISIBLE);
+                    else
+                        noRidesImg.setVisibility(View.GONE);
+                }catch (NullPointerException ne){}
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                if (list.size() == 1) {
+                try {
+                    if (list.size() == 1) {
 
-                }
-                int pos = 0;
-                for (ListUser lu : list) {
-                    if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
-                        list.remove(lu);
-                        adapter.removeItem(pos);
-                        break;
                     }
-                    pos++;
-                }
+                    int pos = 0;
+                    for (ListUser lu : list) {
+                        if (lu.getRoll().equals(BaseApplication.utils.emailToroll(dataSnapshot.getKey()))) {
+                            list.remove(lu);
+                            adapter.removeItem(pos);
+                            break;
+                        }
+                        pos++;
+                    }
 
-                if(list.size()==0){
-                    noRidesImg.setVisibility(View.VISIBLE);
-                }
+                    if (list.size() == 0) {
+                        noRidesImg.setVisibility(View.VISIBLE);
+                    }
+                }catch (NullPointerException ne){}
             }
 
             @Override
