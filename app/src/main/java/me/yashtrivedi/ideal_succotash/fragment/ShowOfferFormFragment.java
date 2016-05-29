@@ -235,6 +235,7 @@ public class ShowOfferFormFragment extends DialogFragment {
             rideData.put(Constants.CAR_NO, carNo);
             rideData.put(Constants.AREA, editTextArea.getText().toString());
             rideData.put(Constants.CAR_CAPACITY, numberPickerCarCapacity.getValue());
+            rideData.put(Constants.RIDE_STARTED,false);
 
             //    rideData.put("carCapacity", Integer.parseInt(numberPickerCarCapacity.getText().toString()));
             parentData.put(sharedPrefrences.getString(Constants.KEY_ENCODED_EMAIL, "null"), rideData);

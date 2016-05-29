@@ -24,7 +24,7 @@
         android:visibility="invisible"
         android:tag="abc"
         app:elevation="6dp"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorCancel"
         app:pressedTranslationZ="12dp"
         android:src="@drawable/ic_close_black_24dp" />
 
@@ -36,7 +36,7 @@
         android:layout_gravity="end|bottom"
         android:layout_marginRight="15dp"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorCancel"
+        app:backgroundTint="@color/colorAccent"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"
         android:tag="abcd"

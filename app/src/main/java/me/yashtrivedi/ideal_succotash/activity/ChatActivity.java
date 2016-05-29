@@ -37,7 +37,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         FragmentManager fragmentManager = getSupportFragmentManager();
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle b = getIntent().getExtras();
         if(b!=null&&b.getBoolean("toChat",false)){
             ChatConversationFragment chatConversationFragment = new ChatConversationFragment();

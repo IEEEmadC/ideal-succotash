@@ -42,6 +42,7 @@ public class Constants {
     public static final String AREA = "area";
     public static final String REQUEST_STATUS = "status";
     public static final String REQUESTED_USER = "reqUser";
+    public static final String RIDE_STARTED = "started";
 
     public static final String ACTION_CANCEL_RIDE = "cancelRide";
     public static final String ACTION_REJECT_RIDE = "rejectRide";

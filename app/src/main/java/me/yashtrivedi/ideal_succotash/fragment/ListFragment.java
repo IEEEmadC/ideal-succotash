@@ -125,13 +125,15 @@ public class ListFragment extends Fragment implements ClickListener {
                     lu.setTried(false);
                     lu.setRideRequest(null);
                 }
-                list.add(0, lu);
-                adapter.addItem(lu);
-                if (list.size() == 0) {
-                    noRidesImg.setVisibility(View.INVISIBLE);
-                }
-                else{
-                    noRidesImg.setVisibility(View.GONE);
+                if(!lu.isStarted()) {
+                    list.add(0, lu);
+                    adapter.addItem(lu);
+                    if (list.size() == 0) {
+                        noRidesImg.setVisibility(View.INVISIBLE);
+                    }
+                    else{
+                        noRidesImg.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -150,6 +152,10 @@ public class ListFragment extends Fragment implements ClickListener {
                         list.get(pos).setCarCapacity(capacity);
                         list.get(pos).setRideRequest(rr);
                         adapter.updateCapacity(pos, capacity, rr);
+                        if(!lu.isStarted()){
+                            list.remove(pos);
+                            adapter.removeItem(pos);
+                        }
                         break;
                     }
                     pos++;
@@ -176,7 +182,7 @@ public class ListFragment extends Fragment implements ClickListener {
                 }
 
                 if(list.size()==0){
-                    noRidesImg.setVisibility(View.GONE);
+                    noRidesImg.setVisibility(View.VISIBLE);
                 }
             }
 

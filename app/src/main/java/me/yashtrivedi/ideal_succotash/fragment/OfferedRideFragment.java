@@ -22,8 +22,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.service.OfferService;
 import me.yashtrivedi.ideal_succotash.R;
@@ -49,7 +53,7 @@ public class OfferedRideFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_offered_ride, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, "")).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
+        final Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.getMyEmail()).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE));
         final OViewAdapter adapter = new OViewAdapter(getContext(), PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
         list = new ArrayList<>();
         mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
@@ -60,7 +64,7 @@ public class OfferedRideFragment extends Fragment {
         fab_scale = AnimationUtils.loadAnimation(getContext(),R.anim.fab_scale);
         fab_unscale = AnimationUtils.loadAnimation(getContext(),R.anim.fab_unscale);
         CoordinatorLayout parent = (CoordinatorLayout) getActivity().findViewById(R.id.parent);
-        mfab.animate().rotation(45);
+        mfab.animate().rotation(180);
 //        fab1.animate().translationX(fab1.getWidth()/4 - parent.getWidth()/2);
 //        fab2.animate().translationX(fab2.getWidth()/4 - parent.getWidth()/2);
 
@@ -86,7 +90,7 @@ public class OfferedRideFragment extends Fragment {
                 }
             }
         });
-        fab1.setOnClickListener(new View.OnClickListener() {
+        fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mfab.startAnimation(fab_unscale);
@@ -95,14 +99,14 @@ public class OfferedRideFragment extends Fragment {
                 fab1.setClickable(false);
                 fab2.setClickable(false);
                 isFabOpen = false;
+                Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.getMyEmail()));
+                Map<String,Object> map = new HashMap<>();
+                map.put(Constants.RIDE_STARTED,true);
+                firebase1.updateChildren(map);
             }
         });
-        /*CoordinatorLayout.LayoutParams centerParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        centerParams.anchorGravity = Gravity.CENTER_HORIZONTAL;
-        centerParams.anchorGravity = Gravity.BOTTOM;
-        centerParams.setAnchorId(centerParams.getAnchorId());
-        mfab.setLayoutParams(centerParams);*/
-        fab2.setOnClickListener(new View.OnClickListener() {
+
+        fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getContext());

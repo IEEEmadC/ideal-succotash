@@ -11,9 +11,13 @@ public class ListUser {
 
     String userName, area, roll, carNo;
     int carCapacity;
-    Boolean toNirma, tried;
+    Boolean toNirma, tried, started;
     Map<String, Object> rideRequest;
     //File img;
+
+    public Boolean isStarted() {
+        return started;
+    }
 
     public ListUser() {
     }

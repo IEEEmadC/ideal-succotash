@@ -171,7 +171,7 @@ public class ChatNotificationService extends Service {
                                 text+=thread.getName()+": "+thread.getmsg();
                             }
                             else{
-                                text.concat("/n").concat(thread.getName()).concat(": ").concat(thread.getmsg());
+                                text+="/n"+thread.getName()+": "+thread.getmsg();
                             }
                         }
                         Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

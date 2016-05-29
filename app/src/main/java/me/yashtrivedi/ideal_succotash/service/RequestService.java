@@ -75,6 +75,9 @@ public class RequestService extends Service {
                             .setSubText("Car No: " + b.getString(Constants.CAR_NO))
                             .setSound(notificationUri)
                             .setPriority(NotificationCompat.PRIORITY_HIGH);
+                    Intent i = new Intent(getApplicationContext(),StartRideService.class);
+                    i.putExtras(b);
+                    startService(i);
                     notificationManager.notify(12123, notif.build());
                 } else if (status == Constants.RIDE_REQUEST_REJECTED) {
                     Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
