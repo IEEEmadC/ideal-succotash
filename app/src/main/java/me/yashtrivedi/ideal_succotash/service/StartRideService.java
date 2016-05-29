@@ -19,6 +19,7 @@ import com.firebase.client.ValueEventListener;
 
 import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
+import me.yashtrivedi.ideal_succotash.R;
 
 public class StartRideService extends Service {
     public StartRideService() {
@@ -37,6 +38,7 @@ Bundle b;
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
                     builder.setPriority(Notification.PRIORITY_HIGH)
                             .setContentTitle(b.getString("name") + " is leaving now")
+                            .setSmallIcon(R.mipmap.ic_launcher)
                             .setVibrate(new long[0])
                             .setSound(notificationUri)
                             .setAutoCancel(true);
