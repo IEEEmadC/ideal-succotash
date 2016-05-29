@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -202,7 +203,6 @@ public class ShowOfferFormFragment extends DialogFragment {
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                     }
                 });
 
@@ -218,6 +218,10 @@ public class ShowOfferFormFragment extends DialogFragment {
 
 
         } else {
+
+            ImageView imageView = (ImageView) getActivity().findViewById(R.id.no_rides_available_img);
+            imageView.setVisibility(View.GONE);
+
             SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getContext());
             carNo = editTextCarNo1.getText().toString() + "-" + editTextCarNo2.getText().toString() + "-" + editTextCarNo3.getText().toString() + "-" + editTextCarNo4.getText().toString();
             userName = sharedPrefrences.getString(Constants.KEY_NAME, "no name");

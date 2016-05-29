@@ -22,6 +22,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -42,6 +43,7 @@ import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.adapter.RViewAdapter;
 import me.yashtrivedi.ideal_succotash.model.ListUser;
 import me.yashtrivedi.ideal_succotash.RecyclerTouchListener;
+import tslamic.fancybg.FancyBackground;
 
 import static android.R.style.Animation;
 
@@ -53,6 +55,7 @@ public class ListFragment extends Fragment implements ClickListener {
     List<String> requestList;
     Firebase firebase;
     ChildEventListener childEventListener;
+    ImageView noRidesImg;
     private RecyclerView recyclerView;
     private RViewAdapter adapter;
     public ListFragment() {
@@ -83,6 +86,8 @@ public class ListFragment extends Fragment implements ClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         final FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        noRidesImg = (ImageView)v.findViewById(R.id.no_rides_available_img);
+
         if (getArguments() != null && getArguments().getBoolean("animation", false)) {
             mfab.animate().rotation(0);
         }
@@ -94,7 +99,7 @@ public class ListFragment extends Fragment implements ClickListener {
         adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
         requestList = new ArrayList<>();
-
+        noRidesImg.setVisibility(View.VISIBLE);
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,9 +116,6 @@ public class ListFragment extends Fragment implements ClickListener {
         childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (list.size() == 0) {
-
-                }
                 ListUser lu = dataSnapshot.getValue(ListUser.class);
                 lu.setRoll(BaseApplication.utils.emailToroll(dataSnapshot.getKey()));
                 Map<String, Object> rr = lu.getRideRequest();
@@ -125,6 +127,12 @@ public class ListFragment extends Fragment implements ClickListener {
                 }
                 list.add(0, lu);
                 adapter.addItem(lu);
+                if (list.size() == 0) {
+                    noRidesImg.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    noRidesImg.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -146,6 +154,10 @@ public class ListFragment extends Fragment implements ClickListener {
                     }
                     pos++;
                 }
+                if(list.size()==0)
+                    noRidesImg.setVisibility(View.VISIBLE);
+                else
+                    noRidesImg.setVisibility(View.GONE);
             }
 
             @Override
@@ -161,6 +173,10 @@ public class ListFragment extends Fragment implements ClickListener {
                         break;
                     }
                     pos++;
+                }
+
+                if(list.size()==0){
+                    noRidesImg.setVisibility(View.GONE);
                 }
             }
 
