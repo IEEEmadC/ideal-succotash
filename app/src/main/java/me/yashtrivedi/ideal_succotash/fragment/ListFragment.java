@@ -108,20 +108,22 @@ public class ListFragment extends Fragment implements ClickListener {
 
         if(list.size()==0)
         noRidesImg.setVisibility(View.VISIBLE);
-        if(!PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("runFirst2",false)) {
-            final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
-                    .setTarget(mfab)
-                    .setTitle("Create Ride button")
-                    .setDescription("Tap this button if you want to create a ride")
-                    .setDelay(100)
-                    .build();
+
+      final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
+                .setTarget(mfab)
+                .setTitle("Create Ride button")
+                .setDescription("Tap this button if you want to create a ride")
+                .setDelay(100)
+                .build();
 
             showTips.setAlpha(0.7f);
-
+            showTips.setButtonColor(Color.BLACK);
             showTips.show(getActivity());
             showTips.setDisplayOneTime(true);
             PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("runFirst2",true).apply();
         }
+
+
 
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
