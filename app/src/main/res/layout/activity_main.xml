@@ -51,7 +51,7 @@
         android:elevation="6dp"
         app:borderWidth="0dp"
         android:src="@drawable/ic_add_white_24dp"
-        app:rippleColor="#fff"
+        app:rippleColor="#6e39d624"
         android:layout_gravity="end|bottom" />
 
 </android.support.design.widget.CoordinatorLayout>

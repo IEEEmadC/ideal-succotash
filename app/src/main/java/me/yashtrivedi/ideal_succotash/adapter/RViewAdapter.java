@@ -44,6 +44,7 @@ public class RViewAdapter extends RecyclerView.Adapter<RViewHolder> {
     public void removeItem(int lu) {
         list.remove(lu);
         notifyItemRemoved(lu);
+
     }
 
     public void addItem(ListUser lu) {

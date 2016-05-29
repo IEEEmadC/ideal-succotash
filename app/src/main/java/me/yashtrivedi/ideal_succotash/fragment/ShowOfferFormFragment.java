@@ -220,9 +220,6 @@ public class ShowOfferFormFragment extends DialogFragment {
 
         } else {
 
-            ImageView imageView = (ImageView) getActivity().findViewById(R.id.no_rides_available_img);
-            imageView.setVisibility(View.GONE);
-
             SharedPreferences sharedPrefrences = PreferenceManager.getDefaultSharedPreferences(getContext());
             carNo = editTextCarNo1.getText().toString() + "-" + editTextCarNo2.getText().toString() + "-" + editTextCarNo3.getText().toString() + "-" + editTextCarNo4.getText().toString();
             userName = sharedPrefrences.getString(Constants.KEY_NAME, "no name");

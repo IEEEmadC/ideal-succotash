@@ -43,7 +43,6 @@ import me.yashtrivedi.ideal_succotash.Utils;
 import me.yashtrivedi.ideal_succotash.adapter.RViewAdapter;
 import me.yashtrivedi.ideal_succotash.model.ListUser;
 import me.yashtrivedi.ideal_succotash.RecyclerTouchListener;
-import tslamic.fancybg.FancyBackground;
 
 import static android.R.style.Animation;
 
@@ -99,7 +98,10 @@ public class ListFragment extends Fragment implements ClickListener {
         adapter = new RViewAdapter(getContext());
         list = new ArrayList<>();
         requestList = new ArrayList<>();
+
+        if(list.size()==0)
         noRidesImg.setVisibility(View.VISIBLE);
+
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
