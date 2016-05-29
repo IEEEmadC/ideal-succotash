@@ -1,9 +1,14 @@
 package me.yashtrivedi.ideal_succotash.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.deser.Deserializers;
@@ -26,8 +31,17 @@ Bundle b;
         firebase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("value",dataSnapshot.getValue().toString());
-                Log.d("key",dataSnapshot.getKey());
+                if(dataSnapshot.getValue().toString().equals("true")){
+                    Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                    builder.setPriority(Notification.PRIORITY_HIGH)
+                            .setContentTitle(b.getString("name") + " is leaving now")
+                            .setVibrate(new long[0])
+                            .setSound(notificationUri)
+                            .setAutoCancel(true);
+                    notificationManager.notify(113113,builder.build());
+                }
             }
 
             @Override

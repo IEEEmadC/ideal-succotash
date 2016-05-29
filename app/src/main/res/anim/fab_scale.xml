@@ -9,4 +9,11 @@
         android:interpolator="@android:anim/decelerate_interpolator"
         android:toXScale="1.15"
         android:toYScale="1.15" />
+    <rotate
+        android:duration="300"
+        android:fromDegrees="0"
+        android:toDegrees="45"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        />
 </set>
