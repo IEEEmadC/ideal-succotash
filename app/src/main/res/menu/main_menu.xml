@@ -6,8 +6,7 @@
         android:id="@+id/chat_icon"
         android:icon="@drawable/ic_chat_white_24dp"
         android:title="Chat"
-        app:showAsAction="ifRoom"
-        app:actionViewClass="android.widget.ImageButton"
+        app:showAsAction="always"
         />
 
 </menu>

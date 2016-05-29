@@ -61,6 +61,7 @@ public class ListFragment extends Fragment implements ClickListener {
     Firebase firebase;
     ChildEventListener childEventListener;
     ImageView noRidesImg;
+    FloatingActionButton mfab;
     private RecyclerView recyclerView;
     private RViewAdapter adapter;
     public ListFragment() {
@@ -90,7 +91,7 @@ public class ListFragment extends Fragment implements ClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
-        final FloatingActionButton mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         noRidesImg = (ImageView)v.findViewById(R.id.no_rides_available_img);
 
         if (getArguments() != null && getArguments().getBoolean("animation", false)) {
@@ -108,33 +109,18 @@ public class ListFragment extends Fragment implements ClickListener {
         if(list.size()==0)
         noRidesImg.setVisibility(View.VISIBLE);
 
-        final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
+      final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
                 .setTarget(mfab)
                 .setTitle("Create Ride button")
                 .setDescription("Tap this button if you want to create a ride")
                 .setDelay(100)
                 .build();
 
-        showTips.setAlpha(0.8f);
+        showTips.setAlpha(0.7f);
+
         showTips.show(getActivity());
+        showTips.setDisplayOneTime(true);
 
-
-
-       /*final ShowTipsView showTips2 = new ShowTipsBuilder(getActivity()).setTarget()
-                .setTitle("A magnific button")
-                .setDescription("This button do nothing so good")
-                .setDelay(200)
-                .build();
-        showTips2.setAlpha(0.8f);
-*/
-        showTips.setCallback(new ShowTipsViewInterface() {
-            @Override
-            public void gotItClicked() {
-  //              showTips2.show(getActivity());
-            }
-        });
-
-//        showTips.setDisplayOneTime(true);
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -247,6 +233,8 @@ public class ListFragment extends Fragment implements ClickListener {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, this));
         return v;
     }
+
+
 
     @Override
     public void onClick(View view, int position) {

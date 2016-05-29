@@ -1,6 +1,7 @@
 package me.yashtrivedi.ideal_succotash.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
@@ -9,15 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.firebase.client.collection.LLRBNode;
 
 import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
+import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     Boolean offered;
     FragmentManager fm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ListFragment f = new ListFragment();
             Bundle b = new Bundle();
-            b.putBoolean("animation",false);
+            b.putBoolean("animation", false);
             f.setArguments(b);
             fm.beginTransaction().replace(R.id.container, f).commit();
 
@@ -53,15 +60,15 @@ public class MainActivity extends AppCompatActivity {
         firebase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()==null && offered){
-                    PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean(Constants.KEY_OFFERED,false).apply();
+                if (dataSnapshot.getValue() == null && offered) {
+                    PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean(Constants.KEY_OFFERED, false).apply();
                     ListFragment f = new ListFragment();
                     Bundle b = new Bundle();
-                    b.putBoolean("animation",false);
+                    b.putBoolean("animation", false);
                     f.setArguments(b);
                     fm.beginTransaction().replace(R.id.container, f).commit();
-                } else if(dataSnapshot.getValue()!=null && !offered){
-                    PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean(Constants.KEY_OFFERED,true).apply();
+                } else if (dataSnapshot.getValue() != null && !offered) {
+                    PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean(Constants.KEY_OFFERED, true).apply();
                     fm.beginTransaction().replace(R.id.container, new OfferedRideFragment()).commit();
                 }
             }
@@ -75,27 +82,52 @@ public class MainActivity extends AppCompatActivity {
         startService(serviceIntent);
     }
 
+    View addingButton;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.chat_icon);
-        ImageButton chatIcon = (ImageButton) MenuItemCompat.getActionView(menuItem);
-        Log.d("chatiCon",chatIcon.toString()==null?"isNull":chatIcon.toString());
+        ImageView chatIcon = new ImageView(this, null, android.R.attr.actionButtonStyle);
+        chatIcon.setImageResource(R.drawable.ic_chat_white_24dp);
+        chatIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,ChatActivity.class));
+            }
+        });
+        chatIcon.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View view, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (left == 0 && top == 0 && right == 0 && bottom == 0)
+                    return;
+                int[] location = new int[2];
+                view.getLocationOnScreen(location);
 
-        ShowTipsView showTipsView = new ShowTipsBuilder(this).
-                setTarget(chatIcon)
+
+            }
+        });
+
+        menuItem.setActionView(chatIcon);
+        addingButton = menuItem.getActionView();
+
+       final ShowTipsView showTipsView = new ShowTipsBuilder(this)
+                .setTarget(addingButton)
                 .setTitle("Chat Button")
-                .setDescription("This button do nothing so good")
+                .setDescription("Chat with others on tapping this button")
                 .setDelay(100)
                 .build();
-        showTipsView.setAlpha(0.8f);
+        showTipsView.setAlpha(0.9f);
+        showTipsView.setButtonColor(Color.DKGRAY);
         showTipsView.show(this);
+        showTipsView.setDisplayOneTime(true);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        startActivity(new Intent(this,ChatActivity.class));
         return true;
     }
 }
