@@ -30,9 +30,10 @@ public class SplashScreen extends AwesomeSplash {
         configSplash.setAnimPathStrokeDrawingDuration(2000);
         configSplash.setPathSplashStrokeSize(3); //I advise value be <5
         configSplash.setPathSplashStrokeColor(R.color.colorPrimaryDark); //any color you want form colors.xml
-        configSplash.setAnimPathFillingDuration(1000);
+        configSplash.setAnimPathFillingDuration(500);
         configSplash.setPathSplashFillColor(R.color.colorPrimary); //path object filling color
         configSplash.setTitleSplash("the carpooling app");
+        configSplash.setAnimTitleDuration(500);
         configSplash.setTitleTextSize(40);
         configSplash.setTitleFont("fonts/GoodDog.otf");
     }
