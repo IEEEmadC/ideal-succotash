@@ -61,7 +61,6 @@ public class ListFragment extends Fragment implements ClickListener {
     Firebase firebase;
     ChildEventListener childEventListener;
     ImageView noRidesImg;
-    ShowTipsView showTips;
     FloatingActionButton mfab;
     private RecyclerView recyclerView;
     private RViewAdapter adapter;
@@ -110,7 +109,7 @@ public class ListFragment extends Fragment implements ClickListener {
         if(list.size()==0)
         noRidesImg.setVisibility(View.VISIBLE);
 
-        showTips = new ShowTipsBuilder(getActivity())
+      final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
                 .setTarget(mfab)
                 .setTitle("Create Ride button")
                 .setDescription("Tap this button if you want to create a ride")
@@ -121,6 +120,7 @@ public class ListFragment extends Fragment implements ClickListener {
 
         showTips.show(getActivity());
         showTips.setDisplayOneTime(true);
+
         mfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

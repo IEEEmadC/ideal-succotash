@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
         menuItem.setActionView(chatIcon);
         addingButton = menuItem.getActionView();
 
-        ShowTipsView showTipsView = new ShowTipsBuilder(this).
-                setTarget(addingButton)
+       final ShowTipsView showTipsView = new ShowTipsBuilder(this)
+                .setTarget(addingButton)
                 .setTitle("Chat Button")
                 .setDescription("Chat with others on tapping this button")
                 .setDelay(100)
