@@ -1,6 +1,9 @@
 package me.yashtrivedi.ideal_succotash.activity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
             b.putBoolean("animation", false);
             f.setArguments(b);
             fm.beginTransaction().replace(R.id.container, f).commit();
-
         }
 
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.getMyEmail()));
@@ -79,7 +81,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Intent serviceIntent = new Intent(MainActivity.this, ChatNotificationService.class);
+
+        if(isMyServiceRunning(ChatNotificationService.class))
         startService(serviceIntent);
+
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     View addingButton;
@@ -88,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.chat_icon);
+
         ImageView chatIcon = new ImageView(this, null, android.R.attr.actionButtonStyle);
         chatIcon.setImageResource(R.drawable.ic_chat_white_24dp);
         chatIcon.setOnClickListener(new View.OnClickListener() {
@@ -112,17 +127,20 @@ public class MainActivity extends AppCompatActivity {
         menuItem.setActionView(chatIcon);
         addingButton = menuItem.getActionView();
 
-       final ShowTipsView showTipsView = new ShowTipsBuilder(this)
-                .setTarget(addingButton)
-                .setTitle("Chat Button")
-                .setDescription("Chat with others on tapping this button")
-                .setDelay(100)
-                .build();
-        showTipsView.setAlpha(0.9f);
-        showTipsView.setButtonColor(Color.DKGRAY);
-        showTipsView.show(this);
-        showTipsView.setDisplayOneTime(true);
+       if(!PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getBoolean("runFirst",false)) {
+           final ShowTipsView showTipsView = new ShowTipsBuilder(this)
+                   .setTarget(addingButton)
+                   .setTitle("Chat Button")
+                   .setDescription("Chat with others on tapping this button")
+                   .setDelay(100)
+                   .build();
+           showTipsView.setAlpha(0.9f);
+           showTipsView.setButtonColor(Color.DKGRAY);
+           showTipsView.show(this);
+           showTipsView.setDisplayOneTime(true);
 
+           PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putBoolean("runFirst",true).apply();
+       }
         return true;
     }
 
