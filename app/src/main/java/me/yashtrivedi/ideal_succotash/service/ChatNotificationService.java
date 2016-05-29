@@ -141,10 +141,10 @@ public class ChatNotificationService extends Service {
                     for (Threads tr : list) {
                         if (tr.getKey().equals(t.getKey())) {
                             list.remove(tr);
-                            list.add(BaseApplication.utils.getInsertPositionByTime(list,0,list.size()-1,t.getTime()),t);
                             break;
                         }
                     }
+                    list.add(0,t);
                     if (list.size() == 1) {
                         Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                         Intent intent2 = new Intent(getApplicationContext(), ChatActivity.class);
