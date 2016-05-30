@@ -17,6 +17,18 @@
         android:layout_height="wrap_content"
         android:text="@string/going_home_text" />
 
+    <EditText
+        android:id="@+id/edit_text_area"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="@string/area"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:inputType="textCapWords"
+        android:textColor="#000"
+        android:textColorHint="#bfbdb9" />
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -115,22 +127,12 @@
          android:textColor="#000"
          android:textColorHint="#bfbdb9" />
     -->
-    <EditText
-        android:id="@+id/edit_text_area"
-        android:layout_width="500dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="@string/area"
-        android:imeOptions="actionDone|flagNoExtractUi"
-        android:inputType="textCapWords"
-        android:textColor="#000"
-        android:textColorHint="#bfbdb9" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:text="@string/capacity" />
 
     <NumberPicker

@@ -165,8 +165,6 @@ public class ShowOfferFormFragment extends DialogFragment {
 
                 if (editable.length() == 0) {
                     editTextCarNo3.requestFocus();
-                } else if (editable.length() == 4) {
-                    editTextArea.requestFocus();
                 }
             }
         });
