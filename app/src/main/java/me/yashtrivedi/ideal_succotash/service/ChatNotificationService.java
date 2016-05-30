@@ -55,13 +55,13 @@ public class ChatNotificationService extends Service {
         Intent intent = new Intent(getApplicationContext(), BootReceiver.class);
         intent.setAction("Chat_Service_Destroyed");
         Log.d("service","destroyed");
-        Toast.makeText(getApplicationContext(),"service destroyed",Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"service destroyed",Toast.LENGTH_LONG).show();
         sendBroadcast(intent);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-         Toast.makeText(getBaseContext(), "service started", Toast.LENGTH_LONG).show();
+         //Toast.makeText(getBaseContext(), "service started", Toast.LENGTH_LONG).show();
         //startForeground(123110, null);
         if(BaseApplication.utils.getMyEmail()==null){
             stopSelf();
@@ -106,7 +106,7 @@ public class ChatNotificationService extends Service {
                             text+=thread.getName()+": "+thread.getmsg();
                         }
                         else{
-                            text.concat("/n").concat(thread.getName()).concat(": ").concat(thread.getmsg());
+                            text+="\n"+thread.getName()+": "+thread.getmsg();
                         }
                     }
                     Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -120,7 +120,7 @@ public class ChatNotificationService extends Service {
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setVibrate(new long[0])
                             .setContentTitle("New Messages")
-                            .setContentText(text)
+                            .setSubText(text)
                             .setSound(notificationUri)
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)

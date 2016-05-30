@@ -13,16 +13,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.firebase.client.ChildEventListener;
@@ -32,7 +25,6 @@ import com.firebase.client.FirebaseError;
 
 import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
-import net.frederico.showtipsview.ShowTipsViewInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,14 +35,10 @@ import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.ClickListener;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
-import me.yashtrivedi.ideal_succotash.activity.MainActivity;
-import me.yashtrivedi.ideal_succotash.service.RequestService;
-import me.yashtrivedi.ideal_succotash.Utils;
+import me.yashtrivedi.ideal_succotash.RecyclerTouchListener;
 import me.yashtrivedi.ideal_succotash.adapter.RViewAdapter;
 import me.yashtrivedi.ideal_succotash.model.ListUser;
-import me.yashtrivedi.ideal_succotash.RecyclerTouchListener;
-
-import static android.R.style.Animation;
+import me.yashtrivedi.ideal_succotash.service.RequestService;
 
 public class ListFragment extends Fragment implements ClickListener {
 
@@ -64,6 +52,7 @@ public class ListFragment extends Fragment implements ClickListener {
     FloatingActionButton mfab;
     private RecyclerView recyclerView;
     private RViewAdapter adapter;
+
     public ListFragment() {
         // Required empty public constructor
     }
@@ -92,7 +81,7 @@ public class ListFragment extends Fragment implements ClickListener {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         mfab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        noRidesImg = (ImageView)v.findViewById(R.id.no_rides_available_img);
+        noRidesImg = (ImageView) v.findViewById(R.id.no_rides_available_img);
 
         if (getArguments() != null && getArguments().getBoolean("animation", false)) {
             mfab.animate().rotation(0);
@@ -106,23 +95,23 @@ public class ListFragment extends Fragment implements ClickListener {
         list = new ArrayList<>();
         requestList = new ArrayList<>();
 
-        if(list.size()==0)
-        noRidesImg.setVisibility(View.VISIBLE);
+        if (list.size() == 0)
+            noRidesImg.setVisibility(View.VISIBLE);
 
-      final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
-                .setTarget(mfab)
-                .setTitle("Create Ride button")
-                .setDescription("Tap this button if you want to create a ride")
-                .setDelay(100)
-                .build();
+        if (!PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("runFirst2", false)) {
+            final ShowTipsView showTips = new ShowTipsBuilder(getActivity())
+                    .setTarget(mfab)
+                    .setTitle("Create Ride button")
+                    .setDescription("Tap this button if you want to create a ride")
+                    .setDelay(100)
+                    .build();
 
             showTips.setAlpha(0.7f);
             showTips.setButtonColor(Color.BLACK);
             showTips.show(getActivity());
             showTips.setDisplayOneTime(true);
-            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("runFirst2",true).apply();
+            PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean("runFirst2", true).apply();
         }
-
 
 
         mfab.setOnClickListener(new View.OnClickListener() {
@@ -150,13 +139,12 @@ public class ListFragment extends Fragment implements ClickListener {
                     lu.setTried(false);
                     lu.setRideRequest(null);
                 }
-                if(!lu.isStarted()) {
+                if (!lu.isStarted()) {
                     list.add(0, lu);
                     adapter.addItem(lu);
                     if (list.size() == 0) {
                         noRidesImg.setVisibility(View.INVISIBLE);
-                    }
-                    else{
+                    } else {
                         noRidesImg.setVisibility(View.GONE);
                     }
                 }
@@ -190,7 +178,8 @@ public class ListFragment extends Fragment implements ClickListener {
                         noRidesImg.setVisibility(View.VISIBLE);
                     else
                         noRidesImg.setVisibility(View.GONE);
-                }catch (NullPointerException ne){}
+                } catch (NullPointerException ne) {
+                }
             }
 
             @Override
@@ -212,7 +201,8 @@ public class ListFragment extends Fragment implements ClickListener {
                     if (list.size() == 0) {
                         noRidesImg.setVisibility(View.VISIBLE);
                     }
-                }catch (NullPointerException ne){}
+                } catch (NullPointerException ne) {
+                }
             }
 
             @Override
@@ -237,7 +227,6 @@ public class ListFragment extends Fragment implements ClickListener {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recyclerView, this));
         return v;
     }
-
 
 
     @Override

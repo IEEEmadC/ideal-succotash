@@ -42,6 +42,7 @@ public class CancelRideIntentService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             final String param1 = intent.getStringExtra("myEmail");
+            Log.d("param1",param1);
             final int param3 = intent.getIntExtra("notif",13123);
             final String paramTag = intent.getStringExtra("paramTag");
             //((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(paramTag,param3);
@@ -94,8 +95,8 @@ public class CancelRideIntentService extends IntentService {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(String s : ((HashMap<String,Object>)dataSnapshot.getValue()).keySet()){
                     Log.d("Remove",s);
-                    Log.d("Remove",reqEmail)
-;                    if(!s.equals(reqEmail)){
+                    Log.d("Remove",reqEmail);
+                    if(!s.equals(reqEmail)){
                         Firebase firebase2 = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(s).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
                         Log.d("remove",firebase2.toString());
                         firebase2.removeValue();
@@ -111,8 +112,10 @@ public class CancelRideIntentService extends IntentService {
     }
 
     private void handleActionReject(String myEmail, String reqEmail) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_REJECTED);
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(reqEmail).concat("/").concat(Constants.FIREBASE_LOCATION_REQUEST_RIDE).concat("/").concat(myEmail));
-        firebase.removeValue();
+        firebase.updateChildren(map);
         Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_USER_REQUEST.concat("/").concat(myEmail).concat("/").concat(reqEmail));
         firebase1.removeValue();
 

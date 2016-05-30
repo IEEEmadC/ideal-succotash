@@ -87,31 +87,29 @@ public class OViewAdapter extends RecyclerView.Adapter<OViewHolder> {
                     case R.id.accept_request:
                         map.put(Constants.REQUEST_STATUS, Constants.RIDE_REQUEST_ACCEPTED);
                         ru.setStatus(Constants.RIDE_REQUEST_ACCEPTED);
+                        Firebase ride = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine).concat("/").concat(Constants.CAR_CAPACITY));
+
+                        ride.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                cap = Integer.parseInt(dataSnapshot.getValue().toString());
+                                Map<String, Object> mapa = new HashMap<>();
+                                mapa.put(Constants.CAR_CAPACITY, cap - 1);
+                                Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine));
+                                firebase1.updateChildren(mapa);
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        });
                         break;
                 }
                 holder.status.setVisibility(View.VISIBLE);
                 holder.status.setText(BaseApplication.utils.statusString(ru.getStatus()));
                 holder.acceptCancelButtonHolder.setVisibility(View.GONE);
                 firebase.updateChildren(map);
-                Firebase ride = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine).concat("/").concat(Constants.CAR_CAPACITY));
-
-                ride.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        cap = Integer.parseInt(dataSnapshot.getValue().toString());
-                        Map<String, Object> mapa = new HashMap<>();
-                        mapa.put(Constants.CAR_CAPACITY, cap - 1);
-                        Firebase firebase1 = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(prefDefine));
-                        firebase1.updateChildren(mapa);
-                    }
-
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-
-
             }
         };
         Boolean stat = ru.getStatus() == 0;

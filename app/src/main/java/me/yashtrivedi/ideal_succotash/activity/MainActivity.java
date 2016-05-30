@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         });
         Intent serviceIntent = new Intent(MainActivity.this, ChatNotificationService.class);
 
-        if(isMyServiceRunning(ChatNotificationService.class))
-        startService(serviceIntent);
+        if(!isMyServiceRunning(ChatNotificationService.class))
+            startService(serviceIntent);
 
     }
     private boolean isMyServiceRunning(Class<?> serviceClass) {

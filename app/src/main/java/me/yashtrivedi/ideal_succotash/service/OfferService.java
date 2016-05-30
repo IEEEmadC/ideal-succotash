@@ -72,10 +72,11 @@ public class OfferService extends Service {
                         aIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent aPendingIntent = PendingIntent.getService(getApplicationContext(),13123,aIntent,0);
                         Intent rIntent = new Intent(getApplicationContext(),CancelRideIntentService.class);
-                        rIntent.setAction(Constants.ACTION_ACCEPT_RIDE);
+                        rIntent.setAction(Constants.ACTION_REJECT_RIDE);
                         rIntent.putExtra("notif",13123);
                         rIntent.putExtra("paramTag",paramTag);
                         rIntent.putExtra("myEmail",request.getEmail());
+                        Log.d("myEmail",request.getEmail());
                         rIntent.putExtra("requested",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Constants.KEY_ENCODED_EMAIL, ""));
                         PendingIntent rPendingIntent = PendingIntent.getService(getApplicationContext(),13123,rIntent,0);
                         Boolean toNirma = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.TO_NIRMA, false);
@@ -93,18 +94,23 @@ public class OfferService extends Service {
                         builder.setContentText(rides.size() + " Requests")
                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
                     }
-
                     notificationManager.notify("onetwothree",12345, builder.build());
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d("Change offer",dataSnapshot.getValue().toString()+"|"+rides.size());
                 RideRequest request = dataSnapshot.getValue(RideRequest.class);
-                if (request.getStatus() != 0) {
+                request.setEmail(dataSnapshot.getKey());
+                Log.d("request status",request.getStatus()+"");
+                if (request.getStatus() != Constants.RIDE_REQUEST_WAITING) {
+                    Log.d("in","here");
                     for (RideRequest r : rides) {
+                        Log.d("ride email",r.getEmail()+"|"+request.getEmail());
                         if (r.getEmail().equals(request.getEmail())) {
                             rides.remove(r);
+                            Log.d("removing",r.getEmail());
                             break;
                         }
                     }

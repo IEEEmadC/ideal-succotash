@@ -45,7 +45,7 @@ public class ShowRequestFormFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.CustomTheme_DialogSingle);
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_request_form, null,false);
         editTextArea = (EditText) v.findViewById(R.id.area);

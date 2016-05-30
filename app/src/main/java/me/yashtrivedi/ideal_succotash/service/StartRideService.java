@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.deser.Deserializers;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -29,9 +30,14 @@ Bundle b;
     public int onStartCommand(Intent intent, int flags, int startId) {
         b = intent.getExtras();
         Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.rollToEmail(b.getString(Constants.KEY_ENCODED_EMAIL))).concat("/").concat(Constants.RIDE_STARTED));
-        firebase.addValueEventListener(new ValueEventListener() {
+        firebase.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot.getValue().toString().equals("true")){
                     Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -43,7 +49,18 @@ Bundle b;
                             .setSound(notificationUri)
                             .setAutoCancel(true);
                     notificationManager.notify(113113,builder.build());
+                    stopSelf();
                 }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                stopSelf();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
