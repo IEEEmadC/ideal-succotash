@@ -86,12 +86,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setScopes(gso.getScopeArray());
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null && bundle.getBoolean("LogOutPlease",false)){
+            //signOut();
+        }
         signInButton.setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
     }
 
-    private void signOut() {
+    public void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -123,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d("D", "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
+        if (result.isSuccess() && !PreferenceManager.getDefaultSharedPreferences(this).getBoolean("logout", false)) {
             acct = result.getSignInAccount();
             if (acct.getEmail().split("@")[1].equals("nirmauni.ac.in")) {
                 ((TextView) findViewById(R.id.title_text)).setText(acct.getDisplayName());
@@ -175,7 +179,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         } else {
             updateUI(false);
-            revokeAccess();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("logout",false).apply();
         }
     }
 

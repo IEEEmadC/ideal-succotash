@@ -146,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.logout:
+                new Firebase(Constants.FIREBASE_URL).unauth();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("logout",true).apply();
+                startActivity(new Intent(this,LoginActivity.class));
+                finish();
+        }
+
         return true;
     }
 }

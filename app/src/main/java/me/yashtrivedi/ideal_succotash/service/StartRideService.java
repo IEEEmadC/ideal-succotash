@@ -10,47 +10,53 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+
+import java.util.Map;
 
 import me.yashtrivedi.ideal_succotash.BaseApplication;
 import me.yashtrivedi.ideal_succotash.Constants;
 import me.yashtrivedi.ideal_succotash.R;
 
 public class StartRideService extends Service {
+    Bundle b;
+
     public StartRideService() {
     }
-Bundle b;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         b = intent.getExtras();
-        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.rollToEmail(b.getString(Constants.KEY_ENCODED_EMAIL))).concat("/").concat(Constants.RIDE_STARTED));
+        Toast.makeText(StartRideService.this, "Service", Toast.LENGTH_SHORT).show();
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL_RIDES.concat("/").concat(BaseApplication.utils.rollToEmail(b.getString(Constants.KEY_ENCODED_EMAIL))));
+        Log.d("hi", firebase.toString());
         firebase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getValue().toString().equals("true")){
-                    Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-                    builder.setPriority(Notification.PRIORITY_HIGH)
-                            .setContentTitle(b.getString("name") + " is leaving now")
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setVibrate(new long[0])
-                            .setSound(notificationUri)
-                            .setAutoCancel(true);
-                    notificationManager.notify(113113,builder.build());
-                    stopSelf();
-                }
+                if (dataSnapshot.getKey().equals(Constants.RIDE_STARTED))
+                    if (dataSnapshot.getValue().toString().equals("true")) {
+                        Uri notificationUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                        builder.setPriority(Notification.PRIORITY_HIGH)
+                                .setContentTitle(b.getString("name") + " is leaving now")
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setVibrate(new long[0])
+                                .setSound(notificationUri)
+                                .setAutoCancel(true);
+                        notificationManager.notify(113113, builder.build());
+                        stopSelf();
+                    }
+
             }
 
             @Override

@@ -194,7 +194,6 @@ public class ChatConversationFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         fab2.show();
     }
 
