@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.yashtrivedi.ideal_succotash">
+    package="me.yashtrivedi.ideal_succotash" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -12,9 +12,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        >
-        <activity android:name=".activity.SplashScreen" android:screenOrientation="portrait">
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".activity.SplashScreen"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,10 +24,13 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name"  android:screenOrientation="portrait"/>
-        <activity android:name=".activity.LoginActivity"  android:screenOrientation="portrait"/>
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait" />
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="Chat_Service_Destroyed" />
@@ -53,12 +57,13 @@
             android:name=".activity.ChatActivity"
             android:label="@string/title_activity_chat"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/AppTheme" android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".service.StartRideService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
     </application>
 
 </manifest>
